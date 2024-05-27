@@ -1,0 +1,48 @@
+--Fabricator, interior module (when I get round to adding seabases), used for most crafting
+minetest.register_node("sub_crafts:fabricator", {
+    description = "Fabricator",
+    drawtype = "mesh",
+    mesh = "fabricator.obj",
+    tiles = {"fabricator.png"},
+    selection_box = {
+        type = "fixed",
+        fixed = {-0.375, -0.5, 0.25, 0.375, 0.5, 0.5}
+    },
+    walkable = false,
+    paramtype = "light",
+    paramtype2 = "4dir",
+    sunlight_propagates = true,
+    on_rightclick = function (pos, node, user)
+        minetest.show_formspec(user:get_player_name(), "sub_crafts:fabricator_formspec", sub_crafts.get_formspec(user, "fabricator"))
+    end
+})
+
+--Function for navigating the fabricator menu and crafting items
+minetest.register_on_player_receive_fields(function(player, formname, fields)
+    if formname ~= "sub_crafts:fabricator_formspec" then return end
+    local playername = player:get_player_name()
+    local inv = player:get_inventory()
+    for name, value in pairs(fields) do
+        if value then
+            if name == "quit" then return end
+            local names = string.split(name, "|")
+            --test if it can be a recipe
+            local names2 = table.copy(names)
+            table.insert(names2, 1, table.remove(names2, #names2))
+            local recipe = sub_crafts.get_recipe("fabricator", unpack(names2))
+            if recipe and sub_crafts.can_do_recipe(inv, recipe.recipe) then
+                for i, item in ipairs(recipe.recipe) do
+                    inv:remove_item("main", ItemStack(item))
+                end
+                for i, item in ipairs(recipe.output) do
+                    inv:add_item("main", ItemStack(item))
+                end
+                table.remove(names, #names)
+            end
+            --show the corresponding menu
+            local formspec = sub_crafts.get_formspec(player, "fabricator", unpack(names))
+            minetest.show_formspec(playername, formname, formspec)
+            return
+        end
+    end
+end)

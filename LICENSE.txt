@@ -1,0 +1,46 @@
+=== SOURCE CODE ===
+
+Subnodeica
+Copyright (C) 2024 theidealist (theidealistmusic@gmail.com)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+Subnodeica is based on the game Subnautica by Unknown Worlds Entertainment,
+however no code or media from Subnautica is used in this game.
+
+Subnodeica uses the following API mods by other authors:
+
+- Mobkit by TheTermos, which is separately licensed under the MIT License; see mobkit/LICENSE
+
+=== MEDIA ===
+
+All textures not mentioned below are copyright (C) 2024 theidealist, and are under CC BY-SA 4.0
+https://creativecommons.org/licenses/by-sa/4.0/
+
+All textures beginning with "default" are borrowed directly from Minetest Game and are under CC BY-SA 4.0
+
+The following textures are altered or recolored from Minetest Game and are also under CC BY-SA 4.0:
+
+sub_core:
+- sub_core_blood_grass.png
+- sub_core_coral_tube.png
+- sub_core_limestone.png
+- sub_core_pink_blood_grass.png
+
+sub_crafts:
+- sub_crafts_copper_wire.png
+
+The image "menu/overlay.png" is edited from a screenshot taken in Minetest Game and is under CC BY-SA 4.0
+
+The image "mobkit/screenshot.png" is part of Mobkit, see its own license file
