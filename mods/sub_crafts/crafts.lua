@@ -11,6 +11,19 @@ sub_crafts.register_craft({
     recipe = {"sub_core:titanium 10"}
 })
 
+--Fiber mesh, important for medkits and some equipment
+minetest.register_craftitem("sub_crafts:fiber_mesh", {
+    description = "Fiber Mesh",
+    inventory_image = "sub_crafts_fiber_mesh.png"
+})
+
+sub_crafts.register_craft({
+    category = "resources",
+    subcategory = "basic",
+    output = {"sub_crafts:fiber_mesh"},
+    recipe = {"sub_core:creepvine_sample 2"}
+})
+
 --Silicone rubber, used for crafting equipment including the survival knife
 minetest.register_craftitem("sub_crafts:rubber", {
     description = "Rubber",
@@ -100,6 +113,19 @@ sub_crafts.register_craft({
     subcategory = "water",
     output = {"sub_crafts:filtered_water"},
     recipe = {"sub_mobs:item_bladderfish"}
+})
+
+--First aid kit, pretty much the only method of restoring player's hp
+minetest.register_craftitem("sub_crafts:medkit", {
+    description = "First Aid Kit",
+    inventory_image = "sub_crafts_medkit.png"
+})
+
+sub_crafts.register_craft({
+    category = "personal",
+    subcategory = "equipment",
+    output = {"sub_crafts:medkit"},
+    recipe = {"sub_crafts:fiber_mesh"}
 })
 
 --Survival knife, essential for gathering many crafting materials

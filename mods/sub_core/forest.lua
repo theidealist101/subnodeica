@@ -67,7 +67,8 @@ minetest.register_node("sub_core:creepvine_stem", sub_core.add_water_physics({
     selection_box = {
         type = "fixed",
         fixed = {-0.375, -0.5, -0.375, 0.375, 0.5, 0.375}
-    }
+    },
+    on_punch = sub_core.drop_if_slash("sub_core:creepvine_sample", true)
 }, "sub_core:forest_water"))
 
 minetest.register_node("sub_core:creepvine_stalk", sub_core.add_water_physics({
@@ -78,7 +79,8 @@ minetest.register_node("sub_core:creepvine_stalk", sub_core.add_water_physics({
     selection_box = {
         type = "fixed",
         fixed = {-0.25, -0.5, -0.25, 0.25, 0.5, 0.25}
-    }
+    },
+    on_punch = sub_core.drop_if_slash("sub_core:creepvine_sample", true)
 }, "sub_core:forest_water"))
 
 minetest.register_node("sub_core:creepvine_with_cluster", sub_core.add_water_physics({
@@ -94,7 +96,8 @@ minetest.register_node("sub_core:creepvine_with_cluster", sub_core.add_water_phy
     on_rightclick = function (pos, node, user, itemstack)
         minetest.set_node(pos, {name="sub_core:creepvine_stem"})
         return sub_core.give_item("sub_core:creepvine_seeds")(pos, node, user, itemstack)
-    end
+    end,
+    on_punch = sub_core.drop_if_slash("sub_core:creepvine_sample", true)
 }, "sub_core:forest_water"))
 
 minetest.register_craftitem("sub_core:creepvine_seeds", {
@@ -106,8 +109,14 @@ minetest.register_node("sub_core:bushy_creepvine", sub_core.add_water_physics({
     description = "Bushy Creepvine",
     drawtype = "allfaces_optional",
     use_texture_alpha = "clip",
-    tiles = {"sub_core_bushy_creepvine.png"}
+    tiles = {"sub_core_bushy_creepvine.png"},
+    on_punch = sub_core.drop_if_slash("sub_core:creepvine_sample", true)
 }, "sub_core:forest_water"))
+
+minetest.register_craftitem("sub_core:creepvine_sample", {
+    description = "Creepvine Sample",
+    inventory_image = "sub_core_creepvine_stalk.png"
+})
 
 --Function for spawning a creepvine at a given location
 local function place_creepvine(pos)

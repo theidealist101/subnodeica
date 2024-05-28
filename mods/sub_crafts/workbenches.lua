@@ -46,3 +46,31 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
         end
     end
 end)
+
+--Medical kit fabricator, generates a medkit every 10 minutes without needing any power
+minetest.register_node("sub_crafts:medkit_fabricator", {
+    description = "Medical Kit Fabricator",
+    drawtype = "mesh",
+    mesh = "medkit_fabricator.obj",
+    tiles = {"medkit_fabricator.png"},
+    selection_box = {
+        type = "fixed",
+        fixed = {-0.25, -0.375, 0.375, 0.25, 0.375, 0.5}
+    },
+    walkable = false,
+    paramtype = "light",
+    paramtype2 = "4dir",
+    sunlight_propagates = true,
+    on_rightclick = function (pos, node, user, itemstack)
+        local meta = minetest.get_meta(pos)
+        local now = minetest.get_gametime()
+        if not meta:contains("last_used") then
+            meta:set_int("last_used", now)
+            return
+        end
+        local last_used = meta:get_int("last_used")
+        if now-last_used < 600 then return end
+        meta:set_int("last_used", now)
+        return sub_core.give_item("sub_crafts:medkit")(pos, node, user, itemstack)
+    end
+})
