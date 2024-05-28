@@ -142,7 +142,7 @@ function sub_crafts.get_formspec(player, rtype, category, subcategory)
         table.insert(out, table.concat({"item_image_button[", x_offset+x, ",", y_offset+height, ";1,1;", defs.output[1], ";", name, ";]"}))
         if doable then table.insert(doable_elems, name) end
         x = x+1+PADDING
-        if x > 4 then
+        if x > 7 then
             x = 2+2*PADDING
             height = height+1+PADDING
         end

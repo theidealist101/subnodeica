@@ -35,6 +35,7 @@ The following textures are altered or recolored from Minetest Game and are also 
 sub_core:
 - sub_core_blood_grass.png
 - sub_core_coral_tube.png
+- sub_core_lead.png
 - sub_core_limestone.png
 - sub_core_pink_blood_grass.png
 

@@ -63,6 +63,32 @@ sub_crafts.register_craft({
     recipe = {"sub_core:item_acidshroom 2", "sub_core:copper"}
 })
 
+--Computer chip, used for many tools and upgrades
+minetest.register_craftitem("sub_crafts:computer_chip", {
+    description = "Computer Chip",
+    inventory_image = "sub_crafts_computer_chip.png"
+})
+
+sub_crafts.register_craft({
+    category = "resources",
+    subcategory = "electronics",
+    output = {"sub_crafts:computer_chip"},
+    recipe = {"sub_core:table_coral_sample 2", "sub_core:gold", "sub_crafts:copper_wire"}
+})
+
+--Wiring kit, used for various tools and modules
+minetest.register_craftitem("sub_crafts:wiring_kit", {
+    description = "Wiring Kit",
+    inventory_image = "sub_crafts_wiring_kit.png"
+})
+
+sub_crafts.register_craft({
+    category = "resources",
+    subcategory = "electronics",
+    output = {"sub_crafts:wiring_kit"},
+    recipe = {"sub_core:silver 2"}
+})
+
 --Filtered water, early-game source of water
 minetest.register_craftitem("sub_crafts:filtered_water", {
     description = "Filtered Water",
@@ -80,6 +106,7 @@ sub_crafts.register_craft({
 minetest.register_craftitem("sub_crafts:knife", {
     description = "Survival Knife",
     inventory_image = "sub_crafts_knife.png",
+    stack_max = 1,
     tool_capabilities = {
         full_punch_interval = 0.5,
         damage_groups = {normal=4} --note that hp in this game is 1/5 of that in Subnautica, as the player has 20 hp

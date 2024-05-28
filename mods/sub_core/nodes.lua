@@ -292,6 +292,45 @@ sub_core.limestone_defs = {
     end
 }
 
+minetest.register_craftitem("sub_core:lead", {
+    description = "Lead",
+    inventory_image = "sub_core_lead.png"
+})
+
+minetest.register_craftitem("sub_core:silver", {
+    description = "Silver",
+    inventory_image = "default_clay_lump.png"
+})
+
+minetest.register_craftitem("sub_core:gold", {
+    description = "Gold",
+    inventory_image = "default_gold_lump.png"
+})
+
+sub_core.sandstone_defs = {
+    description = "Sandstone Outcrop",
+    drawtype = "nodebox",
+    node_box = {
+        type = "fixed",
+        fixed = {-0.25, -0.5, -0.1875, 0.25, -0.125, 0.1875}
+    },
+    tiles = {"default_desert_stone.png"},
+    paramtype = "light",
+    paramtype2 = "wallmounted",
+    sunlight_propagates = true,
+    walkable = false,
+    on_punch = function (pos, node)
+        minetest.set_node(pos, {name=minetest.registered_nodes[node.name]._water_equivalent})
+        if math.random() < 0.25 then
+            minetest.add_item(pos, "sub_core:gold")
+        elseif math.random() < 0.5 then
+            minetest.add_item(pos, "sub_core:lead")
+        else
+            minetest.add_item(pos, "sub_core:silver")
+        end
+    end
+}
+
 --A couple basic structural nodes (will be moved to sub_wrecks or sub_bases later, dunno which)
 minetest.register_node("sub_core:titanium_block", {
     description = "Titanium Block",
