@@ -109,6 +109,11 @@ minetest.register_node(
     sub_core.add_water_physics(sub_core.table_coral_defs, "sub_core:shallows_water")
 )
 
+minetest.register_node(
+    "sub_core:shallows_limestone",
+    sub_core.add_water_physics(sub_core.limestone_defs, "sub_core:shallows_water")
+)
+
 sub_core.register_decor({
     biome = "sub_core:shallows",
     fill_ratio = 0.05,

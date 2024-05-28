@@ -88,7 +88,7 @@ sub_core.blue_palm_defs = {
 
 --Acid mushrooms, important for batteries
 local function acidshroom_on_rightclick(pos, node, user, itemstack)
-    minetest.set_node(pos, minetest.get_node(pos+vector.new(0, 1, 0)))
+    minetest.set_node(pos, {name=minetest.registered_nodes[node.name]._water_equivalent})
     return sub_core.give_item("sub_core:item_acidshroom")(pos, node, user, itemstack)
 end
 
@@ -253,8 +253,8 @@ sub_core.limestone_defs = {
     paramtype2 = "wallmounted",
     sunlight_propagates = true,
     walkable = false,
-    on_punch = function (pos)
-        minetest.remove_node(pos)
+    on_punch = function (pos, node)
+        minetest.set_node(pos, {name=minetest.registered_nodes[node.name]._water_equivalent})
         if math.random() < 0.5 then
             minetest.add_item(pos, "sub_core:titanium")
         else

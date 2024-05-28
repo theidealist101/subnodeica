@@ -13,6 +13,7 @@ function sub_core.add_water_physics(t, water)
     out.groups = out.groups or {}
     out.groups.pathfind_water = out.groups.pathfind_water or 1
     out._fog = water_def._fog
+    out._water_equivalent = water
     return out
 end
 
