@@ -38,6 +38,7 @@ function sub_mobs.actfunc(self, staticdata, dtime)
     mobkit.actfunc(self, staticdata, dtime)
     self.armor_groups.immortal = 0
 	self.object:set_armor_groups(self.armor_groups)
+    self.object:set_hp(self.hp)
 end
 
 --Another utility function, turns up to a certain angle

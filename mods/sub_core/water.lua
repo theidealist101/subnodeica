@@ -60,7 +60,8 @@ function sub_core.register_water(name, defs)
         color = color,
         post_effect_color = tint,
         groups = groups,
-        _fog = fog
+        _fog = fog,
+        _water_equivalent = name
     })
 
     --register underwater node
@@ -80,7 +81,8 @@ function sub_core.register_water(name, defs)
         color = color,
         post_effect_color = tint,
         groups = groups,
-        _fog = fog
+        _fog = fog,
+        _water_equivalent = name
     })
 end
 

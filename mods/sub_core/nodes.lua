@@ -12,6 +12,23 @@ function sub_core.give_item(name)
     end
 end
 
+--Drop item if hit by a knife
+function sub_core.drop_if_slash(item, no_break)
+    return function (pos, node, user, pointed)
+        if user:is_player() then
+            local itemstack = user:get_wielded_item()
+            if not itemstack:is_empty() and itemstack:get_tool_capabilities().damage_groups.normal then
+                if no_break then
+                    minetest.add_item(pointed.above, item)
+                else
+                    minetest.set_node(pos, {name=minetest.registered_nodes[node.name]._water_equivalent})
+                    minetest.add_item(pos, item)
+                end
+            end
+        end
+    end
+end
+
 --General nodes which appear in many biomes
 --For more specific nodes see the file for their biome
 minetest.register_node("sub_core:stone", {
@@ -178,8 +195,14 @@ sub_core.table_coral_defs = {
     paramtype = "light",
     paramtype2 = "wallmounted",
     sunlight_propagates = true,
-    walkable = false
+    walkable = false,
+    on_punch = sub_core.drop_if_slash("sub_core:table_coral_sample")
 }
+
+minetest.register_craftitem("sub_core:table_coral_sample", {
+    description = "Table Coral Sample",
+    inventory_image = "sub_core_table_coral_sample.png"
+})
 
 minetest.register_node("sub_core:table_coral_spawner", {
     description = "Table Coral Spawner",
@@ -227,7 +250,13 @@ minetest.register_abm({
 --Coral tubes and plates, important for bleach
 minetest.register_node("sub_core:coral_tube", {
     description = "Coral Tube Block",
-    tiles = {"sub_core_coral_tube.png"}
+    tiles = {"sub_core_coral_tube.png"},
+    on_punch = sub_core.drop_if_slash("sub_core:coral_tube_sample", true)
+})
+
+minetest.register_craftitem("sub_core:coral_tube_sample", {
+    description = "Coral Tube Sample",
+    inventory_image = "sub_core_coral_tube_sample.png"
 })
 
 --Harvesting nodes and minerals which come from them

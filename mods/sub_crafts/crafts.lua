@@ -75,3 +75,20 @@ sub_crafts.register_craft({
     output = {"sub_crafts:filtered_water"},
     recipe = {"sub_mobs:item_bladderfish"}
 })
+
+--Survival knife, essential for gathering many crafting materials
+minetest.register_craftitem("sub_crafts:knife", {
+    description = "Survival Knife",
+    inventory_image = "sub_crafts_knife.png",
+    tool_capabilities = {
+        full_punch_interval = 0.5,
+        damage_groups = {normal=4} --note that hp in this game is 1/5 of that in Subnautica, as the player has 20 hp
+    }
+})
+
+sub_crafts.register_craft({
+    category = "personal",
+    subcategory = "tools",
+    output = {"sub_crafts:knife"},
+    recipe = {"sub_core:titanium", "sub_crafts:rubber"}
+})
