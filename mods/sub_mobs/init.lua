@@ -42,7 +42,7 @@ minetest.register_globalstep(function (dtime)
                     --attempt to spawn the mob or mobs
                     for _ = 1, math.random(defs.count, defs.count_max) do
                         minetest.add_entity(spawnpos, defs.name)
-                        minetest.log("Spawned "..defs.name)
+                        --minetest.log("Spawned "..defs.name)
                     end
                     return
                 end

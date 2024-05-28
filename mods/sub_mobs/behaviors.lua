@@ -154,10 +154,10 @@ function sub_mobs.hq_water_chase(self, priority, speed, turn_rate, obj)
 
         --try to attack entity
         if self.attack and mobkit.isnear3d(pos, dest, self.attack.range) then
-            local name = (obj:is_player() and "player") or obj:get_luaentity().name --before punch in case the entity dies
+            --local name = (obj:is_player() and "player") or obj:get_luaentity().name --before punch in case the entity dies
             obj:punch(self.object, 1, self.attack)
-            local dead = (mobkit.is_alive(obj) and " punched ") or " killed "
-            minetest.log(self.name..dead..name)
+            --local dead = (mobkit.is_alive(obj) and " punched ") or " killed "
+            --minetest.log(self.name..dead..name)
             return true
         end
 
