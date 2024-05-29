@@ -5,6 +5,7 @@ sub_core.max_breath = 45
 
 --HUDs for each player
 local hunger_huds = {}
+local hunger_huds2 = {}
 local thirst_huds = {}
 local drown_huds = {}
 
@@ -16,6 +17,16 @@ local hunger_hud_defs = {
     offset = {x=-265, y=-115},
     text = "stamina_hud_fg.png",
     number = 20
+}
+
+local hunger_hud_defs2 = {
+    hud_elem_type = "statbar",
+    position = {x=0.5, y=1},
+    size = {x=24, y=24},
+    alignment = {x=-1, y=-1},
+    offset = {x=-265, y=-135},
+    text = "stamina_hud_fg.png",
+    number = 0
 }
 
 local thirst_hud_defs = {
@@ -42,16 +53,15 @@ function sub_core.do_item_eat(food, water, itemstack, user)
     local hunger = meta:get_int("hunger")
     local thirst = meta:get_int("thirst")
     local used = false
-    if hunger < sub_core.max_hunger then
+    if food ~= 0 and hunger < sub_core.max_hunger*0.95 then
         meta:set_int("hunger", hunger+food*sub_core.max_hunger*0.01)
         used = true
     end
-    if thirst < sub_core.max_thirst then
+    if water ~= 0 and thirst < sub_core.max_thirst*0.95 then
         meta:set_int("thirst", math.min(thirst+water*sub_core.max_thirst*0.01, sub_core.max_thirst))
         used = true
     end
-    if not used then return end
-    itemstack:take_item()
+    if used then itemstack:take_item() end
     return itemstack
 end
 
@@ -73,6 +83,7 @@ minetest.register_on_joinplayer(function(player)
     if not meta:contains("thirst") then meta:set_float("thirst", sub_core.max_thirst) end
     local name = player:get_player_name()
     hunger_huds[name] = player:hud_add(hunger_hud_defs)
+    hunger_huds2[name] = player:hud_add(hunger_hud_defs2)
     thirst_huds[name] = player:hud_add(thirst_hud_defs)
     if drown_huds[name] then --in case the player died of drowning
         player:hud_remove(drown_huds[name])
@@ -96,6 +107,7 @@ minetest.register_globalstep(function(dtime)
         if hunger <= 0 then
         else
             obj:hud_change(hunger_huds[name], "number", math.min(math.ceil(hunger*20/sub_core.max_hunger), 20))
+            obj:hud_change(hunger_huds2[name], "number", math.max(math.ceil(hunger*20/sub_core.max_hunger)-20, 0))
             meta:set_float("hunger", hunger-dtime)
         end
 
