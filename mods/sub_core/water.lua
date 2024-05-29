@@ -14,6 +14,7 @@ function sub_core.add_water_physics(t, water)
     out.groups.pathfind_water = out.groups.pathfind_water or 1
     out._fog = water_def._fog
     out._water_equivalent = water
+    out.drowning = 1
     return out
 end
 
@@ -61,7 +62,8 @@ function sub_core.register_water(name, defs)
         post_effect_color = tint,
         groups = groups,
         _fog = fog,
-        _water_equivalent = name
+        _water_equivalent = name,
+        drowning = 1
     })
 
     --register underwater node
@@ -82,7 +84,8 @@ function sub_core.register_water(name, defs)
         post_effect_color = tint,
         groups = groups,
         _fog = fog,
-        _water_equivalent = name
+        _water_equivalent = name,
+        drowning = 1
     })
 end
 

@@ -105,7 +105,9 @@ sub_crafts.register_craft({
 --Filtered water, early-game source of water
 minetest.register_craftitem("sub_crafts:filtered_water", {
     description = "Filtered Water",
-    inventory_image = "sub_crafts_filtered_water.png"
+    inventory_image = "sub_crafts_filtered_water.png",
+    on_place = sub_core.item_eat(0, 20),
+    on_secondary_use = sub_core.item_eat(0, 20)
 })
 
 sub_crafts.register_craft({
@@ -115,10 +117,32 @@ sub_crafts.register_craft({
     recipe = {"sub_mobs:item_bladderfish"}
 })
 
+--Cooked fish of various sorts
+local function cooked_fish(input, output, desc, image, food, water)
+    minetest.register_craftitem(output, {
+        description = desc,
+        inventory_image = image,
+        on_place = sub_core.item_eat(food, water),
+        on_secondary_use = sub_core.item_eat(food, water)
+    })
+    
+    sub_crafts.register_craft({
+        category = "sustenance",
+        subcategory = "cooked",
+        output = {output},
+        recipe = {input}
+    })
+end
+
+cooked_fish("sub_mobs:item_peeper", "sub_crafts:cooked_peeper", "Cooked Peeper", "sub_crafts_cooked_peeper.png", 32, 5)
+cooked_fish("sub_mobs:item_bladderfish", "sub_crafts:cooked_bladderfish", "Cooked Bladderfish", "sub_crafts_cooked_bladderfish.png", 16, 4)
+
 --First aid kit, pretty much the only method of restoring player's hp
 minetest.register_craftitem("sub_crafts:medkit", {
     description = "First Aid Kit",
-    inventory_image = "sub_crafts_medkit.png"
+    inventory_image = "sub_crafts_medkit.png",
+    on_place = minetest.item_eat(10),
+    on_secondary_use = minetest.item_eat(10)
 })
 
 sub_crafts.register_craft({

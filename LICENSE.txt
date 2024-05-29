@@ -42,6 +42,9 @@ sub_core:
 sub_crafts:
 - sub_crafts_copper_wire.png
 
+The image "sub_core/stamina_hud_fg" is borrowed from the Stamina mod by BlockMen,
+the image itself is by PilzAdam and BlockMen and is under WTFPL
+
 The image "menu/overlay.png" is edited from a screenshot taken in Minetest Game and is under CC BY-SA 4.0
 
 The image "mobkit/screenshot.png" is part of Mobkit, see its own license file
