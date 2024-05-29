@@ -4,9 +4,9 @@ sub_core.register_biome("sub_core:forest", {
     node_top = "sub_core:sand",
     node_stone = "sub_core:sandstone",
     node_water = "sub_core:forest_water",
-    heat_point = 30,
+    heat_point = 40,
     humidity_point = 70,
-    dist_point = 200,
+    dist_point = 100,
     noise = {
         offset = -30,
         scale = 10,

@@ -4,7 +4,7 @@
 local heat_table = {
     offset = 50,
     scale = 40,
-    spread = {x=500, y=500, z=500},
+    spread = {x=300, y=300, z=300},
     seed = 101,
     octaves = 5,
     persistence = 0.5,
@@ -14,7 +14,7 @@ local heat_table = {
 local humid_table = {
     offset = 50,
     scale = 40,
-    spread = {x=500, y=500, z=500},
+    spread = {x=300, y=300, z=300},
     seed = 102,
     octaves = 5,
     persistence = 0.5,
@@ -76,6 +76,13 @@ function sub_core.register_schem(defs)
     defs.schem = defs.schem
     table.insert(sub_core.registered_schems, defs)
     return #sub_core.registered_schems
+end
+
+--Register on_generated function to call after generating terrain
+sub_core.registered_on_generate = {}
+
+function sub_core.register_on_generate(func)
+    table.insert(sub_core.registered_on_generate, func)
 end
 
 --SETUP FOR MAPGEN
@@ -152,7 +159,7 @@ local function get_biome_data(ni, pos)
     local biome
     for i, defs in pairs(sub_core.registered_biomes) do
         if not defs.not_generated and defs.y_min <= pos.y and pos.y <= defs.y_max then
-            local biome_dist_sq = (heat-defs.heat_point)^2+(humid-defs.humid_point)^2+0.1*math.abs(math.sqrt(dist_sq)-math.sqrt(defs.dist_point_sq))
+            local biome_dist_sq = (heat-defs.heat_point)^2+(humid-defs.humid_point)^2+0.5*math.abs(math.sqrt(dist_sq)-math.sqrt(defs.dist_point_sq))
             local biome_dist_tuple = {i, defs, biome_dist_sq}
             if not biome or biome_dist_sq < biome[3] then
                 biome = biome_dist_tuple
@@ -278,10 +285,15 @@ minetest.register_on_generated(function (minp, maxp, seed)
         end
         ni3d = ni3d+size*2
     end
-    
+
     vm:set_data(vm_data)
     vm:set_param2_data(param2_data)
     place_schems(vm, minp, maxp, schem_places)
+
+    for i, func in ipairs(sub_core.registered_on_generate) do
+        func(minp, maxp, seed, vm)
+    end
+
     vm:calc_lighting()
     vm:write_to_map()
     vm:update_liquids()
