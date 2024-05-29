@@ -30,6 +30,6 @@ minetest.register_node("sub_initial_stuff:light", {
 })
 
 minetest.register_on_newplayer(function(player)
-    player:set_pos(vector.new(0, 2, -1))
-    minetest.place_schematic(vector.new(0, 1, 0), minetest.get_modpath("sub_initial_stuff").."/schems/lifepod5.mts", nil, nil, true, "place_center_x, place_center_z")
+    player:set_pos(vector.new(0, 1, -1))
+    minetest.place_schematic(vector.zero(), minetest.get_modpath("sub_initial_stuff").."/schems/lifepod5.mts", nil, nil, true, "place_center_x, place_center_z")
 end)

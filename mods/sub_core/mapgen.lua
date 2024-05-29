@@ -155,68 +155,71 @@ minetest.register_on_generated(function (minp, maxp, seed)
             local vi = area:index(minp.x, y, z)
             local ni = size*(z-minp.z)+1
             for x = minp.x, maxp.x do
-                --find the biome of this node
-                local heat = heat_data[ni]
-                local humid = humid_data[ni]
-                local dist_sq = x^2+z^2
-                local biome--, biome2
-                for i, defs in pairs(sub_core.registered_biomes) do
-                    if not defs.not_generated and defs.y_min <= y and y <= defs.y_max
-                    and defs.dist_min_sq <= dist_sq and dist_sq <= defs.dist_max_sq then
-                        local biome_dist_sq = (heat-defs.heat_point)^2+(humid-defs.humid_point)^2
-                        local biome_dist_tuple = {i, defs, biome_dist_sq}
-                        if not biome or biome_dist_sq < biome[3] then
-                            --biome2 = biome
-                            biome = biome_dist_tuple
-                        --[[elseif biome_dist_sq < biome[3]+40 then
-                            if not biome2 or biome_dist_sq < biome2[3] then
-                                biome2 = biome_dist_tuple
-                            end]]
+                --make sure it's not already generated from a neighbouring chunk
+                if vm_data[vi] == minetest.CONTENT_AIR then
+                    --find the biome of this node
+                    local heat = heat_data[ni]
+                    local humid = humid_data[ni]
+                    local dist_sq = x^2+z^2
+                    local biome--, biome2
+                    for i, defs in pairs(sub_core.registered_biomes) do
+                        if not defs.not_generated and defs.y_min <= y and y <= defs.y_max
+                        and defs.dist_min_sq <= dist_sq and dist_sq <= defs.dist_max_sq then
+                            local biome_dist_sq = (heat-defs.heat_point)^2+(humid-defs.humid_point)^2
+                            local biome_dist_tuple = {i, defs, biome_dist_sq}
+                            if not biome or biome_dist_sq < biome[3] then
+                                --biome2 = biome
+                                biome = biome_dist_tuple
+                            --[[elseif biome_dist_sq < biome[3]+40 then
+                                if not biome2 or biome_dist_sq < biome2[3] then
+                                    biome2 = biome_dist_tuple
+                                end]]
+                            end
                         end
                     end
-                end
-                if not biome then biome = {sub_core.biome_default, sub_core.registered_biomes[sub_core.biome_default], 0} end
-                --if not biome2 then biome2 = biome end
+                    if not biome then biome = {sub_core.biome_default, sub_core.registered_biomes[sub_core.biome_default], 0} end
+                    --if not biome2 then biome2 = biome end
 
-                --use biome noise map plus a bit of other nearby ones to generate terrain
-                local density_below = y+terrain_data3d[biome[1]][ni3d]-terrain_data[biome[1]][ni]-1
-                local density = y+terrain_data3d[biome[1]][ni3d+size]-terrain_data[biome[1]][ni]
-                local density_above = y+terrain_data3d[biome[1]][ni3d+size*2]-terrain_data[biome[1]][ni]+1
-                --local terrain_height2 = y+terrain_data3d[biome2[1]][ni3d]-terrain_data[biome2[1]][ni]
-                --local terrain_avg = (terrain_height/biome[3]+terrain_height2/biome2[3])/(1/biome[3]+1/biome2[3])
-                --minetest.log(terrain_avg)
-                if density <= 0 then
-                    if density_above <= 0 then
-                        vm_data[vi] = biome[2].node_stone_id
-                    else
-                        vm_data[vi] = biome[2].node_top_id
+                    --use biome noise map plus a bit of other nearby ones to generate terrain
+                    local density_below = y+terrain_data3d[biome[1]][ni3d]-terrain_data[biome[1]][ni]-1
+                    local density = y+terrain_data3d[biome[1]][ni3d+size]-terrain_data[biome[1]][ni]
+                    local density_above = y+terrain_data3d[biome[1]][ni3d+size*2]-terrain_data[biome[1]][ni]+1
+                    --local terrain_height2 = y+terrain_data3d[biome2[1]][ni3d]-terrain_data[biome2[1]][ni]
+                    --local terrain_avg = (terrain_height/biome[3]+terrain_height2/biome2[3])/(1/biome[3]+1/biome2[3])
+                    --minetest.log(terrain_avg)
+                    if density <= 0 then
+                        if density_above <= 0 then
+                            vm_data[vi] = biome[2].node_stone_id
+                        else
+                            vm_data[vi] = biome[2].node_top_id
+                        end
+                    elseif y == 0 then
+                        vm_data[vi] = biome[2].node_water_surface_id
+                    elseif y < 0 then
+                        vm_data[vi] = biome[2].node_water_id
                     end
-                elseif y == 0 then
-                    vm_data[vi] = biome[2].node_water_surface_id
-                elseif y < 0 then
-                    vm_data[vi] = biome[2].node_water_id
-                end
 
-                --try to place decors
-                for i, defs in ipairs(sub_core.registered_decors) do
-                    if rand_data[i]:next(0, 99999) < defs.fill_ratio*100000 and defs.biome == biome[1]
-                    and (not defs.noise or decor_data[i][ni3d] > 0) then
-                        if (defs.type == "underground" and density <= 0 and density_above <= 0 and density_below <= 0)
+                    --try to place decors
+                    for i, defs in ipairs(sub_core.registered_decors) do
+                        if rand_data[i]:next(0, 99999) < defs.fill_ratio*100000 and defs.biome == biome[1]
+                        and (not defs.noise or decor_data[i][ni3d] > 0) then
+                            if (defs.type == "underground" and density <= 0 and density_above <= 0 and density_below <= 0)
+                            or (defs.type == "surface" and density <= 0 and density_above > 0)
+                            or (defs.type == "top" and density_below <= 0 and density > 0) then
+                                vm_data[vi] = defs.decor_id
+                                if defs.max_param2 then param2_data[vi] = param2_rand:next(1, defs.max_param2) end
+                            end
+                        end
+                    end
+
+                    --try to place small schematics
+                    for i, defs in ipairs(sub_core.registered_schems) do
+                        if schem_rand:next(0, 99999) < defs.fill_ratio*100000 and defs.biome == biome[1]
+                        and ((defs.type == "underground" and density <= 0 and density_above <= 0 and density_below <= 0)
                         or (defs.type == "surface" and density <= 0 and density_above > 0)
-                        or (defs.type == "top" and density_below <= 0 and density > 0) then
-                            vm_data[vi] = defs.decor_id
-                            if defs.max_param2 then param2_data[vi] = param2_rand:next(1, defs.max_param2) end
+                        or (defs.type == "top" and density_below <= 0 and density > 0)) then
+                            table.insert(schem_places, {defs, vector.new(x, y, z)})
                         end
-                    end
-                end
-
-                --try to place small schematics
-                for i, defs in ipairs(sub_core.registered_schems) do
-                    if schem_rand:next(0, 99999) < defs.fill_ratio*100000 and defs.biome == biome[1]
-                    and ((defs.type == "underground" and density <= 0 and density_above <= 0 and density_below <= 0)
-                    or (defs.type == "surface" and density <= 0 and density_above > 0)
-                    or (defs.type == "top" and density_below <= 0 and density > 0)) then
-                        table.insert(schem_places, {defs, vector.new(x, y, z)})
                     end
                 end
 
