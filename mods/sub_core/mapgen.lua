@@ -37,10 +37,8 @@ function sub_core.register_biome(name, defs)
     defs.y_max = defs.y_max or 31000
     defs.y_min = defs.y_min or -31000
     --how far out it generates
-    defs.dist_max = defs.dist_max or 2000 --the start of the void
-    defs.dist_min = defs.dist_min or 0
-    defs.dist_max_sq = defs.dist_max^2
-    defs.dist_min_sq = defs.dist_min^2
+    defs.dist_point = defs.dist_point or 0
+    defs.dist_point_sq = defs.dist_point^2
     defs.heat_point = defs.heat_point or 50
     defs.humid_point = defs.humid_point or 50 --more about nutrients than humidity though
     --tables for perlin noise functions (each biome gets a different seed)
@@ -153,9 +151,8 @@ local function get_biome_data(ni, pos)
     local dist_sq = pos.x^2+pos.z^2
     local biome
     for i, defs in pairs(sub_core.registered_biomes) do
-        if not defs.not_generated and defs.y_min <= pos.y and pos.y <= defs.y_max
-        and defs.dist_min_sq <= dist_sq and dist_sq <= defs.dist_max_sq then
-            local biome_dist_sq = (heat-defs.heat_point)^2+(humid-defs.humid_point)^2
+        if not defs.not_generated and defs.y_min <= pos.y and pos.y <= defs.y_max then
+            local biome_dist_sq = (heat-defs.heat_point)^2+(humid-defs.humid_point)^2+0.1*math.abs(math.sqrt(dist_sq)-math.sqrt(defs.dist_point_sq))
             local biome_dist_tuple = {i, defs, biome_dist_sq}
             if not biome or biome_dist_sq < biome[3] then
                 biome = biome_dist_tuple
@@ -238,6 +235,9 @@ minetest.register_on_generated(function (minp, maxp, seed)
         init(size)
         initialized = true
     end
+
+    --make sure it's not too high
+    if minp.y > 0 then return end
 
     --set up data for chunk
     local vm, area = get_vm()

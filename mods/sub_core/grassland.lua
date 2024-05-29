@@ -6,7 +6,7 @@ sub_core.register_biome("sub_core:grassland", {
     node_water = "sub_core:grassland_water",
     heat_point = 40,
     humidity_point = 40,
-    dist_min = 100,
+    dist_point = 400,
     noise = {
         offset = -80,
         scale = 20,

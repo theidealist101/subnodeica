@@ -6,7 +6,7 @@ sub_core.register_biome("sub_core:shallows", {
     node_water = "sub_core:shallows_water",
     heat_point = 60,
     humidity_point = 70,
-    dist_max = 600,
+    dist_point = 0,
     noise = {
         offset = -20,
         scale = 5,

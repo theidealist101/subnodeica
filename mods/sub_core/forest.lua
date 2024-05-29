@@ -6,7 +6,7 @@ sub_core.register_biome("sub_core:forest", {
     node_water = "sub_core:forest_water",
     heat_point = 30,
     humidity_point = 70,
-    dist_min = 100,
+    dist_point = 200,
     noise = {
         offset = -30,
         scale = 10,
@@ -160,11 +160,11 @@ minetest.register_node("sub_core:creepvine_spawner", {
     on_construct = place_creepvine
 })
 
-minetest.register_lbm({
-    name = "sub_core:grow_creepvines",
+minetest.register_abm({
     nodenames = {"sub_core:creepvine_spawner"},
+    interval = 1,
+    chance = 1,
     action = place_creepvine,
-    run_at_every_load = true
 })
 
 sub_core.register_decor({
