@@ -114,11 +114,6 @@ minetest.register_node(
     sub_core.add_water_physics(sub_core.limestone_defs, "sub_core:shallows_water")
 )
 
-minetest.register_node(
-    "sub_core:shallows_sandstone",
-    sub_core.add_water_physics(sub_core.sandstone_defs, "sub_core:shallows_water")
-)
-
 sub_core.register_decor({
     biome = "sub_core:shallows",
     fill_ratio = 0.05,
@@ -158,11 +153,16 @@ for i = 1, 4 do
     })
 end
 
+sub_core.register_spawner("sub_core:shallows_table_coral", "sub_core:sandstone_with_lichen", "sub_core:sandstone", {
+    description = "Shallows Table Coral Spawner",
+    tiles = {"default_sandstone.png^sub_core_lichen.png"}
+})
+
 sub_core.register_decor({
     type = "underground",
     biome = "sub_core:shallows",
     fill_ratio = 0.8,
-    decor = "sub_core:table_coral_spawner",
+    decor = "sub_core:shallows_table_coral_spawner",
     noise = {
         offset = -0.5,
         scale = 1,
@@ -171,6 +171,18 @@ sub_core.register_decor({
         persistence = 0.5,
         lacunarity = 2.0
     }
+})
+
+sub_core.register_spawner("sub_core:shallows_limestone", "sub_core:sandstone", "sub_core:sandstone", {
+    description = "Shallows Limestone Spawner",
+    tiles = {"default_sandstone.png"}
+})
+
+sub_core.register_decor({
+    type = "underground",
+    biome = "sub_core:shallows",
+    fill_ratio = 0.001,
+    decor = "sub_core:shallows_limestone_spawner"
 })
 
 sub_core.register_schem({

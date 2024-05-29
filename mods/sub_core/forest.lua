@@ -172,3 +172,14 @@ sub_core.register_decor({
     fill_ratio = 0.04,
     decor = "sub_core:creepvine_spawner"
 })
+
+--Various other decorations
+minetest.register_node(
+    "sub_core:forest_limestone",
+    sub_core.add_water_physics(sub_core.limestone_defs, "sub_core:forest_water")
+)
+
+minetest.register_node(
+    "sub_core:forest_sandstone",
+    sub_core.add_water_physics(sub_core.sandstone_defs, "sub_core:forest_water")
+)

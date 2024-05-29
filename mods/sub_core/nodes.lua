@@ -204,47 +204,9 @@ minetest.register_craftitem("sub_core:table_coral_sample", {
     inventory_image = "sub_core_table_coral_sample.png"
 })
 
-minetest.register_node("sub_core:table_coral_spawner", {
-    description = "Table Coral Spawner",
-    tiles = {"default_sandstone.png^sub_core_lichen.png"}
-})
-
 minetest.register_node("sub_core:sandstone_with_lichen", {
     description = "Sandstone with Lichen",
     tiles = {"default_sandstone.png^sub_core_lichen.png"}
-})
-
-local dirs = {
-    vector.new(0, -1, 0),
-    vector.new(0, 1, 0),
-    vector.new(-1, 0, 0),
-    vector.new(1, 0, 0),
-    vector.new(0, 0, -1),
-    vector.new(0, 0, 1),
-}
-
-local function place_table_coral(pos)
-    local swapped = false
-    local exposed = false
-    for i, d in ipairs(dirs) do
-        local neighbor = minetest.registered_nodes[minetest.get_node(pos+d).name]
-        if neighbor and neighbor.groups.water and neighbor.groups.water > 0 then
-            exposed = true
-            if math.random() < 0.5 then
-                minetest.swap_node(pos+d, {name="sub_core:shallows_table_coral", param2=i-1})
-                swapped = true --TODO: different biome variants for different water blocks
-            end
-        end
-    end
-    if exposed then minetest.swap_node(pos, {name="sub_core:sandstone_with_lichen"})
-    else minetest.swap_node(pos, {name="sub_core:sandstone"}) end
-end
-
-minetest.register_abm({
-    nodenames = {"sub_core:table_coral_spawner"},
-    interval = 1,
-    chance = 1,
-    action = place_table_coral
 })
 
 --Coral tubes and plates, important for bleach

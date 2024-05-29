@@ -66,6 +66,16 @@ function sub_core.register_decor(defs)
     return #sub_core.registered_decors
 end
 
+sub_core.registered_spawners = {}
+
+function sub_core.register_spawner(name, exposed, hidden, defs)
+    defs = table.copy(defs)
+    defs.groups = defs.groups or {}
+    defs.groups.spawner = 1
+    minetest.register_node(name.."_spawner", defs)
+    sub_core.registered_spawners[name.."_spawner"] = {exposed, hidden, name}
+end
+
 sub_core.registered_schems = {}
 
 function sub_core.register_schem(defs)
@@ -298,3 +308,37 @@ minetest.register_on_generated(function (minp, maxp, seed)
     vm:write_to_map()
     vm:update_liquids()
 end)
+
+--ABM updating all spawners
+local dirs = {
+    vector.new(0, -1, 0),
+    vector.new(0, 1, 0),
+    vector.new(-1, 0, 0),
+    vector.new(1, 0, 0),
+    vector.new(0, 0, -1),
+    vector.new(0, 0, 1),
+}
+
+local function place_spawner(pos, node)
+    local defs = sub_core.registered_spawners[node.name]
+    local exposed = false
+    for i, d in ipairs(dirs) do
+        local neighbor = minetest.registered_nodes[minetest.get_node(pos+d).name]
+        if neighbor and neighbor.groups.water and neighbor.groups.water > 0 then
+            exposed = true
+            if math.random() < 0.5 then
+                minetest.swap_node(pos+d, {name=defs[3], param2=i-1})
+                minetest.swap_node(pos, {name=defs[1]})
+                return
+            end
+        end
+    end
+    if exposed then minetest.swap_node(pos, {name=defs[1]}) else minetest.swap_node(pos, {name=defs[2]}) end
+end
+
+minetest.register_abm({
+    nodenames = {"group:spawner"},
+    interval = 1,
+    chance = 1,
+    action = place_spawner
+})

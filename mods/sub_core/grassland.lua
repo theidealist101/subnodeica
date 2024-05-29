@@ -94,3 +94,14 @@ sub_core.register_decor({
         lacunarity = 2.0
     }
 })
+
+--Various other decorations
+minetest.register_node(
+    "sub_core:grassland_limestone",
+    sub_core.add_water_physics(sub_core.limestone_defs, "sub_core:grassland_water")
+)
+
+minetest.register_node(
+    "sub_core:grassland_sandstone",
+    sub_core.add_water_physics(sub_core.sandstone_defs, "sub_core:grassland_water")
+)
