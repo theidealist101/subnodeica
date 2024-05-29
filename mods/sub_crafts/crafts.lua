@@ -136,6 +136,13 @@ end
 
 cooked_fish("sub_mobs:item_peeper", "sub_crafts:cooked_peeper", "Cooked Peeper", "sub_crafts_cooked_peeper.png", 32, 5)
 cooked_fish("sub_mobs:item_bladderfish", "sub_crafts:cooked_bladderfish", "Cooked Bladderfish", "sub_crafts_cooked_bladderfish.png", 16, 4)
+cooked_fish("sub_mobs:item_boomerang", "sub_crafts:cooked_boomerang", "Cooked Boomerang", "sub_crafts_cooked_boomerang.png", 21, 3)
+cooked_fish("sub_mobs:item_garryfish", "sub_crafts:cooked_garryfish", "Cooked Garryfish", "sub_crafts_cooked_garryfish.png", 18, 5)
+cooked_fish("sub_mobs:item_spadefish", "sub_crafts:cooked_spadefish", "Cooked Spadefish", "sub_crafts_cooked_spadefish.png", 23, 3)
+cooked_fish("sub_mobs:item_hoopfish", "sub_crafts:cooked_hoopfish", "Cooked Hoopfish", "sub_crafts_cooked_hoopfish.png", 23, 3)
+cooked_fish("sub_mobs:item_hoverfish", "sub_crafts:cooked_hoverfish", "Cooked Hoverfish", "sub_crafts_cooked_hoverfish.png", 23, 3)
+cooked_fish("sub_mobs:item_eyeye", "sub_crafts:cooked_eyeye", "Cooked Eyeye", "sub_crafts_cooked_eyeye.png", 18, 10)
+cooked_fish("sub_mobs:item_reginald", "sub_crafts:cooked_reginald", "Cooked Reginald", "sub_crafts_cooked_reginald.png", 44, 4)
 
 --First aid kit, pretty much the only method of restoring player's hp
 minetest.register_craftitem("sub_crafts:medkit", {

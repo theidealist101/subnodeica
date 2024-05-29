@@ -291,7 +291,6 @@ minetest.register_entity("sub_mobs:hoopfish", {
         mesh = "hoopfish.obj",
         textures = {"hoopfish.png"},
         collisionbox = {-0.375, -0.375, -0.375, 0.375, 0.3125, 0.375},
-        selectionbox = {-0.375, -0.375, -0.375, 0.375, 0.3125, 0.375},
         physical = true,
         glow = 15
     },
@@ -331,7 +330,6 @@ sub_mobs.register_spawn({
 })
 
 --Hoverfish, pretty much only in forest, quite large and very slow
---Hoopfish, found in many biomes, slow and stupid
 minetest.register_entity("sub_mobs:hoverfish", {
     initial_properties = {
         visual = "mesh",
@@ -375,4 +373,96 @@ sub_mobs.register_spawn({
     biomes = {"sub_core:forest"},
     chance = 1,
     reduction = 0.04
+})
+
+--Eyeye, found in deeper lush biomes, occasionally stops to look around (not implemented yet)
+minetest.register_entity("sub_mobs:eyeye", {
+    initial_properties = {
+        visual = "mesh",
+        visual_size = {x=10, y=10},
+        mesh = "eyeye.obj",
+        textures = {"eyeye.png"},
+        collisionbox = {-0.375, -0.375, -0.375, 0.375, 0.3125, 0.375},
+        physical = true,
+        glow = 15
+    },
+    timeout = 300,
+    buoyancy = 1,
+    max_hp = 6,
+    max_speed = 5,
+    jump_height = 0.5,
+    view_range = 2,
+    size = 0.5,
+    on_step = mobkit.stepfunc,
+    on_activate = sub_mobs.actfunc,
+    get_staticdata = mobkit.statfunc,
+    logic = smallfish_brain,
+    on_rightclick = smallfish_pick("sub_mobs:item_eyeye"),
+    flee_check = sub_mobs.is_larger,
+    armor_groups = {
+        normal = 100,
+        gas = 100,
+        fire = 100
+    }
+})
+
+minetest.register_craftitem("sub_mobs:item_eyeye", {
+    description = "Eyeye",
+    inventory_image = "sub_mobs_eyeye.png",
+    stack_max = 1,
+    on_place = smallfish_place("sub_mobs:eyeye"),
+    on_secondary_use = smallfish_place("sub_mobs:eyeye")
+})
+
+sub_mobs.register_spawn({
+    name = "sub_mobs:eyeye",
+    biomes = {"sub_core:forest"},
+    chance = 0.5,
+    reduction = 0.01
+})
+
+--Reginald, found mostly in deeper areas, fast but very filling
+minetest.register_entity("sub_mobs:reginald", {
+    initial_properties = {
+        visual = "mesh",
+        visual_size = {x=10, y=10},
+        mesh = "reginald.obj",
+        textures = {"reginald.png"},
+        collisionbox = {-0.375, -0.375, -0.375, 0.375, 0.3125, 0.375},
+        physical = true,
+        glow = 15
+    },
+    timeout = 300,
+    buoyancy = 1,
+    max_hp = 6,
+    max_speed = 8,
+    jump_height = 0.5,
+    view_range = 2,
+    size = 0.5,
+    on_step = mobkit.stepfunc,
+    on_activate = sub_mobs.actfunc,
+    get_staticdata = mobkit.statfunc,
+    logic = smallfish_brain,
+    on_rightclick = smallfish_pick("sub_mobs:item_reginald"),
+    flee_check = sub_mobs.is_larger,
+    armor_groups = {
+        normal = 100,
+        gas = 100,
+        fire = 100
+    }
+})
+
+minetest.register_craftitem("sub_mobs:item_reginald", {
+    description = "Reginald",
+    inventory_image = "sub_mobs_reginald.png",
+    stack_max = 1,
+    on_place = smallfish_place("sub_mobs:reginald"),
+    on_secondary_use = smallfish_place("sub_mobs:reginald")
+})
+
+sub_mobs.register_spawn({
+    name = "sub_mobs:reginald",
+    biomes = {"sub_core:grassland"},
+    chance = 0.5,
+    reduction = 0.01
 })
