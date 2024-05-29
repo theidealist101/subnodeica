@@ -95,7 +95,7 @@ minetest.register_globalstep(function(dtime)
         local hunger = meta:get_float("hunger")
         if hunger <= 0 then
         else
-            obj:hud_change(hunger_huds[name], "number", math.min(hunger*20/sub_core.max_hunger, 20))
+            obj:hud_change(hunger_huds[name], "number", math.min(math.ceil(hunger*20/sub_core.max_hunger), 20))
             meta:set_float("hunger", hunger-dtime)
         end
 
@@ -103,7 +103,7 @@ minetest.register_globalstep(function(dtime)
         local thirst = meta:get_float("thirst")
         if thirst <= 0 then
         else
-            obj:hud_change(thirst_huds[name], "number", thirst*20/sub_core.max_thirst)
+            obj:hud_change(thirst_huds[name], "number", math.ceil(thirst*20/sub_core.max_thirst))
             meta:set_float("thirst", thirst-dtime)
         end
 
