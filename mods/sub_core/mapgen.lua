@@ -1,3 +1,5 @@
+--DATA FUNCTIONS
+
 --Tables for perlin noise functions of heat and humidity
 local heat_table = {
     offset = 50,
@@ -78,6 +80,8 @@ function sub_core.register_schem(defs)
     return #sub_core.registered_schems
 end
 
+--SETUP FOR MAPGEN
+
 --Important tables localized outside and reused to avoid extra memory usage
 local vm_data = {}
 local param2_data = {}
@@ -90,6 +94,7 @@ local rand_data = {}
 
 --Initializing the perlin maps and positions of important stuff
 local heat_map, humid_map
+local initialized = false
 
 local function init(size)
     for name, defs in pairs(sub_core.registered_biomes) do
@@ -114,18 +119,10 @@ local function init(size)
     humid_map = minetest.get_perlin_map(humid_table, {x=size, y=size})
 end
 
---The actual generating function
-local initialized = false
+--FUNCTIONS FOR MAPGEN
 
-minetest.register_on_generated(function (minp, maxp, seed)
-    --initialize stuff
-    local size = maxp.x-minp.x+1
-    if not initialized then
-        init(size)
-        initialized = true
-    end
-
-    --set up data from perlin noise functions
+--Set up noise map for each chunk
+local function get_maps(minp, seed)
     local minp2d = {x=minp.x, y=minp.z}
     local minp3d = {x=minp.x, y=minp.y-1, z=minp.z}
     heat_map:get_2d_map_flat(minp2d, heat_data)
@@ -138,15 +135,116 @@ minetest.register_on_generated(function (minp, maxp, seed)
         if defs.noise then defs.noise_map:get_3d_map_flat(minp3d, decor_data[i]) end
         rand_data[i] = PcgRandom(seed+i+minp.x*PcgRandom(minp.y+minp.z^2):next(0, 99999))
     end
-    local param2_rand = PcgRandom(seed)
-    local schem_rand = PcgRandom(-seed)
-    local schem_places = {}
+end
 
-    --set up voxelmanip
+--Set up VM for each chunk
+local function get_vm()
     local vm, emin, emax = minetest.get_mapgen_object("voxelmanip")
     local area = VoxelArea:new({MinEdge=emin, MaxEdge=emax})
     vm:get_data(vm_data)
     vm:get_param2_data(param2_data)
+    return vm, area
+end
+
+--Get biome data from internal mapgen variables
+local function get_biome_data(ni, pos)
+    local heat = heat_data[ni]
+    local humid = humid_data[ni]
+    local dist_sq = pos.x^2+pos.z^2
+    local biome
+    for i, defs in pairs(sub_core.registered_biomes) do
+        if not defs.not_generated and defs.y_min <= pos.y and pos.y <= defs.y_max
+        and defs.dist_min_sq <= dist_sq and dist_sq <= defs.dist_max_sq then
+            local biome_dist_sq = (heat-defs.heat_point)^2+(humid-defs.humid_point)^2
+            local biome_dist_tuple = {i, defs, biome_dist_sq}
+            if not biome or biome_dist_sq < biome[3] then
+                biome = biome_dist_tuple
+            end
+        end
+    end
+    if not biome then biome = {sub_core.biome_default, sub_core.registered_biomes[sub_core.biome_default], 0} end
+    return biome[1], biome[2]
+end
+
+--Get density similarly
+local function get_density(ni, ni3d, y, size, biome)
+    local density_below = y+terrain_data3d[biome][ni3d]-terrain_data[biome][ni]-1
+    local density = y+terrain_data3d[biome][ni3d+size]-terrain_data[biome][ni]
+    local density_above = y+terrain_data3d[biome][ni3d+size*2]-terrain_data[biome][ni]+1
+    return density_below, density, density_above
+end
+
+--Choose basic biome node to place
+local function choose_base_node(y, bdefs, density, density_above)
+    if density <= 0 then
+        if density_above <= 0 then
+            return bdefs.node_stone_id
+        else
+            return bdefs.node_top_id
+        end
+    elseif y == 0 then
+        return bdefs.node_water_surface_id
+    elseif y < 0 then
+        return bdefs.node_water_id
+    end
+    return minetest.CONTENT_AIR
+end
+
+--Place decorations using internal stuff, designed to be deterministic per position
+local function place_decors(ni3d, biome, density_below, density, density_above, param2_rand)
+    for i, defs in ipairs(sub_core.registered_decors) do
+        if rand_data[i]:next(0, 99999) < defs.fill_ratio*100000 and defs.biome == biome
+        and (not defs.noise or decor_data[i][ni3d] > 0) then
+            if (defs.type == "underground" and density <= 0 and density_above <= 0 and density_below <= 0)
+            or (defs.type == "surface" and density <= 0 and density_above > 0)
+            or (defs.type == "top" and density_below <= 0 and density > 0) then
+                return defs.decor_id, (defs.max_param2 and param2_rand:next(1, defs.max_param2))
+            end
+        end
+    end
+end
+
+--Add schems to list of schems to be loaded here
+local function get_schems(pos, schem_places, biome, density_below, density, density_above, schem_rand)
+    for i, defs in ipairs(sub_core.registered_schems) do
+        if schem_rand:next(0, 99999) < defs.fill_ratio*100000 and defs.biome == biome
+        and ((defs.type == "underground" and density <= 0 and density_above <= 0 and density_below <= 0)
+        or (defs.type == "surface" and density <= 0 and density_above > 0)
+        or (defs.type == "top" and density_below <= 0 and density > 0)) then
+            table.insert(schem_places, {defs, pos})
+        end
+    end
+end
+
+--Place schems in list of schems
+local function place_schems(vm, minp, maxp, schem_places)
+    for i, place in ipairs(schem_places) do
+        local defs, pos = place[1], place[2]
+        if minp.x+defs.radius < pos.x and pos.x < maxp.x-defs.radius
+        and minp.y+defs.radius < pos.y and pos.y < maxp.y-defs.radius
+        and minp.z+defs.radius < pos.z and pos.z < maxp.z-defs.radius then
+            minetest.place_schematic_on_vmanip(vm, pos, defs.schem, "random", nil, true, "place_center_x, place_center_z")
+        end
+    end
+end
+
+--MAPGEN
+
+--The actual generating function
+minetest.register_on_generated(function (minp, maxp, seed)
+    --initialize stuff
+    local size = maxp.x-minp.x+1
+    if not initialized then
+        init(size)
+        initialized = true
+    end
+
+    --set up data for chunk
+    local vm, area = get_vm()
+    local param2_rand = PcgRandom(seed)
+    local schem_rand = PcgRandom(-seed)
+    local schem_places = {}
+    get_maps(minp, seed)
 
     --loop over each node
     local ni3d = 1
@@ -157,70 +255,19 @@ minetest.register_on_generated(function (minp, maxp, seed)
             for x = minp.x, maxp.x do
                 --make sure it's not already generated from a neighbouring chunk
                 if vm_data[vi] == minetest.CONTENT_AIR then
-                    --find the biome of this node
-                    local heat = heat_data[ni]
-                    local humid = humid_data[ni]
-                    local dist_sq = x^2+z^2
-                    local biome--, biome2
-                    for i, defs in pairs(sub_core.registered_biomes) do
-                        if not defs.not_generated and defs.y_min <= y and y <= defs.y_max
-                        and defs.dist_min_sq <= dist_sq and dist_sq <= defs.dist_max_sq then
-                            local biome_dist_sq = (heat-defs.heat_point)^2+(humid-defs.humid_point)^2
-                            local biome_dist_tuple = {i, defs, biome_dist_sq}
-                            if not biome or biome_dist_sq < biome[3] then
-                                --biome2 = biome
-                                biome = biome_dist_tuple
-                            --[[elseif biome_dist_sq < biome[3]+40 then
-                                if not biome2 or biome_dist_sq < biome2[3] then
-                                    biome2 = biome_dist_tuple
-                                end]]
-                            end
-                        end
-                    end
-                    if not biome then biome = {sub_core.biome_default, sub_core.registered_biomes[sub_core.biome_default], 0} end
-                    --if not biome2 then biome2 = biome end
-
-                    --use biome noise map plus a bit of other nearby ones to generate terrain
-                    local density_below = y+terrain_data3d[biome[1]][ni3d]-terrain_data[biome[1]][ni]-1
-                    local density = y+terrain_data3d[biome[1]][ni3d+size]-terrain_data[biome[1]][ni]
-                    local density_above = y+terrain_data3d[biome[1]][ni3d+size*2]-terrain_data[biome[1]][ni]+1
-                    --local terrain_height2 = y+terrain_data3d[biome2[1]][ni3d]-terrain_data[biome2[1]][ni]
-                    --local terrain_avg = (terrain_height/biome[3]+terrain_height2/biome2[3])/(1/biome[3]+1/biome2[3])
-                    --minetest.log(terrain_avg)
-                    if density <= 0 then
-                        if density_above <= 0 then
-                            vm_data[vi] = biome[2].node_stone_id
-                        else
-                            vm_data[vi] = biome[2].node_top_id
-                        end
-                    elseif y == 0 then
-                        vm_data[vi] = biome[2].node_water_surface_id
-                    elseif y < 0 then
-                        vm_data[vi] = biome[2].node_water_id
+                    local pos = vector.new(x, y, z)
+                    local biome, bdefs = get_biome_data(ni, pos)
+                    local density_below, density, density_above = get_density(ni, ni3d, y, size, biome)
+                    
+                    local id, param2 = place_decors(ni3d, biome, density_below, density, density_above, param2_rand)
+                    if id then
+                        vm_data[vi] = id
+                        if param2 then param2_data[vi] = param2 end
+                    else
+                        vm_data[vi] = choose_base_node(y, bdefs, density, density_above)
                     end
 
-                    --try to place decors
-                    for i, defs in ipairs(sub_core.registered_decors) do
-                        if rand_data[i]:next(0, 99999) < defs.fill_ratio*100000 and defs.biome == biome[1]
-                        and (not defs.noise or decor_data[i][ni3d] > 0) then
-                            if (defs.type == "underground" and density <= 0 and density_above <= 0 and density_below <= 0)
-                            or (defs.type == "surface" and density <= 0 and density_above > 0)
-                            or (defs.type == "top" and density_below <= 0 and density > 0) then
-                                vm_data[vi] = defs.decor_id
-                                if defs.max_param2 then param2_data[vi] = param2_rand:next(1, defs.max_param2) end
-                            end
-                        end
-                    end
-
-                    --try to place small schematics
-                    for i, defs in ipairs(sub_core.registered_schems) do
-                        if schem_rand:next(0, 99999) < defs.fill_ratio*100000 and defs.biome == biome[1]
-                        and ((defs.type == "underground" and density <= 0 and density_above <= 0 and density_below <= 0)
-                        or (defs.type == "surface" and density <= 0 and density_above > 0)
-                        or (defs.type == "top" and density_below <= 0 and density > 0)) then
-                            table.insert(schem_places, {defs, vector.new(x, y, z)})
-                        end
-                    end
+                    get_schems(pos, schem_places, biome, density_below, density, density_above, schem_rand)
                 end
 
                 --increment the index for the next node
@@ -231,20 +278,10 @@ minetest.register_on_generated(function (minp, maxp, seed)
         end
         ni3d = ni3d+size*2
     end
+    
     vm:set_data(vm_data)
-
-    --check all possible schematic positions and place them
-    for i, place in ipairs(schem_places) do
-        local defs, pos = place[1], place[2]
-        if minp.x+defs.radius < pos.x and pos.x < maxp.x-defs.radius
-        and minp.y+defs.radius < pos.y and pos.y < maxp.y-defs.radius
-        and minp.z+defs.radius < pos.z and pos.z < maxp.z-defs.radius then
-            minetest.place_schematic_on_vmanip(vm, pos, defs.schem, "random", nil, true, "place_center_x, place_center_z")
-        end
-    end
-
-    --save changes to world
     vm:set_param2_data(param2_data)
+    place_schems(vm, minp, maxp, schem_places)
     vm:calc_lighting()
     vm:write_to_map()
     vm:update_liquids()
