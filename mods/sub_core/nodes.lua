@@ -354,8 +354,13 @@ sub_core.salvage1_defs = {
 
 minetest.register_node("sub_core:salvage", {
     description = "Metal Salvage",
+    stack_max = 1,
     drawtype = "mesh",
     mesh = "salvage1.obj",
     tiles = {"salvage1.png"},
-    on_place = function () return end --to be replaced later
+    on_place = function (itemstack, user, pointed)
+        local node = minetest.get_node(pointed.under)
+        local defs = minetest.registered_nodes[node.name]
+        if defs and defs.on_rightclick then return defs.on_rightclick(pointed.under, node, user, itemstack, pointed) end
+    end --to be replaced later
 })
