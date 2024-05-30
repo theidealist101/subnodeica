@@ -1,3 +1,11 @@
+--Titanium crafted from metal salvage
+sub_crafts.register_craft({
+    category = "resources",
+    subcategory = "basic",
+    output = {"sub_core:titanium 4"},
+    recipe = {"sub_core:salvage"}
+})
+
 --Titanium ingot, used for mid-game construction and plasteel
 minetest.register_craftitem("sub_crafts:titanium_ingot", {
     description = "Titanium Ingot",

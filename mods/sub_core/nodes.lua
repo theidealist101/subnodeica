@@ -298,11 +298,6 @@ minetest.register_craftitem("sub_core:quartz", {
     inventory_image = "sub_core_quartz.png"
 })
 
-local function quartz_on_rightclick(pos, node, user, itemstack)
-    minetest.set_node(pos, {name=minetest.registered_nodes[node.name]._water_equivalent})
-    return sub_core.give_item("sub_core:quartz")(pos, node, user, itemstack)
-end
-
 sub_core.quartz_defs = {
     description = "Quartz Outcrop",
     drawtype = "plantlike",
@@ -316,7 +311,10 @@ sub_core.quartz_defs = {
     paramtype2 = "wallmounted",
     sunlight_propagates = true,
     walkable = false,
-    on_rightclick = quartz_on_rightclick
+    on_rightclick = function (pos, node, user, itemstack)
+        minetest.set_node(pos, {name=minetest.registered_nodes[node.name]._water_equivalent})
+        return sub_core.give_item("sub_core:quartz")(pos, node, user, itemstack)
+    end
 }
 
 --A couple basic structural nodes (will be moved to sub_wrecks or sub_bases later, dunno which)
@@ -333,4 +331,31 @@ minetest.register_node("sub_core:dark_titanium_block", {
 minetest.register_node("sub_core:black_titanium_block", {
     description = "Black Titanium Block",
     tiles = {"sub_core_black_titanium_block.png"}
+})
+
+--Metal salvage, source of titanium and also used to get stalker teeth
+sub_core.salvage1_defs = {
+    description = "Metal Salvage",
+    drawtype = "mesh",
+    mesh = "salvage1.obj",
+    tiles = {"salvage1.png"},
+    selection_box = {
+        type = "fixed",
+        fixed = {-0.5, -0.5, -0.5, 0.5, 0, 0.5}
+    },
+    paramtype = "light",
+    paramtype2 = "4dir",
+    sunlight_propagates = true,
+    on_rightclick = function (pos, node, user, itemstack)
+        minetest.set_node(pos, {name=minetest.registered_nodes[node.name]._water_equivalent})
+        return sub_core.give_item("sub_core:salvage")(pos, node, user, itemstack)
+    end
+}
+
+minetest.register_node("sub_core:salvage", {
+    description = "Metal Salvage",
+    drawtype = "mesh",
+    mesh = "salvage1.obj",
+    tiles = {"salvage1.png"},
+    on_place = function () return end --to be replaced later
 })

@@ -114,6 +114,11 @@ minetest.register_node(
     sub_core.add_water_physics(sub_core.limestone_defs, "sub_core:shallows_water")
 )
 
+minetest.register_node(
+    "sub_core:shallows_salvage1",
+    sub_core.add_water_physics(sub_core.salvage1_defs, "sub_core:shallows_water")
+)
+
 sub_core.register_decor({
     biome = "sub_core:shallows",
     fill_ratio = 0.05,
@@ -191,4 +196,11 @@ sub_core.register_schem({
     fill_ratio = 0.0005,
     radius = 5,
     schem = minetest.get_modpath("sub_core").."/schems/coral_tube.mts",
+})
+
+sub_core.register_decor({
+    biome = "sub_core:shallows",
+    fill_ratio = 0.001,
+    max_param2 = 4,
+    decor = "sub_core:shallows_salvage1"
 })

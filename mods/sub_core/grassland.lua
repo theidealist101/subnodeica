@@ -111,6 +111,11 @@ minetest.register_node(
     sub_core.add_water_physics(sub_core.quartz_defs, "sub_core:grassland_water")
 )
 
+minetest.register_node(
+    "sub_core:grassland_salvage1",
+    sub_core.add_water_physics(sub_core.salvage1_defs, "sub_core:grassland_water")
+)
+
 sub_core.register_spawner("sub_core:grassland_limestone", "sub_core:sandstone", "sub_core:sandstone", {
     description = "Grassland Limestone Spawner",
     tiles = {"default_sandstone.png"}
@@ -139,4 +144,11 @@ sub_core.register_decor({
     fill_ratio = 0.0004,
     decor = "sub_core:grassland_quartz",
     param2 = 1
+})
+
+sub_core.register_decor({
+    biome = "sub_core:grassland",
+    fill_ratio = 0.001,
+    max_param2 = 4,
+    decor = "sub_core:grassland_salvage1"
 })
