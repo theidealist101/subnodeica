@@ -28,9 +28,9 @@ Subnodeica uses the following API mods by other authors:
 All textures not mentioned below are copyright (C) 2024 theidealist, and are under CC BY-SA 4.0
 https://creativecommons.org/licenses/by-sa/4.0/
 
-All textures beginning with "default" are borrowed directly from Minetest Game and are under CC BY-SA 4.0
+All textures beginning with "default" or "vessels" are borrowed directly from Minetest Game and are under CC BY-SA 3.0
 
-The following textures are altered or recolored from Minetest Game and are also under CC BY-SA 4.0:
+The following textures are altered or recolored from Minetest Game and are also under CC BY-SA 3.0:
 
 sub_core:
 - sub_core_blood_grass.png
@@ -42,9 +42,15 @@ sub_core:
 sub_crafts:
 - sub_crafts_copper_wire.png
 
+The following textures are altered or recolored from Mineclonia,
+whose textures are based on the Pixel Perfection resource pack for Minecraft, under CC BY-SA 4.0:
+
+sub_core:
+- sub_core_quartz.png
+
 The image "sub_core/stamina_hud_fg" is borrowed from the Stamina mod by BlockMen,
 the image itself is by PilzAdam and BlockMen and is under WTFPL
 
-The image "menu/overlay.png" is edited from a screenshot taken in Minetest Game and is under CC BY-SA 4.0
+The image "menu/overlay.png" is edited from a screenshot taken in Minetest Game and is under CC BY-SA 3.0
 
 The image "mobkit/screenshot.png" is part of Mobkit, see its own license file

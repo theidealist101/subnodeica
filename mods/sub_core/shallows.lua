@@ -181,7 +181,7 @@ sub_core.register_spawner("sub_core:shallows_limestone", "sub_core:sandstone", "
 sub_core.register_decor({
     type = "underground",
     biome = "sub_core:shallows",
-    fill_ratio = 0.001,
+    fill_ratio = 0.002,
     decor = "sub_core:shallows_limestone_spawner"
 })
 

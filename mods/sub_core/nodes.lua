@@ -293,6 +293,32 @@ sub_core.sandstone_defs = {
     end
 }
 
+minetest.register_craftitem("sub_core:quartz", {
+    description = "Quartz",
+    inventory_image = "sub_core_quartz.png"
+})
+
+local function quartz_on_rightclick(pos, node, user, itemstack)
+    minetest.set_node(pos, {name=minetest.registered_nodes[node.name]._water_equivalent})
+    return sub_core.give_item("sub_core:quartz")(pos, node, user, itemstack)
+end
+
+sub_core.quartz_defs = {
+    description = "Quartz Outcrop",
+    drawtype = "plantlike",
+    tiles = {"sub_core_quartz.png"},
+    inventory_image = "sub_core_quartz.png",
+    selection_box = {
+        type = "fixed",
+        fixed = {-0.3125, -0.5, -0.3125, 0.3125, 0.25, 0.3125}
+    },
+    paramtype = "light",
+    paramtype2 = "wallmounted",
+    sunlight_propagates = true,
+    walkable = false,
+    on_rightclick = quartz_on_rightclick
+}
+
 --A couple basic structural nodes (will be moved to sub_wrecks or sub_bases later, dunno which)
 minetest.register_node("sub_core:titanium_block", {
     description = "Titanium Block",

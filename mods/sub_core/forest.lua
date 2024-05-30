@@ -183,3 +183,27 @@ minetest.register_node(
     "sub_core:forest_sandstone",
     sub_core.add_water_physics(sub_core.sandstone_defs, "sub_core:forest_water")
 )
+
+sub_core.register_spawner("sub_core:forest_limestone", "sub_core:sandstone", "sub_core:sandstone", {
+    description = "Forest Limestone Spawner",
+    tiles = {"default_sandstone.png"}
+})
+
+sub_core.register_decor({
+    type = "underground",
+    biome = "sub_core:forest",
+    fill_ratio = 0.002,
+    decor = "sub_core:forest_limestone_spawner"
+})
+
+sub_core.register_spawner("sub_core:forest_sandstone", "sub_core:sandstone", "sub_core:sandstone", {
+    description = "Forest Sandstone Spawner",
+    tiles = {"default_sandstone.png"}
+})
+
+sub_core.register_decor({
+    type = "underground",
+    biome = "sub_core:forest",
+    fill_ratio = 0.001,
+    decor = "sub_core:forest_sandstone_spawner"
+})

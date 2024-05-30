@@ -60,6 +60,7 @@ function sub_core.register_decor(defs)
     defs.decor = defs.decor
     defs.place_under = defs.place_under
     defs.noise = defs.noise
+    defs.param2 = defs.param2 or 0
     defs.max_param2 = defs.max_param2
     --add it to the global table
     table.insert(sub_core.registered_decors, defs)
@@ -212,7 +213,7 @@ local function place_decors(ni3d, biome, density_below, density, density_above, 
             if (defs.type == "underground" and density <= 0 and density_above <= 0 and density_below <= 0)
             or (defs.type == "surface" and density <= 0 and density_above > 0)
             or (defs.type == "top" and density_below <= 0 and density > 0) then
-                return defs.decor_id, (defs.max_param2 and param2_rand:next(1, defs.max_param2))
+                return defs.decor_id, (defs.max_param2 and param2_rand:next(defs.param2, defs.max_param2)) or defs.param2
             end
         end
     end
@@ -279,7 +280,7 @@ minetest.register_on_generated(function (minp, maxp, seed)
                     local id, param2 = place_decors(ni3d, biome, density_below, density, density_above, param2_rand)
                     if id then
                         vm_data[vi] = id
-                        if param2 then param2_data[vi] = param2 end
+                        param2_data[vi] = param2
                     else
                         vm_data[vi] = choose_base_node(y, bdefs, density, density_above)
                     end

@@ -37,6 +37,19 @@ sub_crafts.register_craft({
     recipe = {"sub_core:creepvine_seeds"}
 })
 
+--Glass, useful for some tools and decorative base pieces
+minetest.register_craftitem("sub_crafts:glass", {
+    description = "Glass",
+    inventory_image = "vessels_glass_fragments.png"
+})
+
+sub_crafts.register_craft({
+    category = "resources",
+    subcategory = "basic",
+    output = {"sub_crafts:glass"},
+    recipe = {"sub_core:quartz 2"}
+})
+
 --Lubricant, used in construction of most vehicles and some base pieces
 minetest.register_craftitem("sub_crafts:lubricant", {
     description = "Lubricant",
