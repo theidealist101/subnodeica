@@ -64,10 +64,6 @@ minetest.register_node("sub_crafts:medkit_fabricator", {
     on_rightclick = function (pos, node, user, itemstack)
         local meta = minetest.get_meta(pos)
         local now = minetest.get_gametime()
-        if not meta:contains("last_used") then
-            meta:set_int("last_used", now)
-            return
-        end
         local last_used = meta:get_int("last_used")
         if now-last_used < 600 then return end
         meta:set_int("last_used", now)
