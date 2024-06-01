@@ -33,3 +33,9 @@ minetest.register_on_newplayer(function(player)
     player:set_pos(vector.new(0, 1, -1))
     minetest.place_schematic(vector.zero(), minetest.get_modpath("sub_initial_stuff").."/schems/lifepod5.mts", nil, nil, true, "place_center_x, place_center_z")
 end)
+
+sub_nav.set_waypoint(vector.zero(), {
+    name = "Lifepod 5",
+    image = "waypoint_lifepod5.png",
+    dist = 10
+})
