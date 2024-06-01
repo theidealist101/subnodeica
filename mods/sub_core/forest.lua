@@ -174,48 +174,23 @@ sub_core.register_decor({
 })
 
 --Various other decorations
-minetest.register_node(
-    "sub_core:forest_limestone",
-    sub_core.add_water_physics(sub_core.limestone_defs, "sub_core:forest_water")
-)
-
-minetest.register_node(
-    "sub_core:forest_sandstone",
-    sub_core.add_water_physics(sub_core.sandstone_defs, "sub_core:forest_water")
-)
-
-minetest.register_node(
-    "sub_core:forest_salvage1",
-    sub_core.add_water_physics(sub_core.salvage1_defs, "sub_core:forest_water")
-)
-
-sub_core.register_spawner("sub_core:forest_limestone", "sub_core:sandstone", "sub_core:sandstone", {
-    description = "Forest Limestone Spawner",
-    tiles = {"default_sandstone.png"}
-})
-
 sub_core.register_decor({
     type = "underground",
     biome = "sub_core:forest",
     fill_ratio = 0.002,
-    decor = "sub_core:forest_limestone_spawner"
-})
-
-sub_core.register_spawner("sub_core:forest_sandstone", "sub_core:sandstone", "sub_core:sandstone", {
-    description = "Forest Sandstone Spawner",
-    tiles = {"default_sandstone.png"}
+    decor = "sub_core:limestone_outcrop_spawner"
 })
 
 sub_core.register_decor({
     type = "underground",
     biome = "sub_core:forest",
     fill_ratio = 0.001,
-    decor = "sub_core:forest_sandstone_spawner"
+    decor = "sub_core:sandstone_outcrop_spawner"
 })
 
 sub_core.register_decor({
     biome = "sub_core:forest",
     fill_ratio = 0.003,
     max_param2 = 4,
-    decor = "sub_core:forest_salvage1"
+    decor = "sub_core:salvage1"
 })

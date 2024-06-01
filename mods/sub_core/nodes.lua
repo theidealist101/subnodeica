@@ -54,8 +54,7 @@ minetest.register_node("sub_core:sand_with_lichen", {
 })
 
 --Common decorations that appear in many biomes
---Each biome creates its own variant with its water color
-sub_core.veined_nettle_defs = {
+sub_core.register_waterloggable("sub_core:veined_nettle", {
     description = "Veined Nettle",
     drawtype = "plantlike",
     tiles = {"sub_core_veined_nettle.png"},
@@ -69,9 +68,9 @@ sub_core.veined_nettle_defs = {
     walkable = false,
     buildable_to = true,
     groups = {attached_node=1}
-}
+})
 
-sub_core.writhing_weed_defs = {
+sub_core.register_waterloggable("sub_core:writhing_weed", {
     description = "Writhing Weed",
     drawtype = "plantlike",
     tiles = {"sub_core_writhing_weed.png"},
@@ -85,9 +84,9 @@ sub_core.writhing_weed_defs = {
     walkable = false,
     buildable_to = true,
     groups = {attached_node=1}
-}
+})
 
-sub_core.blue_palm_defs = {
+sub_core.register_waterloggable("sub_core:blue_palm", {
     description = "Blue Palm",
     drawtype = "mesh",
     mesh = "palm.obj",
@@ -101,7 +100,7 @@ sub_core.blue_palm_defs = {
     walkable = false,
     buildable_to = true,
     groups = {attached_node=1}
-}
+})
 
 --Acid mushrooms, important for batteries
 local function acidshroom_on_rightclick(pos, node, user, itemstack)
@@ -109,7 +108,7 @@ local function acidshroom_on_rightclick(pos, node, user, itemstack)
     return sub_core.give_item("sub_core:item_acidshroom")(pos, node, user, itemstack)
 end
 
-sub_core.acidshroom1_defs = {
+sub_core.register_waterloggable("sub_core:acidshroom1", {
     description = "Acidshrooms",
     drawtype = "mesh",
     mesh = "acidshroom1.obj",
@@ -124,9 +123,9 @@ sub_core.acidshroom1_defs = {
     walkable = false,
     groups = {attached_node=1},
     on_rightclick = acidshroom_on_rightclick
-}
+})
 
-sub_core.acidshroom2_defs = {
+sub_core.register_waterloggable("sub_core:acidshroom2", {
     description = "Acidshrooms",
     drawtype = "mesh",
     mesh = "acidshroom2.obj",
@@ -141,9 +140,9 @@ sub_core.acidshroom2_defs = {
     walkable = false,
     groups = {attached_node=1},
     on_rightclick = acidshroom_on_rightclick
-}
+})
 
-sub_core.acidshroom3_defs = {
+sub_core.register_waterloggable("sub_core:acidshroom3", {
     description = "Acidshrooms",
     drawtype = "mesh",
     mesh = "acidshroom3.obj",
@@ -158,9 +157,9 @@ sub_core.acidshroom3_defs = {
     walkable = false,
     groups = {attached_node=1},
     on_rightclick = acidshroom_on_rightclick
-}
+})
 
-sub_core.acidshroom4_defs = {
+sub_core.register_waterloggable("sub_core:acidshroom4", {
     description = "Acidshrooms",
     drawtype = "mesh",
     mesh = "acidshroom4.obj",
@@ -175,7 +174,7 @@ sub_core.acidshroom4_defs = {
     walkable = false,
     groups = {attached_node=1},
     on_rightclick = acidshroom_on_rightclick
-}
+})
 
 minetest.register_craftitem("sub_core:item_acidshroom", {
     description = "Acidshroom",
@@ -183,7 +182,7 @@ minetest.register_craftitem("sub_core:item_acidshroom", {
 })
 
 --Table coral, important for certain electronics
-sub_core.table_coral_defs = {
+sub_core.register_waterloggable("sub_core:table_coral", {
     description = "Table Coral",
     drawtype = "mesh",
     mesh = "table_coral.obj",
@@ -197,7 +196,7 @@ sub_core.table_coral_defs = {
     sunlight_propagates = true,
     walkable = false,
     on_punch = sub_core.drop_if_slash("sub_core:table_coral_sample")
-}
+})
 
 minetest.register_craftitem("sub_core:table_coral_sample", {
     description = "Table Coral Sample",
@@ -206,6 +205,11 @@ minetest.register_craftitem("sub_core:table_coral_sample", {
 
 minetest.register_node("sub_core:sandstone_with_lichen", {
     description = "Sandstone with Lichen",
+    tiles = {"default_sandstone.png^sub_core_lichen.png"}
+})
+
+sub_core.register_spawner("sub_core:table_coral", "sub_core:sandstone_with_lichen", "sub_core:sandstone", {
+    description = "Table Coral Spawner",
     tiles = {"default_sandstone.png^sub_core_lichen.png"}
 })
 
@@ -232,7 +236,7 @@ minetest.register_craftitem("sub_core:copper", {
     inventory_image = "default_copper_lump.png"
 })
 
-sub_core.limestone_defs = {
+sub_core.register_waterloggable("sub_core:limestone_outcrop", {
     description = "Limestone Outcrop",
     drawtype = "nodebox",
     node_box = {
@@ -252,7 +256,12 @@ sub_core.limestone_defs = {
             minetest.add_item(pos, "sub_core:copper")
         end
     end
-}
+})
+
+sub_core.register_spawner("sub_core:limestone_outcrop", "sub_core:sandstone", "sub_core:sandstone", {
+    description = "Limestone Spawner",
+    tiles = {"default_sandstone.png"}
+})
 
 minetest.register_craftitem("sub_core:lead", {
     description = "Lead",
@@ -269,7 +278,7 @@ minetest.register_craftitem("sub_core:gold", {
     inventory_image = "default_gold_lump.png"
 })
 
-sub_core.sandstone_defs = {
+sub_core.register_waterloggable("sub_core:sandstone_outcrop", {
     description = "Sandstone Outcrop",
     drawtype = "nodebox",
     node_box = {
@@ -291,14 +300,19 @@ sub_core.sandstone_defs = {
             minetest.add_item(pos, "sub_core:silver")
         end
     end
-}
+})
+
+sub_core.register_spawner("sub_core:sandstone_outcrop", "sub_core:sandstone", "sub_core:sandstone", {
+    description = "Sandstone Spawner",
+    tiles = {"default_sandstone.png"}
+})
 
 minetest.register_craftitem("sub_core:quartz", {
     description = "Quartz",
     inventory_image = "sub_core_quartz.png"
 })
 
-sub_core.quartz_defs = {
+sub_core.register_waterloggable("sub_core:quartz_outcrop", {
     description = "Quartz Outcrop",
     drawtype = "plantlike",
     tiles = {"sub_core_quartz.png"},
@@ -315,7 +329,7 @@ sub_core.quartz_defs = {
         minetest.set_node(pos, {name=minetest.registered_nodes[node.name]._water_equivalent})
         return sub_core.give_item("sub_core:quartz")(pos, node, user, itemstack)
     end
-}
+})
 
 --A couple basic structural nodes (will be moved to sub_wrecks or sub_bases later, dunno which)
 minetest.register_node("sub_core:titanium_block", {
@@ -334,7 +348,7 @@ minetest.register_node("sub_core:black_titanium_block", {
 })
 
 --Metal salvage, source of titanium and also used to get stalker teeth
-sub_core.salvage1_defs = {
+sub_core.register_waterloggable("sub_core:salvage1", {
     description = "Metal Salvage",
     drawtype = "mesh",
     mesh = "salvage1.obj",
@@ -350,7 +364,7 @@ sub_core.salvage1_defs = {
         minetest.set_node(pos, {name=minetest.registered_nodes[node.name]._water_equivalent})
         return sub_core.give_item("sub_core:salvage")(pos, node, user, itemstack)
     end
-}
+})
 
 minetest.register_node("sub_core:salvage", {
     description = "Metal Salvage",

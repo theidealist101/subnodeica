@@ -57,7 +57,9 @@ function sub_core.register_decor(defs)
     defs.type = defs.type or "top"
     defs.fill_ratio = defs.fill_ratio or 1
     defs.biome = defs.biome
-    defs.decor = defs.decor
+    if not minetest.registered_nodes[defs.decor] then
+        defs.decor = sub_core.get_waterlogged(defs.decor, sub_core.registered_biomes[defs.biome].node_water)
+    end
     defs.place_under = defs.place_under
     defs.noise = defs.noise
     defs.param2 = defs.param2 or 0
@@ -328,7 +330,11 @@ local function place_spawner(pos, node)
         if neighbor and neighbor.groups.water and neighbor.groups.water > 0 then
             exposed = true
             if math.random() < 0.5 then
-                minetest.swap_node(pos+d, {name=defs[3], param2=i-1})
+                local name
+                if not minetest.registered_nodes[defs[3]] then
+                    name = sub_core.get_waterlogged(defs[3], neighbor._water_equivalent)
+                else name = defs[3] end
+                minetest.swap_node(pos+d, {name=name, param2=i-1})
                 minetest.swap_node(pos, {name=defs[1]})
                 return
             end
