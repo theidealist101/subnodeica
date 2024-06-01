@@ -1,6 +1,18 @@
 local storage = minetest.get_mod_storage()
-storage:set_string("waypoints", "return {}")
-local storage_updated = false
+
+--Register functions to do upon initializing storage
+sub_nav.registered_on_loads = {}
+
+function sub_nav.register_on_load(func)
+    table.insert(sub_nav.registered_on_loads, func)
+end
+
+minetest.register_on_mods_loaded(function()
+    if storage:get_string("waypoints") == "" then
+        storage:set_string("waypoints", "return {}")
+        for i, func in ipairs(sub_nav.registered_on_loads) do func() end
+    end
+end)
 
 --Set waypoint for all players at given position, returns id
 function sub_nav.set_waypoint(pos, defs)
@@ -9,7 +21,6 @@ function sub_nav.set_waypoint(pos, defs)
     data[next] = {pos, defs}
     storage:set_string("waypoints", minetest.serialize(data))
     storage:set_int("next_waypoint", next)
-    storage_updated = true
     return next
 end
 
@@ -19,7 +30,6 @@ function sub_nav.move_waypoint(id, pos)
     if not data[id] then return false end
     data[id] = {pos, data[id].defs}
     storage:set_string("waypoints", minetest.serialize(data))
-    storage_updated = true
     return true
 end
 
@@ -28,7 +38,6 @@ function sub_nav.remove_waypoint(id)
     local data = minetest.deserialize(storage:get_string("waypoints"))
     data[id] = nil
     storage:set_string("waypoints", minetest.serialize(data))
-    storage_updated = true
 end
 
 --Iterate over waypoints
