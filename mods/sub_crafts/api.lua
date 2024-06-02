@@ -127,7 +127,7 @@ function sub_crafts.get_formspec(player, rtype, category, subcategory)
             name = category.."|"..defs
             table.insert(out, table.concat({"image_button[", x_offset+1+PADDING, ",", y_offset+height, ";1,1;", defs, ".png;", name, ";]tooltip[", name, ";", string.upper(string.sub(defs, 1, 1)), string.sub(defs, 2), "]"}))
         else
-            name = category.."|"..defs.output[1]
+            name = category.."|"..escape_colon(defs.output[1])
             table.insert(out, table.concat({"item_image_button[", x_offset+1+PADDING, ",", y_offset+height, ";1,1;", defs.output[1], ";", name, ";]"}))
         end
         if doable then table.insert(doable_elems, name) end
