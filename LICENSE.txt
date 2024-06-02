@@ -19,9 +19,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 Subnodeica is based on the game Subnautica by Unknown Worlds Entertainment,
 however no code or media from Subnautica is used in this game.
 
-Subnodeica uses the following API mods by other authors:
+Subnodeica uses the following API mods by other authors, all under the MIT license as specified in their docs:
 
-- Mobkit by TheTermos, which is separately licensed under the MIT License; see mobkit/LICENSE
+- Mobkit by TheTermos
+- Sfinv by rubenwardy
 
 === MEDIA ===
 
