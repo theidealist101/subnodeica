@@ -1,13 +1,18 @@
 Subnodeica
 ==========
 
-An attempt to recreate the popular survival and exploration game Subnautica in the Minetest engine. Requires Minetest to function.
+An attempt to recreate the popular survival and exploration game Subnautica in the Minetest engine.
 
 This is very much an early work in progress, expect almost everything about it to change at any time without notice. Consequently it is not recommended to create mods for it or forks of it at this stage, and for the same reason the APIs are not yet documented. (I WILL document them someday!)
 
 Disclaimer: This project is not affiliated with or endorsed by the creators of Subnautica. It is merely the personal project of a passionate fan.
 
 Copyright (C) 2024 theidealist (theidealistmusic@gmail.com)
+
+Installation
+------------
+
+Like any other Minetest game: download and place it in your Minetest "games" folder. Probably requires Minetest 5.8.0 or higher.
 
 Features
 --------
@@ -30,6 +35,6 @@ These features I expect to add in the near future:
 - Improvements and fixes for mob behaviours, like floating mobs, fish which sometimes try to swim into the ground, gasopods which sleep when they shouldn't, reefbacks which are really bad at avoiding terrain, etc.
 - Putting more stuff in Lifepod 5 and making it actually usable
 
-Probably next on the list are surface caves. (I've made crashfish and mesmers but they don't spawn yet.)
+Probably next on the list of big features are blueprints and surface caves. (I've made crashfish and mesmers but they don't spawn yet.)
 
 Also note that the bioluminescence mechanic does not fully work yet, as Minetest does not have glow on nodes or any way of making only some parts of a texture glow; I intend to get this added to Minetest. There are also no animations on models, as I'm waiting for .gltf support first.
