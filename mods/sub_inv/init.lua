@@ -145,13 +145,29 @@ Your personal and work files have been encrypted, and may be retrieved at a late
 
 This information is meant as a general guide. In the first instance you should always follow the advice of your PDA, which has taken your particular circumstances into account.]],
 
-    ["WARNING: Corrupted"] = [[Damage to your PDA's hard drive has corrupted approximately 80% of stored survival blueprints. Blueprints may be reacquired by scanning salvaged technology using the handheld scanner, or by redownloading plans from a ship-board databox. In the circumstances, these assets will most likely be found amongst wreckage from the Aurora.]]
+    ["WARNING: Corrupted"] = [[Damage to your PDA's hard drive has corrupted approximately 80% of stored survival blueprints. Blueprints may be reacquired by scanning salvaged technology using the handheld scanner, or by redownloading plans from a ship-board databox. In the circumstances, these assets will most likely be found amongst wreckage from the Aurora.]],
+
+    ["Subnodeica Info"] = [[Welcome to Subnodeica by theidealist!
+
+Unfortunately this game is still at a very early stage of development, expect plenty of weird bugs and behaviors, and nowhere near as many features as the actual game - and don't be surprised if a new update completely breaks worlds from the previous. For now you can at least explore the custom terrain and try to see what you can find!
+
+There are currently three biomes (Safe Shallows, Kelp Forest, Grassy Plateaus) with plenty of mobs and decorations in them, especially the Shallows. You'll also be able to craft food and water and medkits to manage your stats, and find various resources and craft them into more materials and a few useful items like knives and beacons. Check out the README file for more!
+
+(You should spawn in the Shallows but if you spawn in the Kelp Forest, just swim around, there's probably a Shallows within one or two hundred blocks.)
+
+To find this again, open your inventory and go to Databank > Survival Package > Subnodeica Info.
+
+Do give feedback on Github and report any bugs you find! Have fun!]]
 }
 
 minetest.register_on_newplayer(function(player)
     for name, text in pairs(survival_package) do
         sub_inv.add_databank_entry(player, name, text, "Survival Package")
     end
+    local context = sfinv.get_or_create_context(player)
+    context.databank_nav_category = "Survival Package"
+    context.databank_nav_subcategory = "Subnodeica Info"
+    sfinv.set_page(player, "sub_inv:databank")
 end)
 
 --Get rid of default page
