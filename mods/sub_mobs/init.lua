@@ -31,7 +31,7 @@ minetest.register_globalstep(function (dtime)
 
         --choose spawn position and check if there is space
         local spawnpos = mobkit.get_spawn_pos_abr(dtime, 1, defs.dist, defs.chance, defs.reduction)
-        if spawnpos and #minetest.get_objects_inside_radius(spawnpos, 100) < 50 then
+        if spawnpos and #minetest.get_objects_inside_radius(spawnpos, 50) < 50 then
             spawnpos = spawnpos+vector.new(0, 1, 0) --to bring it off the ground
             spawnpos.y = spawnpos.y*(1-math.random(defs.height_min*1000, defs.height_max*1000)*0.001)
 
