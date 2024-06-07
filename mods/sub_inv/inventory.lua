@@ -3,10 +3,10 @@ local inventory_formspec = [[
     list[current_player;head;10.75,2;1,1;]
     list[current_player;body;10.75,4.5;1,1;]
     list[current_player;feet;10.75,7;1,1;]
-    list[current_player;tank;9,3.25;1,1;]
-    list[current_player;hands;12.5,3.25;1,1;]
-    list[current_player;chips;9,5.75;1,1;]
-    list[current_player;chips;12.5,5.75;1,1;1]
+    list[current_player;tank;9,5.75;1,1;]
+    list[current_player;hands;12.5,5.75;1,1;]
+    list[current_player;chips;9,3.25;1,1;]
+    list[current_player;chips;12.5,3.25;1,1;1]
 ]]
 
 sfinv.register_page("sub_inv:inventory", {
@@ -29,8 +29,16 @@ minetest.register_on_joinplayer(function(player)
     inv:set_size("main", 48)
     for i, name in ipairs({"head", "body", "feet", "tank", "hands"}) do
         inv:set_size(name, 1)
+        if not inv:is_empty(name) then
+            local defs = inv:get_stack(name, 0)
+            if defs and defs._on_equip then defs._on_equip(player) end
+        end
     end
     inv:set_size("chips", 2)
+    if not inv:is_empty("chips") then for i = 0, 1 do
+        local defs = inv:get_stack("chips", i):get_definition()
+        if defs and defs._on_equip then defs._on_equip(player) end
+    end end
     player:hud_set_hotbar_itemcount(6)
 end)
 
@@ -66,6 +74,7 @@ minetest.register_on_player_inventory_action(function(player, action, inv, inv_i
         item = inv_info.stack
     else return end --in case something weird happens
     local defs = item:get_definition()
+    if not defs then return end
     for i, name in ipairs({"head", "body", "feet", "tank", "hands", "chips"}) do
         if old_list == name and defs._on_unequip then defs._on_unequip(player) end
         if new_list == name and defs._on_equip then defs._on_equip(player) end
