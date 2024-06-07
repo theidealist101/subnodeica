@@ -24,17 +24,16 @@ As stated above this game is in early development, but these are the features cu
 - A crafting system using the fabricator, not many recipes exist yet but it is easily extendable
 - Most of the mobs inhabiting the aforementioned biomes, with their own behaviours made using the Mobkit API
 - A basic version of Lifepod 5 which the player spawns within
+- A working custom inventory and HUD with hunger and thirst
+- Navigational features including beacons, depth meter and compass
 
 These features I expect to add in the near future:
 
 - More diverse terrain features (e.g. pillars in Plateaus, floating land in Underwater Islands) and narrow surface caves
 - More biomes, including cavern biomes such as the Jellyshroom Caves
 - More decorations for the main biomes
-- Debris and scannable blueprints and metal salvage from the Aurora
 - Stalkers, the only major mob of these three biomes to not yet be implemented, as it needs metal salvage to play with
 - Improvements and fixes for mob behaviours, like floating mobs, fish which sometimes try to swim into the ground, gasopods which sleep when they shouldn't, reefbacks which are really bad at avoiding terrain, etc.
 - Putting more stuff in Lifepod 5 and making it actually usable
-
-Probably next on the list of big features are a proper inventory and surface caves. (I've made crashfish and mesmers but they don't spawn yet.)
 
 Also note that the bioluminescence mechanic does not fully work yet, as Minetest does not have glow on nodes or any way of making only some parts of a texture glow; I intend to get this added to Minetest. There are also no animations on models, as I'm waiting for .gltf support first.
