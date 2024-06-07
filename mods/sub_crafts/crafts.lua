@@ -180,6 +180,40 @@ sub_crafts.register_craft({
     recipe = {"sub_crafts:fiber_mesh"}
 })
 
+--Compass, equippable chip which gives a readout of the direction
+local compass_huds = {}
+
+minetest.register_craftitem("sub_crafts:compass", {
+    description = "Compass",
+    inventory_image = "mcl_compass_compass_20.png",
+    _equip = "chips",
+    _on_equip = function (player)
+        compass_huds[player] = player:hud_add({
+            hud_elem_type = "compass",
+            position = {x=0.5, y=0},
+            alignment = {x=0, y=1},
+            offset = {x=0, y=72},
+            size = {x=256, y=64},
+            scale = {x=1, y=1},
+            direction = 2,
+            text = "hud_compass_straight.png"
+        })
+    end,
+    _on_unequip = function (player)
+        if compass_huds[player] then
+            player:hud_remove(compass_huds[player])
+            compass_huds[player] = nil
+        end
+    end
+})
+
+sub_crafts.register_craft({
+    category = "personal",
+    subcategory = "equipment",
+    output = {"sub_crafts:compass"},
+    recipe = {"sub_crafts:copper_wire", "sub_crafts:wiring_kit"}
+})
+
 --Survival knife, essential for gathering many crafting materials
 minetest.register_craftitem("sub_crafts:knife", {
     description = "Survival Knife",
