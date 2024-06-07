@@ -8,6 +8,7 @@ local hunger_huds = {}
 local hunger_huds2 = {}
 local thirst_huds = {}
 local drown_huds = {}
+local depth_huds = {}
 
 local hunger_hud_defs = {
     hud_elem_type = "statbar",
@@ -45,6 +46,17 @@ local drown_hud_defs = {
     position = {x=0.5, y=0.5},
     z_index = 1000,
     scale = {x=-100, y=-100}
+}
+
+local depth_hud_defs = {
+    hud_elem_type = "text",
+    position = {x=0.5, y=0},
+    offset = {x=0, y=32},
+    scale = {x=100, y=100},
+    size = {x=3, y=3},
+    style = 4,
+    number = 0x9ffeff,
+    text = "0m"
 }
 
 --Functions for adding to stats
@@ -85,6 +97,7 @@ minetest.register_on_joinplayer(function(player)
     hunger_huds[name] = player:hud_add(hunger_hud_defs)
     hunger_huds2[name] = player:hud_add(hunger_hud_defs2)
     thirst_huds[name] = player:hud_add(thirst_hud_defs)
+    depth_huds[name] = player:hud_add(depth_hud_defs)
     if drown_huds[name] then --in case the player died of drowning
         player:hud_remove(drown_huds[name])
     end
@@ -139,5 +152,8 @@ minetest.register_globalstep(function(dtime)
         end
         meta:set_int("breath", breath) --saves it in case the player quits and returns
         obj:hud_change(drown_huds[name], "text", "sub_core_fade_hud.png^[opacity:"..math.min(math.floor(meta:get_float("drown_progress")*64), 255))
+
+        --update depth
+        obj:hud_change(depth_huds[name], "text", (eye_pos.y > 0 and "0m") or tostring(math.round(-eye_pos.y)).."m")
     end
 end)
