@@ -1,11 +1,5 @@
 sub_inv = {}
 
---Make sure inventory is the right size
-minetest.register_on_joinplayer(function(player)
-    player:get_inventory():set_size("main", 48)
-    player:hud_set_hotbar_itemcount(6)
-end)
-
 --Custom inventory layout
 function sub_inv.make_formspec(player, context, content, show_inv, size)
     return table.concat({
