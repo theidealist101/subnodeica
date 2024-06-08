@@ -33,6 +33,6 @@ These features I expect to add in the near future:
 - More biomes, including cavern biomes such as the Jellyshroom Caves
 - More decorations for the main biomes
 - Putting more stuff in Lifepod 5 and making it actually usable
-- Tools 
+- Tools for constructing vehicles and seabases
 
 Also note that the bioluminescence mechanic does not fully work yet, as Minetest does not have glow on nodes or any way of making only some parts of a texture glow; I intend to get this added to Minetest. There are also no animations on models, as I'm waiting for .gltf support first.
