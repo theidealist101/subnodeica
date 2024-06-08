@@ -32,7 +32,6 @@ These features I expect to add in the near future:
 - More diverse terrain features (e.g. pillars in Plateaus, floating land in Underwater Islands) and narrow surface caves
 - More biomes, including cavern biomes such as the Jellyshroom Caves
 - More decorations for the main biomes
-- Stalkers, the only major mob of these three biomes to not yet be implemented, as it needs metal salvage to play with
 - Improvements and fixes for mob behaviours, like floating mobs, fish which sometimes try to swim into the ground, gasopods which sleep when they shouldn't, reefbacks which are really bad at avoiding terrain, etc.
 - Putting more stuff in Lifepod 5 and making it actually usable
 
