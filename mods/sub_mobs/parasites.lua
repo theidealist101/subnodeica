@@ -80,7 +80,7 @@ local mesmer_prey = {
 local mesmer_hud = {
     hud_elem_type = "image", --"type" didn't work for some reason so I had to use the deprecated version
     text = "mesmer_hud.png^[opacity:100",
-    --wtf do you mean you can't have animated HUDs
+    --tf do you mean you can't have animated HUDs
     --[[text = {
         name = "mesmer_hud_animated.png^[opacity:100",
         animation = {

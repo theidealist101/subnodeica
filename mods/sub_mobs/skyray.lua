@@ -63,6 +63,6 @@ sub_mobs.register_spawn({
     nodes = {"air"},
     chance = 1,
     reduction = 0.01,
-    height = 1.5,
-    height_max = 2
+    height_min = 16,
+    height_max = 32
 })

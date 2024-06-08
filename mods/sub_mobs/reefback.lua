@@ -113,7 +113,7 @@ sub_mobs.register_spawn({
     chance = 0.1,
     reduction = 0.1,
     dist = 100,
-    height_min = 0.5
+    height_min = -40
 })
 
 sub_mobs.register_spawn({
@@ -122,7 +122,7 @@ sub_mobs.register_spawn({
     chance = 0.1,
     reduction = 0.1,
     dist = 100,
-    height_min = 0.5
+    height_min = -40
 })
 
 --Miscellaneous plants which spawn on adult reefbacks (specifically those which are naturally nodes instead)

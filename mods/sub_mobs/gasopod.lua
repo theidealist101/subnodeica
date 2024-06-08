@@ -80,7 +80,7 @@ sub_mobs.register_spawn({
     chance = 0.1,
     reduction = 0.1,
     count_max = 3,
-    height_min = 0.5
+    height_min = -15
 })
 
 --Gas pod, ejected by gasopods, explodes into gas clouds dealing poison damage

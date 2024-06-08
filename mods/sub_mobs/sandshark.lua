@@ -122,5 +122,5 @@ sub_mobs.register_spawn({
     biomes = {"sub_core:grassland"},
     chance = 0.1,
     reduction = 0.04,
-    height_max = 0.4
+    height_max = -50
 })

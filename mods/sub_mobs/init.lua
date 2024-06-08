@@ -19,8 +19,8 @@ function sub_mobs.register_spawn(defs)
     defs.count_max = defs.count_max or defs.count
     defs.reduction = defs.reduction or 0
     defs.dist = defs.dist or 50
-    defs.height_min = defs.height or 0
-    defs.height_max = defs.height_max or 1
+    defs.height_min = defs.height_min or -31000
+    defs.height_max = defs.height_max or 0
     table.insert(sub_mobs.registered_spawns, defs)
 end
 
@@ -33,7 +33,7 @@ minetest.register_globalstep(function (dtime)
         local spawnpos = mobkit.get_spawn_pos_abr(dtime, 1, defs.dist, defs.chance, defs.reduction)
         if spawnpos and #minetest.get_objects_inside_radius(spawnpos, 50) < 50 then
             spawnpos = spawnpos+vector.new(0, 1, 0) --to bring it off the ground
-            spawnpos.y = spawnpos.y*(1-math.random(defs.height_min*1000, defs.height_max*1000)*0.001)
+            spawnpos.y = math.random(math.max(spawnpos.y, defs.height_min), defs.height_max)
 
             --check if correct node to spawn in
             for i, node in ipairs(defs.nodes) do
@@ -42,7 +42,6 @@ minetest.register_globalstep(function (dtime)
                     --attempt to spawn the mob or mobs
                     for _ = 1, math.random(defs.count, defs.count_max) do
                         minetest.add_entity(spawnpos, defs.name)
-                        --minetest.log("Spawned "..defs.name)
                     end
                     return
                 end
