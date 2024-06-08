@@ -26,7 +26,6 @@ end
 --Function controlling flying skyrays, fly around aimlessly
 local function skyray_brain(self)
     if mobkit.is_queue_empty_high(self) then
-        minetest.log(dump(self.object:get_pos()))
         hq_air_roam(self, 10, 4)
     end
 end
