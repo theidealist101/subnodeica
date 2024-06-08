@@ -4,6 +4,7 @@ minetest.register_node("sub_mobs:sulfur_plant", sub_core.add_water_physics({
     drawtype = "mesh",
     mesh = "sulfur_plant.obj",
     tiles = {"sulfur_plant.png"},
+    use_texture_alpha = "clip",
     selection_box = {
         type = "fixed",
         fixed = {-0.375, -0.5, -0.375, 0.375, 0, 0.375}
@@ -19,6 +20,7 @@ minetest.register_node("sub_mobs:sulfur_plant_open", sub_core.add_water_physics(
     drawtype = "mesh",
     mesh = "sulfur_plant_open.obj",
     tiles = {"sulfur_plant.png"},
+    use_texture_alpha = "clip",
     selection_box = {
         type = "fixed",
         fixed = {-0.375, -0.5, -0.375, 0.375, 0, 0.375}

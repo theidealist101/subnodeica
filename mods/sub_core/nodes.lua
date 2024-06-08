@@ -58,6 +58,7 @@ sub_core.register_waterloggable("sub_core:veined_nettle", {
     description = "Veined Nettle",
     drawtype = "plantlike",
     tiles = {"sub_core_veined_nettle.png"},
+    use_texture_alpha = "clip",
     inventory_image = "sub_core_veined_nettle.png",
     selection_box = {
         type = "fixed",
@@ -74,6 +75,7 @@ sub_core.register_waterloggable("sub_core:writhing_weed", {
     description = "Writhing Weed",
     drawtype = "plantlike",
     tiles = {"sub_core_writhing_weed.png"},
+    use_texture_alpha = "clip",
     inventory_image = "sub_core_writhing_weed.png",
     selection_box = {
         type = "fixed",
@@ -91,6 +93,7 @@ sub_core.register_waterloggable("sub_core:blue_palm", {
     drawtype = "mesh",
     mesh = "palm.obj",
     tiles = {"blue_palm.png"},
+    use_texture_alpha = "clip",
     selection_box = {
         type = "fixed",
         fixed = {-0.375, -0.5, -0.375, 0.375, 0.25, 0.375}
@@ -113,6 +116,7 @@ sub_core.register_waterloggable("sub_core:acidshroom1", {
     drawtype = "mesh",
     mesh = "acidshroom1.obj",
     tiles = {"acidshroom.png"},
+    use_texture_alpha = "opaque",
     selection_box = {
         type = "fixed",
         fixed = {-0.375, -0.5, -0.375, 0.375, 0, 0.375}
@@ -130,6 +134,7 @@ sub_core.register_waterloggable("sub_core:acidshroom2", {
     drawtype = "mesh",
     mesh = "acidshroom2.obj",
     tiles = {"acidshrooms.png"},
+    use_texture_alpha = "opaque",
     selection_box = {
         type = "fixed",
         fixed = {-0.375, -0.5, -0.375, 0.375, 0, 0.375}
@@ -147,6 +152,7 @@ sub_core.register_waterloggable("sub_core:acidshroom3", {
     drawtype = "mesh",
     mesh = "acidshroom3.obj",
     tiles = {"acidshrooms.png"},
+    use_texture_alpha = "opaque",
     selection_box = {
         type = "fixed",
         fixed = {-0.375, -0.5, -0.375, 0.375, 0, 0.375}
@@ -164,6 +170,7 @@ sub_core.register_waterloggable("sub_core:acidshroom4", {
     drawtype = "mesh",
     mesh = "acidshroom4.obj",
     tiles = {"acidshroom_small.png"},
+    use_texture_alpha = "opaque",
     selection_box = {
         type = "fixed",
         fixed = {-0.375, -0.5, -0.375, 0.375, -0.25, 0.375}
@@ -187,6 +194,7 @@ sub_core.register_waterloggable("sub_core:table_coral", {
     drawtype = "mesh",
     mesh = "table_coral.obj",
     tiles = {"table_coral_red.png"},
+    use_texture_alpha = "opaque",
     selection_box = {
         type = "fixed",
         fixed = {-0.4375, -0.5, -0.3125, 0.4375, 0, 0.3125}
@@ -356,6 +364,7 @@ sub_core.register_waterloggable("sub_core:salvage1", {
     drawtype = "mesh",
     mesh = "salvage1.obj",
     tiles = {"salvage1.png"},
+    use_texture_alpha = "opaque",
     selection_box = {
         type = "fixed",
         fixed = {-0.5, -0.5, -0.5, 0.5, 0, 0.5}
@@ -376,6 +385,7 @@ minetest.register_node("sub_core:salvage", {
     drawtype = "mesh",
     mesh = "salvage1.obj",
     tiles = {"salvage1.png"},
+    use_texture_alpha = "opaque",
     groups = {metal=1},
     on_place = function (itemstack, user, pointed)
         local node = minetest.get_node(pointed.under)

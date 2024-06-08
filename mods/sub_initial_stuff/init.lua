@@ -26,7 +26,7 @@ minetest.register_node("sub_initial_stuff:light", {
     walkable = false,
     pointable = false,
     buildable_to = true,
-    light_source = 15
+    light_source = 14
 })
 
 minetest.register_on_newplayer(function(player)

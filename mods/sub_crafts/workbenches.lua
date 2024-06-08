@@ -4,6 +4,7 @@ minetest.register_node("sub_crafts:fabricator", {
     drawtype = "mesh",
     mesh = "fabricator.obj",
     tiles = {"fabricator.png"},
+    use_texture_alpha = "opaque",
     selection_box = {
         type = "fixed",
         fixed = {-0.375, -0.5, 0.25, 0.375, 0.5, 0.5}
@@ -53,6 +54,7 @@ minetest.register_node("sub_crafts:medkit_fabricator", {
     drawtype = "mesh",
     mesh = "medkit_fabricator.obj",
     tiles = {"medkit_fabricator.png"},
+    use_texture_alpha = "opaque",
     selection_box = {
         type = "fixed",
         fixed = {-0.25, -0.375, 0.375, 0.25, 0.375, 0.5}
