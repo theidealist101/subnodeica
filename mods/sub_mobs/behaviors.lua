@@ -58,10 +58,13 @@ function sub_mobs.hq_fish_roam(self, priority, speed, nopitch)
         --check there is a destination
         local pos = self.object:get_pos()
         if not dest or mobkit.isnear3d(pos, dest, 3) then
-            for _ = 1, 8 do
+            for _ = 1, 16 do
                 --pick a random nearby position and check if reachable
-                dest = mobkit.get_node_pos(pos+vector.new(math.random(-16, 16), math.random(-16, 8), math.random(-16, 16)))
-                if sub_mobs.in_water(dest) and not minetest.raycast(pos, dest, false):next() then break end
+                local new_dest = mobkit.get_node_pos(pos+vector.new(math.random(-16, 16), math.random(-16, 8), math.random(-16, 16)))
+                if sub_mobs.in_water(new_dest) and not minetest.raycast(pos, new_dest, false):next() then
+                    dest = new_dest
+                    break
+                end
             end
             if not dest then return end
         end
@@ -87,9 +90,12 @@ function sub_mobs.hq_fish_flee(self, priority, speed, obj, jump, nopitch)
         if not mobkit.is_alive(self.object) or not mobkit.is_alive(obj) or vector.length(pos-obj:get_pos()) > 16 then return true end
 
         if not dest or mobkit.isnear3d(pos, dest, 3) then
-            for _ = 1, 8 do
-                dest = mobkit.get_node_pos(pos+12*vector.normalize(pos-obj:get_pos())+vector.new(math.random(-8, 8), math.random(-8, 8), math.random(-8, 8)))
-                if (jump or sub_mobs.in_water(dest)) and not minetest.raycast(pos, dest, false):next() then break end
+            for _ = 1, 16 do
+                local new_dest = mobkit.get_node_pos(pos+12*vector.normalize(pos-obj:get_pos())+vector.new(math.random(-8, 8), math.random(-8, 8), math.random(-8, 8)))
+                if (jump or sub_mobs.in_water(new_dest)) and not minetest.raycast(pos, new_dest, false):next() then
+                    dest = new_dest
+                    break
+                end
             end
             if not dest then return end
         end
@@ -126,9 +132,12 @@ function sub_mobs.hq_herd_roam(self, priority, speed, herd_weight)
 
         if not dest or mobkit.isnear3d(pos, dest, 3) then
             if math.random() < 0.2 then return true end --to allow certain other behaviors
-            for _ = 1, 8 do
-                dest = mobkit.get_node_pos(pos+herd_weight*(herd_center-pos)+vector.new(math.random(-32, 32), math.random(-16, 32), math.random(-32, 32)))
-                if sub_mobs.in_water(dest) and not minetest.raycast(pos, dest, false):next() then break end
+            for _ = 1, 16 do
+                local new_dest = mobkit.get_node_pos(pos+herd_weight*(herd_center-pos)+vector.new(math.random(-32, 32), math.random(-16, 32), math.random(-32, 32)))
+                if sub_mobs.in_water(new_dest) and not minetest.raycast(pos, new_dest, false):next() then
+                    dest = new_dest
+                    break
+                end
             end
             if not dest then return end
         end
