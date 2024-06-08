@@ -228,12 +228,14 @@ minetest.register_craftitem("sub_core:coral_tube_sample", {
 --Harvesting nodes and minerals which come from them
 minetest.register_craftitem("sub_core:titanium", {
     description = "Titanium",
-    inventory_image = "default_tin_lump.png"
+    inventory_image = "default_tin_lump.png",
+    groups = {metal=1}
 })
 
 minetest.register_craftitem("sub_core:copper", {
     description = "Copper",
-    inventory_image = "default_copper_lump.png"
+    inventory_image = "default_copper_lump.png",
+    groups = {metal=1}
 })
 
 sub_core.register_waterloggable("sub_core:limestone_outcrop", {
@@ -270,7 +272,8 @@ minetest.register_craftitem("sub_core:lead", {
 
 minetest.register_craftitem("sub_core:silver", {
     description = "Silver",
-    inventory_image = "default_clay_lump.png"
+    inventory_image = "default_clay_lump.png",
+    groups = {metal=1}
 })
 
 minetest.register_craftitem("sub_core:gold", {
@@ -360,6 +363,7 @@ sub_core.register_waterloggable("sub_core:salvage1", {
     paramtype = "light",
     paramtype2 = "4dir",
     sunlight_propagates = true,
+    groups = {metal=1},
     on_rightclick = function (pos, node, user, itemstack)
         minetest.set_node(pos, {name=minetest.registered_nodes[node.name]._water_equivalent})
         return sub_core.give_item("sub_core:salvage")(pos, node, user, itemstack)
@@ -372,6 +376,7 @@ minetest.register_node("sub_core:salvage", {
     drawtype = "mesh",
     mesh = "salvage1.obj",
     tiles = {"salvage1.png"},
+    groups = {metal=1},
     on_place = function (itemstack, user, pointed)
         local node = minetest.get_node(pointed.under)
         local defs = minetest.registered_nodes[node.name]
