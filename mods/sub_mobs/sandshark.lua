@@ -54,7 +54,7 @@ end
 --Function controlling sandsharks, hiding in ground when idle and then jumping out at passing mobs
 local function sandshark_brain(self)
     --chase prey that comes near - always the closest one at any given time
-    if mobkit.timer(self, 1) then
+    if mobkit.timer(self, 5) then
         local pos = self.object:get_pos()
         local radius = (self.object:get_velocity() == vector.zero() and 8) or 32
         local target
