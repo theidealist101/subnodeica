@@ -115,6 +115,7 @@ function sub_mobs.hq_herd_roam(self, priority, speed, herd_weight)
     local dest, herd_center
 
     local function out()
+        if mobkit.timer(self, 1) and math.random() < 0.05 then return true end --to allow certain other behaviors
         local pos = self.object:get_pos()
 
         if not herd_center or mobkit.timer(self, 1) then
@@ -131,7 +132,6 @@ function sub_mobs.hq_herd_roam(self, priority, speed, herd_weight)
         end
 
         if not dest or mobkit.isnear3d(pos, dest, 3) then
-            if math.random() < 0.2 then return true end --to allow certain other behaviors
             for _ = 1, 16 do
                 local new_dest = mobkit.get_node_pos(pos+herd_weight*(herd_center-pos)+vector.new(math.random(-32, 32), math.random(-16, 32), math.random(-32, 32)))
                 if sub_mobs.in_water(new_dest) and not minetest.raycast(pos, new_dest, false):next() then
