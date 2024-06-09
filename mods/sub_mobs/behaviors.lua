@@ -150,6 +150,34 @@ function sub_mobs.hq_herd_roam(self, priority, speed, herd_weight)
     mobkit.queue_high(self, out, priority)
 end
 
+--Swim around randomly in very big arcs, mainly for leviathans
+function sub_mobs.hq_big_roam(self, priority, speed)
+    local dest
+
+    local function out()
+        --check there is a destination
+        local pos = self.object:get_pos()
+        if not dest or mobkit.isnear3d(pos, dest, 6) then
+            for _ = 1, 16 do
+                --pick a random nearby position and check if reachable
+                local new_dest = mobkit.get_node_pos(pos+vector.new(math.random(-64, 64), math.random(-32, 16), math.random(-64, 64)))
+                if sub_mobs.in_water(new_dest) and not mobkit.isnear3d(pos, new_dest, 16) and not minetest.raycast(pos, new_dest, false):next() then
+                    dest = new_dest
+                    break
+                end
+            end
+            if not dest then return end
+        end
+
+        --move towards destination
+        local dir = vector.normalize(self.object:get_velocity()+vector.normalize(dest-pos)*0.5)
+        self.object:set_velocity(dir*speed)
+        self.object:set_rotation(mobkit.dir_to_rot(dir))
+    end
+
+    mobkit.queue_high(self, out, priority)
+end
+
 --Swim towards entity and attack it
 function sub_mobs.hq_water_chase(self, priority, speed, turn_rate, obj)
     local function out()
