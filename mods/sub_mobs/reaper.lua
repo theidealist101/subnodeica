@@ -128,6 +128,46 @@ local function reaper_brain(self)
     end
 end
 
+--Procedurally animate reaper tail
+local bone_lengths = {{"hips", 10}, {"tail", 10}, {"tail2", 5}, {"tail3", 5}, {"tail4", 5}}
+
+local function reaper_handle_tail(self)
+    if self.old_pos then
+        --find position of each segment
+        local rot = self.old_rot
+        local pos = self.old_pos-5*mobkit.rot_to_dir(rot)
+        local positions = {}
+        for _, item in pairs(bone_lengths) do
+            local bone, length = unpack(item)
+            rot = rot+vector.apply(({self.object:get_bone_position(bone)})[2], math.rad)
+            pos = pos-length*mobkit.rot_to_dir(rot)
+            positions[bone] = pos
+        end
+
+        --point each bone towards its old end position
+        rot = self.object:get_rotation()
+        pos = self.object:get_pos()-5*mobkit.rot_to_dir(rot)
+        for _, item in pairs(bone_lengths) do
+            local bone, length = unpack(item)
+            local new_rot = mobkit.dir_to_rot(positions[bone]-pos)
+            self.object:set_bone_position(bone, vector.zero(), vector.apply(vector.subtract(new_rot, rot), math.deg))
+            rot = new_rot
+            pos = pos-length*mobkit.rot_to_dir(rot)
+        end
+    end
+
+    --set up stuff for next iteration
+    self.old_rot = self.object:get_rotation()
+    self.old_pos = self.object:get_pos()
+end
+
+--Step function for reapers, processing tail movement
+local function reaper_stepfunc(self, dtime, colinfo)
+    mobkit.stepfunc(self, dtime, colinfo)
+    --this, TOO, does not work. set_bone_position simply has no effect whatsoever
+    --reaper_handle_tail(self)
+end
+
 --Reaper leviathan, found in several surface biomes which are also the most dangerous ones largely because of the reaper
 minetest.register_entity("sub_mobs:reaper", {
     initial_properties = {
@@ -144,7 +184,7 @@ minetest.register_entity("sub_mobs:reaper", {
     max_speed = 20,
     jump_height = 0.5,
     view_range = 2,
-    on_step = mobkit.stepfunc,
+    on_step = reaper_stepfunc,
     on_activate = sub_mobs.actfunc,
     get_staticdata = mobkit.statfunc,
     logic = reaper_brain,
