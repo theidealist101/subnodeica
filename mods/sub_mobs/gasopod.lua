@@ -37,7 +37,6 @@ local function gasopod_brain(self)
     --roam aimlessly (default)
     if mobkit.timer(self, 1) then
         if mobkit.is_queue_empty_high(self) and mobkit.is_queue_empty_low(self) then
-            minetest.log(dump(math.abs(minetest.get_timeofday()-0.5)))
             if math.abs(minetest.get_timeofday()-0.5) < 0.35 or math.random() < 0.05 then
                 sub_mobs.hq_herd_roam(self, 10, 2, 0.5)
             else --TODO: not quite working yet
