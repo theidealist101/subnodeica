@@ -58,7 +58,7 @@ function sub_mobs.hq_fish_roam(self, priority, speed, nopitch)
         --check there is a destination
         local pos = self.object:get_pos()
         if not dest or mobkit.isnear3d(pos, dest, 3) then
-            for _ = 1, 16 do
+            for _ = 1, 64 do
                 --pick a random nearby position and check if reachable
                 local new_dest = mobkit.get_node_pos(pos+vector.new(math.random(-16, 16), math.random(-16, 8), math.random(-16, 16)))
                 if sub_mobs.in_water(new_dest) and not minetest.raycast(pos, new_dest, false):next() then
@@ -66,7 +66,10 @@ function sub_mobs.hq_fish_roam(self, priority, speed, nopitch)
                     break
                 end
             end
-            if not dest then return end
+            if not dest then
+                self.object:set_velocity(vector.zero())
+                return
+            end
         end
 
         --move towards destination

@@ -1,5 +1,10 @@
 --Entities which reapers will try to attack (none currently)
-local reaper_prey = {}
+local reaper_prey = {
+    "sub_mobs:reefback_baby",
+    "sub_mobs:sandshark",
+    "sub_mobs:stalker",
+    "sub_mobs:gasopod"
+}
 
 --Thrash around wildly in a death grip
 local function hq_reaper_thrash(self, priority, speed, turn_rate)
@@ -15,6 +20,7 @@ local function hq_reaper_thrash(self, priority, speed, turn_rate)
             for i, obj in ipairs(self.object:get_children()) do
                 obj:set_detach()
                 --obj:set_properties({visual_size={x=1, y=1}})
+                obj:punch(self.object, 1, self.attack)
                 return true
             end
         end
@@ -58,8 +64,9 @@ local function hq_reaper_grab(self, priority, speed, turn_rate, obj)
         --try to pick up object
         if self.attack and mobkit.isnear3d(pos, dest, self.attack.range+0.5) then
             obj:set_attach(self.object, "", {x=0, y=0, z=10}, {x=0, y=0, z=0}, false) --offset not working
-            --obj:set_properties({visual_size={x=0.02, y=0.02}})
-            hq_reaper_thrash(self, priority, speed, turn_rate)
+            minetest.log(dump({obj:get_attach()}))
+            obj:set_properties({visual_size={x=1, y=1}})
+            hq_reaper_thrash(self, priority, 10, turn_rate)
             return true
         end
 
@@ -78,14 +85,14 @@ local function hq_reaper_circle(self, priority, speed, obj)
         --make sure target is still in range
         local pos = self.object:get_pos()
         local target = obj:get_pos()
-        if not mobkit.isnear3d(pos, target, 128) then return true end
+        if not mobkit.is_alive(obj) or not mobkit.isnear3d(pos, target, 128) then return true end
 
         --chance to attack the target suddenly (more likely if target is facing away)
-        if mobkit.timer(self, 5) and mobkit.isnear3d(pos, target, 32)
+        if mobkit.timer(self, 5) and mobkit.isnear3d(pos, target, 64)
         and (not obj:is_player() or math.random()*math.pi > vector.angle(pos-target, obj:get_look_dir())) then
             --not yet working correctly, so removed for now
             --note to self: switch inequality above later
-            --hq_reaper_grab(self, priority, 20, 0.1, obj)
+            hq_reaper_grab(self, priority, 20, 0.1, obj)
             return true
         end
 
