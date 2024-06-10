@@ -7,7 +7,7 @@ local reaper_prey = {
 }
 
 --Thrash around wildly in a death grip
-local function hq_reaper_thrash(self, priority, speed, turn_rate)
+local function hq_reaper_thrash(self, priority, speed)
     local dest
     local finish = minetest.get_gametime()+math.random(5, 10)
 
@@ -19,7 +19,11 @@ local function hq_reaper_thrash(self, priority, speed, turn_rate)
         if minetest.get_gametime() > finish then
             for i, obj in ipairs(self.object:get_children()) do
                 obj:set_detach()
-                --obj:set_properties({visual_size={x=1, y=1}})
+                if not obj:is_player() then
+                    local old_size = obj:get_properties().visual_size
+                    local self_size = self.object:get_properties().visual_size
+                    obj:set_properties({visual_size={old_size.x*self_size.x*0.1, old_size.y*self_size.y*0.1}})
+                end
                 obj:punch(self.object, 1, self.attack)
                 return true
             end
@@ -63,10 +67,14 @@ local function hq_reaper_grab(self, priority, speed, turn_rate, obj)
 
         --try to pick up object
         if self.attack and mobkit.isnear3d(pos, dest, self.attack.range+0.5) then
-            obj:set_attach(self.object, "", {x=0, y=0, z=10}, {x=0, y=0, z=0}, false) --offset not working
-            minetest.log(dump({obj:get_attach()}))
-            obj:set_properties({visual_size={x=1, y=1}})
-            hq_reaper_thrash(self, priority, 10, turn_rate)
+            obj:set_attach(self.object, "", {x=0, y=0, z=5}, {x=0, y=0, z=0}, false) --offset not working
+            if not obj:is_player() then
+                local old_size = obj:get_properties().visual_size
+                local self_size = self.object:get_properties().visual_size
+                minetest.log(dump({old_size, self_size}))
+                obj:set_properties({visual_size={old_size.x/self_size.x*10, old_size.y/self_size.y*10}})
+            end
+            hq_reaper_thrash(self, priority, 10)
             return true
         end
 
@@ -123,7 +131,7 @@ local function reaper_brain(self)
     --start to circle nearby prey
     if mobkit.timer(self, 10) and mobkit.get_queue_priority(self) < 20 then
         for i, obj in ipairs(minetest.get_objects_inside_radius(self.object:get_pos(), 96)) do
-            if obj:is_player() or sub_mobs.containsi(reaper_prey, obj:get_luaentity().name) then
+            if not obj:is_player() and obj ~= self.object and sub_mobs.containsi(reaper_prey, obj:get_luaentity().name) then
                 hq_reaper_circle(self, 20, 15, obj)
             end
         end
