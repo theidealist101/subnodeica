@@ -393,3 +393,50 @@ minetest.register_node("sub_core:salvage", {
         if defs and defs.on_rightclick then return defs.on_rightclick(pointed.under, node, user, itemstack, pointed) end
     end --to be replaced later
 })
+
+--Brain coral, produces occasional oxygen bubbles
+minetest.register_node("sub_core:brain_coral", {
+    description = "Brain Coral",
+    drawtype = "nodebox",
+    node_box = {
+        type = "fixed",
+        fixed = {-0.75, -0.5, -0.75, 0.75, 0.5, 0.75}
+    },
+    tiles = {"sub_core_brain_coral.png"}
+})
+
+minetest.register_entity("sub_core:coral_bubble", {
+    initial_properties = {
+        visual = "cube",
+        visual_size = {x=1, y=0.8},
+        textures = {"coral_bubble.png", "coral_bubble.png", "coral_bubble.png", "coral_bubble.png", "coral_bubble.png", "coral_bubble.png"},
+        use_texture_alpha = true,
+        physical = false
+    },
+    on_activate = function (self)
+        self.object:set_velocity(vector.new(0, 1.5, 0))
+    end,
+    on_step = function (self)
+        local pos = self.object:get_pos()
+        local nearby_objects = minetest.get_objects_inside_radius(pos, 0.5)
+        local defs = minetest.registered_nodes[minetest.get_node(pos).name]
+        if pos.y > 0 or #nearby_objects > 1 or (defs and defs.walkable) then
+            for _, obj in ipairs(nearby_objects) do
+                if obj:is_player() then obj:set_breath(obj:get_breath()+10) end
+            end
+            self.object:remove()
+            return
+        end
+    end
+})
+
+minetest.register_abm({
+    nodenames = {"sub_core:brain_coral"},
+    neighbors = {"group:water"},
+    interval = 1,
+    chance = 4,
+    action = function (pos)
+        pos.y = pos.y+1
+        minetest.add_entity(pos, "sub_core:coral_bubble")
+    end
+})
