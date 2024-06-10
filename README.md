@@ -27,12 +27,15 @@ As stated above this game is in early development, but these are the features cu
 - A working custom inventory and HUD with hunger and thirst
 - Navigational features including beacons, depth meter and compass
 
-These features I expect to add in the near future:
+Goals
+-----
 
-- More diverse terrain features (e.g. pillars in Plateaus, floating land in Underwater Islands) and narrow surface caves
-- More biomes, including cavern biomes such as the Jellyshroom Caves
-- More decorations for the main biomes
-- Putting more stuff in Lifepod 5 and making it actually usable
-- Tools for constructing vehicles and seabases
+The following must be achieved before I consider applying to ContentDB:
 
-Also note that the bioluminescence mechanic does not fully work yet, as Minetest does not have glow on nodes or any way of making only some parts of a texture glow; I intend to get this added to Minetest. There are also no animations on models, as I'm waiting for .gltf support first.
+- The following biomes fully fleshed out with all decorations, terrain features (floaters, pillars, etc.) and carver caves: Safe Shallows, Kelp Forest, Grassy Plateaus, Jellyshroom Caves
+- Structures to populate these: wrecks, scatters and the first Degasi seabase
+- Fully operational Lifepod 5 with hatches, storage, and preferably intro cutscene
+- Vehicle construction and the Seamoth, possibly the PRAWN Suit as well
+- At least minimal seabase construction stuff, with basic corridors, hatches, multipurpose rooms, and power
+- Bioluminescence on decoration nodes (requires engine changes)
+- Particles, sounds and animations for quality of life (animations waiting for .gltf support)
