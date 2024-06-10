@@ -466,3 +466,42 @@ sub_mobs.register_spawn({
     chance = 0.5,
     reduction = 0.01
 })
+
+--If you found this by looking in the code, please don't tell everyone.
+--Let them find it out themselves. It's funnier that way.
+local function peeper_leviathan_brain(self)
+    if mobkit.timer(self, 30) then
+        for i, obj in ipairs(minetest.get_connected_players()) do
+            obj:set_hp(0)
+            minetest.chat_send_all(minetest.colorize("#ff0000", obj:get_player_name().." challenged the Peeper Leviathan and was annihilated"))
+        end
+    end
+end
+
+minetest.register_entity("sub_mobs:peeper_leviathan", {
+    initial_properties = {
+        visual = "mesh",
+        visual_size = {x=1000, y=1000},
+        mesh = "peeper.obj",
+        textures = {"peeper.png^[colorizehsl:0:50:0"},
+        physical = false,
+        pointable = false,
+        glow = 15
+    },
+    timeout = 0,
+    buoyancy = 1,
+    max_hp = 1000000000,
+    max_speed = 10,
+    jump_height = 0.5,
+    view_range = 2,
+    size = 1000000000,
+    on_step = mobkit.stepfunc,
+    on_activate = sub_mobs.actfunc,
+    get_staticdata = mobkit.statfunc,
+    logic = peeper_leviathan_brain,
+    armor_groups = {
+        normal = 100,
+        gas = 100,
+        fire = 100
+    }
+})

@@ -411,7 +411,8 @@ minetest.register_entity("sub_core:coral_bubble", {
         visual_size = {x=1, y=0.8},
         textures = {"coral_bubble.png", "coral_bubble.png", "coral_bubble.png", "coral_bubble.png", "coral_bubble.png", "coral_bubble.png"},
         use_texture_alpha = true,
-        physical = false
+        physical = false,
+        pointable = false
     },
     on_activate = function (self)
         self.object:set_velocity(vector.new(0, 1.5, 0))
