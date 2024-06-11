@@ -98,6 +98,28 @@ sub_core.register_decor({
     noise = decor_noise
 })
 
+sub_core.register_decor({
+    type = "surface",
+    biome = "sub_core:shallows",
+    fill_ratio = 0.02,
+    decor = "sub_core:sandstone"
+})
+
+sub_core.register_decor({
+    type = "underground",
+    biome = "sub_core:shallows",
+    fill_ratio = 0.7,
+    decor = "sub_core:sandstone_with_scales",
+    noise = {
+        offset = 0,
+        scale = 1,
+        spread = {x=4, y=8, z=4},
+        octaves = 3,
+        persistence = 0.5,
+        lacunarity = 2.0
+    }
+})
+
 for i = 1, 4 do
     sub_core.register_decor({
         biome = "sub_core:shallows",

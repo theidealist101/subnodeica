@@ -53,6 +53,11 @@ minetest.register_node("sub_core:sand_with_lichen", {
     tiles = {"default_sand.png^sub_core_lichen.png"}
 })
 
+minetest.register_node("sub_core:sandstone_with_scales", {
+    description = "Sandstone",
+    tiles = {"default_sandstone.png^sub_core_scales.png"}
+})
+
 --Common decorations that appear in many biomes
 sub_core.register_waterloggable("sub_core:veined_nettle", {
     description = "Veined Nettle",
@@ -97,6 +102,55 @@ sub_core.register_waterloggable("sub_core:blue_palm", {
     selection_box = {
         type = "fixed",
         fixed = {-0.375, -0.5, -0.375, 0.375, 0.25, 0.375}
+    },
+    paramtype = "light",
+    sunlight_propagates = true,
+    walkable = false,
+    buildable_to = true,
+    groups = {attached_node=1}
+})
+
+sub_core.register_waterloggable("sub_core:furled_papyrus", {
+    description = "Furled Papyrus",
+    drawtype = "mesh",
+    mesh = "furled_papyrus.obj",
+    tiles = {"furled_papyrus.png"},
+    use_texture_alpha = "clip",
+    selection_box = {
+        type = "fixed",
+        fixed = {-0.375, -0.5, -0.375, 0.375, 0.5, 0.375}
+    },
+    paramtype = "light",
+    sunlight_propagates = true,
+    walkable = false,
+    buildable_to = true,
+    groups = {attached_node=1}
+})
+
+sub_core.register_waterloggable("sub_core:redwort", {
+    description = "Redwort",
+    drawtype = "plantlike",
+    tiles = {"sub_core_redwort.png"},
+    use_texture_alpha = "clip",
+    selection_box = {
+        type = "fixed",
+        fixed = {-0.375, -0.5, -0.375, 0.375, 0.5, 0.375}
+    },
+    paramtype = "light",
+    sunlight_propagates = true,
+    walkable = false,
+    buildable_to = true,
+    groups = {attached_node=1}
+})
+
+sub_core.register_waterloggable("sub_core:violet_beau", {
+    description = "Violet Beau",
+    drawtype = "plantlike",
+    tiles = {"sub_core_violet_beau.png"},
+    use_texture_alpha = "clip",
+    selection_box = {
+        type = "fixed",
+        fixed = {-0.25, -0.5, -0.25, 0.25, 0.5, 0.25}
     },
     paramtype = "light",
     sunlight_propagates = true,

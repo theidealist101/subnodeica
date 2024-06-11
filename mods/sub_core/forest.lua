@@ -175,6 +175,13 @@ sub_core.register_decor({
 
 --Various other decorations
 sub_core.register_decor({
+    type = "surface",
+    biome = "sub_core:forest",
+    fill_ratio = 0.04,
+    decor = "sub_core:sandstone"
+})
+
+sub_core.register_decor({
     type = "underground",
     biome = "sub_core:forest",
     fill_ratio = 0.002,
@@ -186,6 +193,14 @@ sub_core.register_decor({
     biome = "sub_core:forest",
     fill_ratio = 0.001,
     decor = "sub_core:sandstone_outcrop_spawner"
+})
+
+sub_core.register_schem({
+    type = "surface",
+    biome = "sub_core:forest",
+    fill_ratio = 0.0002,
+    radius = 5,
+    schem = minetest.get_modpath("sub_core").."/schems/coral_tube.mts",
 })
 
 sub_core.register_decor({
