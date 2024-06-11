@@ -28,7 +28,7 @@ end
 function sub_nav.move_waypoint(id, pos)
     local data = minetest.deserialize(storage:get_string("waypoints"))
     if not data[id] then return false end
-    data[id] = {pos, data[id].defs}
+    data[id] = {pos, data[id][2]}
     storage:set_string("waypoints", minetest.serialize(data))
     return true
 end
