@@ -173,6 +173,70 @@ sub_core.register_decor({
     decor = "sub_core:creepvine_spawner"
 })
 
+--Drooping stingers, spawn mostly in caves and poison the player
+minetest.register_node("sub_core:drooping_stinger", {
+    description = "Drooping Stinger",
+    drawtype = "mesh",
+    mesh = "double_plantlike_down.obj",
+    tiles = {"sub_core_drooping_stinger.png"},
+    use_texture_alpha = "clip",
+    selection_box = {
+        type = "fixed",
+        fixed = {-0.25, -1.5, -0.25, 0.25, 0.5, 0.25}
+    },
+    paramtype = "light",
+    sunlight_propagates = true,
+    walkable = false,
+    groups = {drooping_stinger=1},
+    liquid_move_physics = true,
+    post_effect_color = {r=60, g=120, b=0, a=100},
+    _fog = {
+        fog_distance = 10,
+        fog_start = 0,
+        fog_color = {r=192, g=255, b=0}
+    }
+})
+
+minetest.register_node("sub_core:drooping_stinger_tip", {
+    description = "Drooping Stinger Tip",
+    drawtype = "airlike",
+    paramtype = "light",
+    sunlight_propagates = true,
+    walkable = false,
+    pointable = false,
+    buildable_to = true,
+    damage_per_second = 3,
+    liquid_move_physics = true,
+    post_effect_color = {r=60, g=120, b=0, a=100},
+    _fog = {
+        fog_distance = 10,
+        fog_start = 0,
+        fog_color = {r=192, g=255, b=0}
+    }
+})
+
+local up = vector.new(0, 1, 0)
+
+minetest.register_abm({
+    nodenames = {"sub_core:drooping_stinger", "sub_core:drooping_stinger_tip"},
+    interval = 1,
+    chance = 1,
+    action = function (pos, node)
+        if node.name == "sub_core:drooping_stinger" and minetest.get_node(pos-up).name ~= "sub_core:drooping_stinger_tip" then
+            minetest.set_node(pos-up, {name="sub_core:drooping_stinger_tip"})
+        elseif node.name == "sub_core:drooping_stinger_tip" and minetest.get_node(pos+up).name ~= "sub_core:drooping_stinger" then
+            minetest.set_node(pos, minetest.get_node(pos+up))
+        end
+    end
+})
+
+sub_core.register_decor({
+    type = "bottom",
+    biome = "sub_core:forest",
+    fill_ratio = 0.1,
+    decor = "sub_core:drooping_stinger"
+})
+
 --Various other decorations
 sub_core.register_decor({
     type = "surface",

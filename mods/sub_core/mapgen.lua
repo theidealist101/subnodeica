@@ -214,6 +214,7 @@ local function place_decors(ni3d, biome, density_below, density, density_above, 
         and (not defs.noise or decor_data[i][ni3d] > 0) then
             if (defs.type == "underground" and density <= 0 and density_above <= 0 and density_below <= 0)
             or (defs.type == "surface" and density <= 0 and density_above > 0)
+            or (defs.type == "bottom" and density > 0 and density_above <= 0)
             or (defs.type == "top" and density_below <= 0 and density > 0) then
                 return defs.decor_id, (defs.max_param2 and param2_rand:next(defs.param2, defs.max_param2)) or defs.param2
             end
