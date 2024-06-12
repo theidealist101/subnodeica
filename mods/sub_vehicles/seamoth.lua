@@ -27,9 +27,12 @@ minetest.register_entity("sub_vehicles:seamoth", {
         user:set_eye_offset(vector.new(0, -12, 0))
     end,
     on_step = function (self, dtime, moveresult)
-        --do some friction physics
+        --do some physics
         local accel = -self.object:get_velocity()
         if vector.length(accel) > 1 then accel = vector.normalize(accel) end
+        if minetest.get_node(mobkit.get_node_pos(self.object:get_pos())).name == "air" then
+            accel.y = accel.y-3
+        end
 
         --check there is someone driving
         local driver = self.object:get_children()[1]
