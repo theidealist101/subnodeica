@@ -1,3 +1,9 @@
+--Settings related to seamoth
+local ACCEL = 0.5
+local MAX_SPEED = 16
+local GRAVITY = -3
+local FRICTION = 0.2
+
 --Seamoth, one-manned submersible, small and unarmored but easily manoevrable and extendable
 minetest.register_entity("sub_vehicles:seamoth", {
     initial_properties = {
@@ -27,12 +33,7 @@ minetest.register_entity("sub_vehicles:seamoth", {
         user:set_eye_offset(vector.new(0, -12, 0))
     end,
     on_step = function (self, dtime, moveresult)
-        --do some physics
-        local accel = -self.object:get_velocity()
-        if vector.length(accel) > 1 then accel = vector.normalize(accel) end
-        if minetest.get_node(mobkit.get_node_pos(self.object:get_pos())).name == "air" then
-            accel.y = accel.y-3
-        end
+        local accel = vector.zero()
 
         --check there is someone driving
         local driver = self.object:get_children()[1]
@@ -50,20 +51,29 @@ minetest.register_entity("sub_vehicles:seamoth", {
                 self.object:set_rotation(rot)
 
                 --apply force based on controls
-                local forward = 2*mobkit.rot_to_dir(rot)
+                local forward = ACCEL*mobkit.rot_to_dir(rot)
                 local sideways = vector.new(forward.z, 0, -forward.x)
                 if controls.up then accel = accel+forward end
                 if controls.down then accel = accel-forward*0.5 end
                 if controls.right then accel = accel+sideways end
                 if controls.left then accel = accel-sideways end
-                if controls.jump then accel.y = accel.y+2 end
-                if controls.sneak then accel.y = accel.y-2 end
+                if controls.jump then accel.y = accel.y+ACCEL end
+                if controls.sneak then accel.y = accel.y-ACCEL end
+            end
+        end
+
+        --do some physics
+        if accel == vector.zero() then
+            accel = -self.object:get_velocity()
+            if vector.length(accel) > FRICTION then accel = FRICTION*vector.normalize(accel) end
+            if minetest.get_node(mobkit.get_node_pos(self.object:get_pos())).name == "air" then
+                accel.y = accel.y+GRAVITY
             end
         end
 
         --update motion
         local vel = self.object:get_velocity()+accel
-        if vector.length(vel) > 10 then vel = 10*vector.normalize(vel) end
+        if vector.length(vel) > MAX_SPEED then vel = MAX_SPEED*vector.normalize(vel) end
         self.object:set_velocity(vel)
         sub_nav.move_waypoint(self.waypoint, self.object:get_pos())
     end,
