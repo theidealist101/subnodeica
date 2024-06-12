@@ -62,6 +62,7 @@ local function crashfish_brain(self)
     if not self.target then
         for i, obj in ipairs(minetest.get_objects_inside_radius(pos, 64)) do
             if obj:is_player() then
+                while obj:get_attach() do obj = obj:get_attach() end
                 self.target = obj
                 break
             end

@@ -65,6 +65,7 @@ local function stalker_brain(self)
     if mobkit.timer(self, 10) and mobkit.get_queue_priority(self) < 20 then
         for i, obj in ipairs(minetest.get_objects_inside_radius(self.object:get_pos(), 16)) do
             if obj:is_player() or sub_mobs.containsi(stalker_prey, obj:get_luaentity().name) then
+                while obj:get_attach() do obj = obj:get_attach() end
                 drop_items(self)
                 sub_mobs.hq_water_chase(self, 20, 8, 0.1, obj)
             end

@@ -61,6 +61,7 @@ local function sandshark_brain(self)
         local dist = 1000
         for i, obj in ipairs(minetest.get_objects_inside_radius(pos, radius)) do
             if obj:is_player() or sub_mobs.containsi(sandshark_prey, obj:get_luaentity().name) then
+                while obj:get_attach() do obj = obj:get_attach() end
                 local new_dist = vector.distance(pos, obj:get_pos())
                 if new_dist < dist then
                     target = obj

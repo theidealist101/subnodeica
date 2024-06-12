@@ -16,6 +16,7 @@ local function biter_brain(self)
         --attack certain entities nearby
         for i, obj in ipairs(minetest.get_objects_inside_radius(self.object:get_pos(), 8)) do
             if obj:is_player() or sub_mobs.containsi(biter_prey, obj:get_luaentity().name) then
+                while obj:get_attach() do obj = obj:get_attach() end
                 sub_mobs.hq_water_chase(self, 20, 4, 0.1, obj)
             end
         end
@@ -143,7 +144,7 @@ local function mesmer_brain(self)
     --mesmerise nearby creatures
     if mobkit.timer(self, 1) and mobkit.get_queue_priority(self) < 20 then
         for i, obj in ipairs(minetest.get_objects_inside_radius(self.object:get_pos(), 8)) do
-            if obj ~= self.object and (obj:is_player() or sub_mobs.containsi(mesmer_prey, obj:get_luaentity().name)) then
+            if obj ~= self.object and not obj:get_attach() and (obj:is_player() or sub_mobs.containsi(mesmer_prey, obj:get_luaentity().name)) then
                 hq_mesmerise(self, 20, obj)
                 break
             end

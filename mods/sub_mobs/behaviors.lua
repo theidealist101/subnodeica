@@ -185,7 +185,7 @@ end
 function sub_mobs.hq_water_chase(self, priority, speed, turn_rate, obj)
     local function out()
         --make sure the entity is still alive
-        if not mobkit.exists(self) or not mobkit.is_alive(obj) then return true end
+        if not mobkit.exists(self) or not mobkit.exists(obj) then return true end
 
         --turn towards entity
         local pos = self.object:get_pos()
@@ -194,7 +194,7 @@ function sub_mobs.hq_water_chase(self, priority, speed, turn_rate, obj)
         self.object:set_rotation(sub_mobs.turn_to(rot, mobkit.dir_to_rot(dest-pos), turn_rate))
 
         --try to attack entity
-        if self.attack and mobkit.isnear3d(pos, dest, self.attack.range) then
+        if self.attack and mobkit.isnear3d(pos, dest, self.attack.range+0.5) then
             obj:punch(self.object, 1, self.attack)
             return true
         end
