@@ -44,6 +44,7 @@ function sub_crafts.register_craft(defs)
     defs.category = defs.category --can be nil
     defs.subcategory = defs.subcategory --ditto
     defs.output = defs.output or {}
+    defs.output_icon = defs.output_icon
     defs.recipe = defs.recipe or {}
     table.insert(sub_crafts.registered_crafts, defs)
     return #sub_crafts.registered_crafts
@@ -110,6 +111,9 @@ function sub_crafts.get_formspec(player, rtype, category, subcategory)
             if defs == category then offset = height end
             name = defs
             table.insert(out, table.concat({"image_button[", x_offset, ",", y_offset+height, ";1,1;", name, ".png;", name, ";]tooltip[", name, ";", string.upper(string.sub(name, 1, 1)), string.sub(name, 2), "]"}))
+        elseif defs.output_icon then
+            name = defs.output_icon
+            table.insert(out, table.concat({"image_button[", x_offset, ",", y_offset+height, ";1,1;", name, ".png;", name, ";]tooltip[", name, ";", defs.output_tooltip, "]"}))
         else
             name = defs.output[1]
             table.insert(out, table.concat({"item_image_button[", x_offset, ",", y_offset+height, ";1,1;", name, ";", name, ";]"}))
@@ -126,6 +130,9 @@ function sub_crafts.get_formspec(player, rtype, category, subcategory)
             if defs == subcategory then offset = height end
             name = category.."|"..defs
             table.insert(out, table.concat({"image_button[", x_offset+1+PADDING, ",", y_offset+height, ";1,1;", defs, ".png;", name, ";]tooltip[", name, ";", string.upper(string.sub(defs, 1, 1)), string.sub(defs, 2), "]"}))
+        elseif defs.output_icon then
+            name = category.."|"..defs.output_icon
+            table.insert(out, table.concat({"image_button[", x_offset+1+PADDING, ",", y_offset+height, ";1,1;", defs.output_icon, ".png;", name, ";]tooltip[", name, ";", defs.output_tooltip, "]"}))
         else
             name = category.."|"..escape_colon(defs.output[1])
             table.insert(out, table.concat({"item_image_button[", x_offset+1+PADDING, ",", y_offset+height, ";1,1;", defs.output[1], ";", name, ";]"}))
