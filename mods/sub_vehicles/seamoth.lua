@@ -24,7 +24,7 @@ minetest.register_entity("sub_vehicles:seamoth", {
         local rot = self.object:get_rotation()
         user:set_look_vertical(-rot.x)
         user:set_look_horizontal(rot.y)
-        user:set_eye_offset(vector.new(0, -1.625, 0), vector.zero())
+        user:set_eye_offset(vector.new(0, -12, 0))
     end,
     on_step = function (self, dtime, moveresult)
         --do some friction physics
@@ -37,6 +37,11 @@ minetest.register_entity("sub_vehicles:seamoth", {
             local controls = driver:get_player_control()
             if controls.aux1 then
                 driver:set_detach()
+                driver:set_eye_offset(vector.zero())
+                --based on how it's done in Minetest Game's boats mod
+                local dismount_pos = driver:get_pos()
+                dismount_pos.y = dismount_pos.y+1
+                minetest.after(0.1, function() driver:set_pos(dismount_pos) end)
             else
                 local rot = vector.new(-driver:get_look_vertical(), driver:get_look_horizontal(), 0)
                 self.object:set_rotation(rot)

@@ -106,6 +106,7 @@ minetest.register_on_joinplayer(function(player)
     local props = player:get_properties()
     props.breath_max = 45
     player:set_properties(props)
+    player:set_eye_offset(vector.zero())
     player:set_breath(meta:get("breath") or 45)
     player:hud_set_flags({
         minimap = false,
