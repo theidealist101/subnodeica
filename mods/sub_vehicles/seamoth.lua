@@ -21,16 +21,43 @@ minetest.register_entity("sub_vehicles:seamoth", {
     end,
     on_rightclick = function (self, user)
         user:set_attach(self.object)
+        local rot = self.object:get_rotation()
+        user:set_look_vertical(-rot.x)
+        user:set_look_horizontal(rot.y)
+        user:set_eye_offset(vector.new(0, -1.625, 0), vector.zero())
     end,
     on_step = function (self, dtime, moveresult)
-        sub_nav.move_waypoint(self.waypoint, self.object:get_pos())
+        --do some friction physics
+        local accel = -self.object:get_velocity()
+        if vector.length(accel) > 1 then accel = vector.normalize(accel) end
+
+        --check there is someone driving
         local driver = self.object:get_children()[1]
-        if not driver then return end
-        local controls = driver:get_player_control()
-        if controls.aux1 then
-            driver:set_detach()
-            return
+        if driver then
+            local controls = driver:get_player_control()
+            if controls.aux1 then
+                driver:set_detach()
+            else
+                local rot = vector.new(-driver:get_look_vertical(), driver:get_look_horizontal(), 0)
+                self.object:set_rotation(rot)
+
+                --apply force based on controls
+                local forward = 2*mobkit.rot_to_dir(rot)
+                local sideways = vector.new(forward.z, 0, -forward.x)
+                if controls.up then accel = accel+forward end
+                if controls.down then accel = accel-forward*0.5 end
+                if controls.right then accel = accel+sideways end
+                if controls.left then accel = accel-sideways end
+                if controls.jump then accel.y = accel.y+2 end
+                if controls.sneak then accel.y = accel.y-2 end
+            end
         end
+
+        --update motion
+        local vel = self.object:get_velocity()+accel
+        if vector.length(vel) > 10 then vel = 10*vector.normalize(vel) end
+        self.object:set_velocity(vel)
+        sub_nav.move_waypoint(self.waypoint, self.object:get_pos())
     end,
     get_staticdata = function (self)
         return tostring(self.waypoint)
