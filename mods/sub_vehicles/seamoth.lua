@@ -1,8 +1,8 @@
 --Settings related to seamoth
 local ACCEL = 0.5
 local MAX_SPEED = 16
-local GRAVITY = -3
-local FRICTION = 0.2
+local GRAVITY = -1
+local FRICTION = 0.3
 
 --Seamoth, one-manned submersible, small and unarmored but easily manoevrable and extendable
 minetest.register_entity("sub_vehicles:seamoth", {
@@ -14,6 +14,7 @@ minetest.register_entity("sub_vehicles:seamoth", {
         collisionbox = {-1, -1, -1, 1, 1, 1},
         physical = true
     },
+    breathable = true,
     on_activate = function (self, staticdata)
         if staticdata and staticdata ~= "" then
             self.waypoint = tonumber(staticdata)

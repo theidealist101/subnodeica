@@ -144,7 +144,11 @@ minetest.register_globalstep(function(dtime)
         eye_pos.z = math.round(eye_pos.z)
         local node_def = minetest.registered_nodes[minetest.get_node(eye_pos).name]
         local breath = obj:get_breath()
-        if node_def and node_def.drowning and node_def.drowning > 0 then
+        local parent = obj:get_attach()
+        if parent and parent:get_luaentity().breathable then
+            meta:set_float("drown_progress", math.max(meta:get_float("drown_progress")-2*dtime, 0))
+            obj:set_breath(breath+3) --has to counteract natural depletion
+        elseif node_def and node_def.drowning and node_def.drowning > 0 then
             if breath <= 0 then
                 meta:set_float("drown_progress", meta:get_float("drown_progress")+dtime)
                 if meta:get_float("drown_progress") > 8 then
