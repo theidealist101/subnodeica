@@ -122,7 +122,7 @@ end
 --Make player see fog as defined by the node their eyes are in (TODO: make it biome instead, when biome smoothing added?)
 minetest.register_globalstep(function(dtime)
     for i, player in ipairs(minetest.get_connected_players()) do
-        local eye_pos = player:get_pos()+vector.new(0, 1.625, 0)
+        local eye_pos = player:get_pos()+vector.new(0, 1.625, 0)+0.1*player:get_eye_offset()
         eye_pos.x = math.round(eye_pos.x)
         eye_pos.y = math.round(eye_pos.y)
         eye_pos.z = math.round(eye_pos.z)
