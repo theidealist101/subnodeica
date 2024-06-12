@@ -62,7 +62,7 @@ end
 --Get whether something is a valid recipe
 function sub_crafts.get_recipe(rtype, item, category, subcategory)
     for i, defs in ipairs(sub_crafts.registered_crafts) do
-        if defs.type == rtype and escape_colon(defs.output[1]) == item
+        if defs.type == rtype and (defs.output_icon == item or escape_colon(defs.output[1]) == item)
         and defs.category == category and defs.subcategory == subcategory then return defs end
     end
 end
