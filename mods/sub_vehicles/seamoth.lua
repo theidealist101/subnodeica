@@ -35,6 +35,7 @@ minetest.register_entity("sub_vehicles:seamoth", {
     end,
     on_step = function (self, dtime, moveresult)
         local accel = vector.zero()
+        local in_air = minetest.get_node(mobkit.get_node_pos(self.object:get_pos())).name == "air"
 
         --check there is someone driving
         local driver = self.object:get_children()[1]
@@ -52,14 +53,16 @@ minetest.register_entity("sub_vehicles:seamoth", {
                 self.object:set_rotation(rot)
 
                 --apply force based on controls
-                local forward = ACCEL*mobkit.rot_to_dir(rot)
-                local sideways = vector.new(forward.z, 0, -forward.x)
-                if controls.up then accel = accel+forward end
-                if controls.down then accel = accel-forward*0.5 end
-                if controls.right then accel = accel+sideways end
-                if controls.left then accel = accel-sideways end
-                if controls.jump then accel.y = accel.y+ACCEL end
-                if controls.sneak then accel.y = accel.y-ACCEL end
+                if not in_air then
+                    local forward = ACCEL*mobkit.rot_to_dir(rot)
+                    local sideways = vector.new(forward.z, 0, -forward.x)
+                    if controls.up then accel = accel+forward end
+                    if controls.down then accel = accel-forward*0.5 end
+                    if controls.right then accel = accel+sideways end
+                    if controls.left then accel = accel-sideways end
+                    if controls.jump then accel.y = accel.y+ACCEL end
+                    if controls.sneak then accel.y = accel.y-ACCEL end
+                end
             end
         end
 
@@ -67,7 +70,7 @@ minetest.register_entity("sub_vehicles:seamoth", {
         if accel == vector.zero() then
             accel = -self.object:get_velocity()
             if vector.length(accel) > FRICTION then accel = FRICTION*vector.normalize(accel) end
-            if minetest.get_node(mobkit.get_node_pos(self.object:get_pos())).name == "air" then
+            if in_air then
                 accel.y = accel.y+GRAVITY
             end
         end
