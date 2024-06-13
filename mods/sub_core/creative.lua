@@ -6,5 +6,10 @@ minetest.register_craftitem("sub_core:magic_stick", {
         if pointed.type == "node" then
             minetest.remove_node(pointed.under)
         end
+    end,
+    on_secondary_use = function (itemstack, user, pointed)
+        if pointed.type == "object" then
+            pointed.ref:remove()
+        end
     end
 })
