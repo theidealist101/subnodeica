@@ -87,7 +87,6 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
             local names2 = table.copy(names)
             table.insert(names2, 1, table.remove(names2, #names2))
             local recipe = sub_crafts.get_recipe("constructor", unpack(names2))
-            minetest.log(dump(names2))
             if recipe and sub_crafts.can_do_recipe(inv, recipe.recipe) then
                 for i, item in ipairs(recipe.recipe) do
                     inv:remove_item("main", ItemStack(item))
