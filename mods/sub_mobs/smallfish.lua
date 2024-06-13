@@ -76,7 +76,8 @@ minetest.register_entity("sub_mobs:peeper", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse
+    on_death = sub_core.become_corpse,
+    corpse_despawn = true
 })
 
 minetest.register_craftitem("sub_mobs:item_peeper", {
@@ -124,7 +125,8 @@ minetest.register_entity("sub_mobs:bladderfish", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse
+    on_death = sub_core.become_corpse,
+    corpse_despawn = true
 })
 
 minetest.register_craftitem("sub_mobs:item_bladderfish", {
@@ -172,7 +174,8 @@ minetest.register_entity("sub_mobs:boomerang", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse
+    on_death = sub_core.become_corpse,
+    corpse_despawn = true
 })
 
 minetest.register_craftitem("sub_mobs:item_boomerang", {
@@ -220,7 +223,8 @@ minetest.register_entity("sub_mobs:garryfish", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse
+    on_death = sub_core.become_corpse,
+    corpse_despawn = true
 })
 
 minetest.register_craftitem("sub_mobs:item_garryfish", {
@@ -270,7 +274,8 @@ minetest.register_entity("sub_mobs:spadefish", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse
+    on_death = sub_core.become_corpse,
+    corpse_despawn = true
 })
 
 minetest.register_craftitem("sub_mobs:item_spadefish", {
@@ -317,7 +322,8 @@ minetest.register_entity("sub_mobs:hoopfish", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse
+    on_death = sub_core.become_corpse,
+    corpse_despawn = true
 })
 
 minetest.register_craftitem("sub_mobs:item_hoopfish", {
@@ -364,7 +370,8 @@ minetest.register_entity("sub_mobs:hoverfish", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse
+    on_death = sub_core.become_corpse,
+    corpse_despawn = true
 })
 
 minetest.register_craftitem("sub_mobs:item_hoverfish", {
@@ -411,7 +418,8 @@ minetest.register_entity("sub_mobs:eyeye", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse
+    on_death = sub_core.become_corpse,
+    corpse_despawn = true
 })
 
 minetest.register_craftitem("sub_mobs:item_eyeye", {
@@ -458,7 +466,8 @@ minetest.register_entity("sub_mobs:reginald", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse
+    on_death = sub_core.become_corpse,
+    corpse_despawn = true
 })
 
 minetest.register_craftitem("sub_mobs:item_reginald", {
