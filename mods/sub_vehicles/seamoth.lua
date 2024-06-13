@@ -4,13 +4,37 @@ local MAX_SPEED = 16
 local GRAVITY = -1
 local FRICTION = 0.3
 
+local seamoth_collide = {
+    full_punch_interval = 1,
+    damage_groups = {normal=5}
+}
+
 --Seamoth, one-manned submersible, small and unarmored but easily manoevrable and extendable
 local function seamoth_on_step(self, dtime, moveresult)
     local accel = vector.zero()
     local in_air = minetest.get_node(mobkit.get_node_pos(self.object:get_pos())).name == "air"
+    local driver = self.object:get_children()[1]
+
+    --check for collisions
+    local speed = vector.length(self.object:get_velocity())
+    minetest.log(dump(speed))
+    if #moveresult.collisions > 0 and speed > 10 and self.iframes <= 0 then
+        for i, col in ipairs(moveresult.collisions) do
+            if col.type == "object" then
+                col.object:punch(self.object, speed/MAX_SPEED, seamoth_collide)
+            end
+        end
+        self.object:punch(self.object, speed/MAX_SPEED, seamoth_collide)
+        self.iframes = 10 --prevents lots of small node collisions dealing too much damage
+        if not mobkit.exists(self) then
+            if driver then sub_vehicles.remove_huds(driver) end
+            return
+        end
+    elseif self.iframes > 0 then
+        self.iframes = self.iframes-1
+    end
 
     --check there is someone driving
-    local driver = self.object:get_children()[1]
     if driver then
         local controls = driver:get_player_control()
         if controls.aux1 then
@@ -82,6 +106,7 @@ minetest.register_entity("sub_vehicles:seamoth", {
                 dist = 6
             })
         end
+        self.iframes = 0
     end,
     on_rightclick = function (self, user)
         user:set_attach(self.object)
