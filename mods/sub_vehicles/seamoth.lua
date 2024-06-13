@@ -64,7 +64,7 @@ minetest.register_entity("sub_vehicles:seamoth", {
         textures = {"seamoth.png"},
         collisionbox = {-1, -1, -1, 1, 1, 1},
         physical = true,
-        hp_max = 40
+        hp_max = 60
     },
     breathable = true,
     on_activate = function (self, staticdata)
@@ -92,6 +92,9 @@ minetest.register_entity("sub_vehicles:seamoth", {
         sub_vehicles.add_huds(user, self.object)
     end,
     on_step = seamoth_on_step,
+    on_death = function (self)
+        sub_nav.remove_waypoint(self.waypoint)
+    end,
     get_staticdata = function (self)
         return tostring(self.waypoint)
     end
