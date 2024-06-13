@@ -1,8 +1,5 @@
 --Entities which biters and blighters will try to attack
 local biter_prey = {
-    "sub_mobs:spadefish",
-    "sub_mobs:peeper",
-    "sub_mobs:boomerang",
     "sub_mobs:gasopod",
     "sub_mobs:rabbitray"
 }
@@ -14,10 +11,21 @@ local function biter_brain(self)
         if not sub_mobs.check_in_water(self) then return end
 
         --attack certain entities nearby
-        for i, obj in ipairs(minetest.get_objects_inside_radius(self.object:get_pos(), 8)) do
-            if obj:is_player() or sub_mobs.containsi(biter_prey, obj:get_luaentity().name) then
-                while obj:get_attach() do obj = obj:get_attach() end
-                sub_mobs.hq_water_chase(self, 20, 4, 0.1, obj)
+        if mobkit.timer(self, 5) then
+            --first check for corpses
+            for i, obj in ipairs(minetest.get_objects_inside_radius(self.object:get_pos(), 32)) do
+                if not obj:is_player() and obj:get_luaentity().name == "sub_core:corpse" then
+                    sub_mobs.hq_water_chase(self, 20, 4, 0.1, obj)
+                    return
+                end
+            end
+            --then for live mobs
+            for i, obj in ipairs(minetest.get_objects_inside_radius(self.object:get_pos(), 8)) do
+                if obj:is_player() or sub_mobs.containsi(biter_prey, obj:get_luaentity().name) then
+                    while obj:get_attach() do obj = obj:get_attach() end
+                    sub_mobs.hq_water_chase(self, 20, 4, 0.1, obj)
+                    return
+                end
             end
         end
 
@@ -56,9 +64,9 @@ minetest.register_entity("sub_mobs:biter", {
         fire = 100
     },
     attack = {
-        range = 1,
+        range = 2,
         full_punch_interval = 1,
-        damage_groups = {normal=1}
+        damage_groups = {normal=1, corpse_eat=1}
     },
     on_death = sub_core.become_corpse
 })
