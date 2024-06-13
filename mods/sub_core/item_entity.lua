@@ -35,7 +35,6 @@ end
 minetest.register_entity(":__builtin:item", item_defs)
 
 --Corpse, special entity which replaces fauna when they die
-
 minetest.register_entity("sub_core:corpse", {
     initial_properties = {
         physical = false,
@@ -49,6 +48,7 @@ minetest.register_entity("sub_core:corpse", {
         local props = table.copy(defs.initial_properties)
         props.physical = true
         props.is_visible = true
+        props.hp_max = defs.max_hp or props.hp_max
         self.object:set_properties(props)
         self.entity = entity
     end,
