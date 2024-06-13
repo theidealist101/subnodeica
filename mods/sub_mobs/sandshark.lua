@@ -112,7 +112,7 @@ minetest.register_entity("sub_mobs:sandshark", {
         fire = 100
     },
     attack = {
-        range = 1.5,
+        range = 2,
         full_punch_interval = 1,
         damage_groups = {normal=6}
     }
