@@ -32,5 +32,44 @@ item_defs.set_item = function (self, item)
     self.object:set_properties({infotext="", automatic_rotate=0})
 end
 
-
 minetest.register_entity(":__builtin:item", item_defs)
+
+--Corpse, special entity which replaces fauna when they die
+
+minetest.register_entity("sub_core:corpse", {
+    initial_properties = {
+        physical = false,
+        is_visible = false
+    },
+    entity = "",
+    set_entity = function (self, entity)
+        entity = entity or self.entity
+        local defs = minetest.registered_entities[entity]
+        if not defs then return end
+        local props = table.copy(defs.initial_properties)
+        props.physical = true
+        props.is_visible = true
+        self.object:set_properties(props)
+        self.entity = entity
+    end,
+    on_activate = function (self, staticdata)
+        if staticdata and staticdata ~= "" then self:set_entity(staticdata) end
+        self.object:set_acceleration(vector.new(0, ITEM_GRAVITY, 0))
+        self.object:set_armor_groups({corpse_eat=100})
+    end,
+    on_step = function (self)
+        self.object:set_acceleration(vector.new(0, ITEM_GRAVITY, 0))
+    end,
+    get_staticdata = function (self)
+        return self.entity
+    end
+})
+
+--Turn entity into corpse, return corpse if successful otherwise nil
+function sub_core.become_corpse(self)
+    local corpse = minetest.add_entity(self.object:get_pos(), "sub_core:corpse", self.name)
+    if not corpse then return end
+    corpse:set_rotation(vector.new(0, self.object:get_rotation().y, (math.random()+0.5)*math.pi))
+    self.object:remove()
+    return corpse
+end

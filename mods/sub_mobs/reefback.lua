@@ -77,7 +77,8 @@ minetest.register_entity("sub_mobs:reefback", {
         normal = 100,
         gas = 100,
         fire = 100
-    }
+    },
+    on_death = sub_core.become_corpse
 })
 
 minetest.register_entity("sub_mobs:reefback_baby", {
@@ -104,7 +105,8 @@ minetest.register_entity("sub_mobs:reefback_baby", {
         normal = 100,
         gas = 100,
         fire = 100
-    }
+    },
+    on_death = sub_core.become_corpse
 })
 
 sub_mobs.register_spawn({

@@ -113,7 +113,8 @@ minetest.register_entity("sub_mobs:stalker", {
         range = 1.5,
         full_punch_interval = 1,
         damage_groups = {normal=6}
-    }
+    },
+    on_death = sub_core.become_corpse
 })
 
 sub_mobs.register_spawn({

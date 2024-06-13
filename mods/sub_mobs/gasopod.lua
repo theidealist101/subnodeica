@@ -73,7 +73,8 @@ minetest.register_entity("sub_mobs:gasopod", {
     armor_groups = {
         normal = 100,
         fire = 100
-    }
+    },
+    on_death = sub_core.become_corpse
 })
 
 sub_mobs.register_spawn({

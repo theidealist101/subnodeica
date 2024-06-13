@@ -75,7 +75,8 @@ minetest.register_entity("sub_mobs:peeper", {
         normal = 100,
         gas = 100,
         fire = 100
-    }
+    },
+    on_death = sub_core.become_corpse
 })
 
 minetest.register_craftitem("sub_mobs:item_peeper", {
@@ -122,7 +123,8 @@ minetest.register_entity("sub_mobs:bladderfish", {
         normal = 100,
         gas = 100,
         fire = 100
-    }
+    },
+    on_death = sub_core.become_corpse
 })
 
 minetest.register_craftitem("sub_mobs:item_bladderfish", {
@@ -169,7 +171,8 @@ minetest.register_entity("sub_mobs:boomerang", {
         normal = 100,
         gas = 100,
         fire = 100
-    }
+    },
+    on_death = sub_core.become_corpse
 })
 
 minetest.register_craftitem("sub_mobs:item_boomerang", {
@@ -216,7 +219,8 @@ minetest.register_entity("sub_mobs:garryfish", {
         normal = 100,
         gas = 100,
         fire = 100
-    }
+    },
+    on_death = sub_core.become_corpse
 })
 
 minetest.register_craftitem("sub_mobs:item_garryfish", {
@@ -265,7 +269,8 @@ minetest.register_entity("sub_mobs:spadefish", {
         normal = 100,
         gas = 100,
         fire = 100
-    }
+    },
+    on_death = sub_core.become_corpse
 })
 
 minetest.register_craftitem("sub_mobs:item_spadefish", {
@@ -311,7 +316,8 @@ minetest.register_entity("sub_mobs:hoopfish", {
         normal = 100,
         gas = 100,
         fire = 100
-    }
+    },
+    on_death = sub_core.become_corpse
 })
 
 minetest.register_craftitem("sub_mobs:item_hoopfish", {
@@ -357,7 +363,8 @@ minetest.register_entity("sub_mobs:hoverfish", {
         normal = 100,
         gas = 100,
         fire = 100
-    }
+    },
+    on_death = sub_core.become_corpse
 })
 
 minetest.register_craftitem("sub_mobs:item_hoverfish", {
@@ -403,7 +410,8 @@ minetest.register_entity("sub_mobs:eyeye", {
         normal = 100,
         gas = 100,
         fire = 100
-    }
+    },
+    on_death = sub_core.become_corpse
 })
 
 minetest.register_craftitem("sub_mobs:item_eyeye", {
@@ -449,7 +457,8 @@ minetest.register_entity("sub_mobs:reginald", {
         normal = 100,
         gas = 100,
         fire = 100
-    }
+    },
+    on_death = sub_core.become_corpse
 })
 
 minetest.register_craftitem("sub_mobs:item_reginald", {
