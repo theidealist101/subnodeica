@@ -21,11 +21,12 @@ As stated above this game is in early development, but these are the features cu
 
 - Custom mapgen supporting biomes of different terrain shapes and heights
 - Several major biomes: Safe Shallows, Kelp Forest, Grassy Plateaus, each with their own terrain and resources
-- A crafting system using the fabricator, not many recipes exist yet but it is easily extendable
+- An easily extendable crafting system using the fabricator
 - Most of the mobs inhabiting the aforementioned biomes, with their own behaviours made using the Mobkit API
 - A basic version of Lifepod 5 which the player spawns within
 - A working custom inventory and HUD with hunger and thirst
 - Navigational features including beacons, depth meter and compass
+- One vehicle, the Seamoth, craftable using a mobile vehicle bay
 
 Goals
 -----
@@ -35,7 +36,6 @@ The following must be achieved before I consider applying to ContentDB:
 - The following biomes fully fleshed out with all decorations, terrain features (floaters, pillars, etc.) and carver caves: Safe Shallows, Kelp Forest, Grassy Plateaus, Jellyshroom Caves
 - Structures to populate these: wrecks, scatters and the first Degasi seabase
 - Fully operational Lifepod 5 with hatches, storage, and preferably intro cutscene
-- Vehicle construction and the Seamoth, possibly the PRAWN Suit as well
 - At least minimal seabase construction stuff, with basic corridors, hatches, multipurpose rooms, and power
 - Bioluminescence on decoration nodes (requires engine changes)
 - Particles, sounds and animations for quality of life (animations waiting for .gltf support)

@@ -125,7 +125,7 @@ This information is meant as a general guide. In the first instance you should a
 
 Unfortunately this game is still at a very early stage of development, expect plenty of weird bugs and behaviors, and nowhere near as many features as the actual game - and don't be surprised if a new update completely breaks worlds from the previous. For now you can at least explore the custom terrain and try to see what you can find!
 
-There are currently three biomes (Safe Shallows, Kelp Forest, Grassy Plateaus) with plenty of mobs and decorations in them, especially the Shallows. You'll also be able to craft food and water and medkits to manage your stats, and find various resources and craft them into more materials and a few useful items like knives and beacons. Check out the README file for more!
+There are currently three biomes (Safe Shallows, Kelp Forest, Grassy Plateaus) with plenty of mobs and decorations in them, especially the Shallows. You'll also be able to craft food and water and medkits to manage your stats, and find various resources and craft them into more materials, tools and even vehicles. Check out the README file for more!
 
 (You should spawn in the Shallows but if you spawn in the Kelp Forest, just swim around, there's probably a Shallows within one or two hundred blocks.)
 
