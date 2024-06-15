@@ -3,7 +3,7 @@ Subnodeica
 
 An attempt to recreate the popular survival and exploration game Subnautica in the Minetest engine.
 
-This is very much an early work in progress, expect almost everything about it to change at any time without notice. Consequently it is not recommended to create mods for it or forks of it at this stage, and for the same reason the APIs are not yet documented. (I WILL document them someday!)
+This is very much an early work in progress, expect almost everything about it to change at any time without notice. Consequently it is not recommended to create mods for it or forks of it at this stage, and for the same reason the APIs are not yet fully documented. (I'm working on it!)
 
 Disclaimer: This project is not affiliated with or endorsed by the creators of Subnautica. It is merely the personal project of a passionate fan.
 
