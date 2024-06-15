@@ -5,7 +5,7 @@ Subnodeica uses the `singlenode` mapgen type; all other types are unavailable. O
 
 It does not use the mapgen async thread as Minetest 5.8 does not have that feature. This may cause significant lag whie exploring a world, manifested in chunks not appearing, entities rubber-banding, etc. - chunk load times in excess of 2000ms have been observed. It is recommended players only drive Seamoths in already explored areas until this is fixed.
 
-All mapgen API functions are currently in the mod `sub_core`, mostly in the files `mapgen.lua` and `water.lua`. Biome definitions and decorations may be found each in their own respective files.
+All mapgen API functions are currently in the mod `sub_core`, mostly in the files `mapgen.lua` and `water.lua`. Biome definitions and decorations may be found each in their own respective files, mostly using nodes defined in `nodes.lua`.
 
 Biomes
 ------
@@ -192,6 +192,119 @@ Misc
     * `minp`, `maxp`: the two opposite corners of the mapchunk.
     * `seed`: the seed used to generate the mapchunk.
     * `voxelmanip`: the VoxelManip created in the mapgen, after terrain and decors but before spawners have been checked.
+
+Items and Crafting
+==================
+
+Crafting API functions are in `sub_crafts/api.lua` while item-related functions are in various places as necessary. Most crafting recipes are in `sub_crafts/crafts.lua`, as are the items they produce; basic harvested items are in `sub_core/nodes.lua` and more specialised items are defined in the mods they pertain to. Inventory API may be found in `sub_inv`.
+
+Crafting
+--------
+
+Subnodeica uses its own crafting system, as the builtin one was inadequate for its needs. This API does probably need to be reworked significantly.
+
+* `sub_crafts.registered_crafts`
+    * List of registered crafting recipe definitions.
+
+* `sub_crafts.register_craft(defs)`
+    * Register a crafting recipe to be used by one of various crafting workstations.
+    * No return value.
+
+* `sub_crafts.get_recipe(type, item[, category[, subcategory]])`
+    * Utility function for on_player_receive_fields functions handling crafting formspecs.
+    * If there is a recipe in the given type, category and subcategory for the given item then it is returned, otherwise `nil`.
+    * Note that `item` is expected with `"--"` used instead of `":"`, for internal formspec-related reasons.
+
+* `sub_crafts.can_do_recipe(inventory, recipe)`
+    * Returns whether there are materials for the given recipe in the inventory.
+    * `inv` is an `InvRef` object, `recipe` is a crafting recipe definition.
+
+* `sub_crafts.get_formspec(player, type[, category[, subcategory]])`
+    * Creates a tree-like GUI showing crafting recipes for the player in the given type, category and subcategory, as used in e.g. fabricators.
+
+A crafting recipe definition is a table with the following fields:
+
+```lua
+{
+    type = "fabricator",
+    --Type of recipe, defaults to "fabricator"
+    --Currently used values: "fabricator", "constructor" (mobile vehicle bay)
+    --See api.lua for a full list of types and categories intended to be added
+
+    category = "resources",
+    subcategory = "electronics",
+    --Several layers of categorisation
+    --May be displayed differently by different crafting formspecs
+
+    output = {"sub_crafts:battery"},
+    --List of output items as itemstrings
+    --To output several of the same item you should add them as separate entries, so they don't come out in one stack
+
+    output_icon = "seamoth_craft.png",
+    --Name of image to be shown instead of the output, if defined
+    --Necessary for crafting vehicles etc. where the output is an entity not an item
+
+    output_tooltip = "Seamoth",
+    --Human-readable name of craft (defaults to item description)
+    --Necessary with output_icon
+
+    recipe = {"sub_core:item_acidshroom 2", "sub_core:copper"}
+    --List of input items as itemstrings
+    --Unlike in the output, item counts function as expected
+}
+```
+
+Inventory
+---------
+
+Subnodeica uses the Sfinv framework to define the inventory, however heavily modified to suit its needs. In general, the API should be the same as that of Sfinv, however be aware that the inventory is much larger and takes up the whole left side of the formspec.
+
+* `sub_inv.make_formspec(player, context, content, show_inv, size)`
+    * Applies the inventory layout to the given formspec.
+    * Parameters the same as `sfinv.make_formspec` which it is intended to replace.
+
+* `sub_inv.add_databank_entry(player, name, text, category, subcategory)`
+    * Adds an entry to the Databank tab of the given player's inventory (stored in metadata).
+    * `name`: the name of the entry in the menu on the left.
+    * `text`: the entire text of the entry.
+    * `category` and `subcategory` are used in the menu for categorisation.
+    * There is intentionally no method for removing or changing an entry.
+
+Subnodeica also reads the following custom fields in item definitions:
+
+* `_equip`: a string specifying which equip slot it may be placed in.
+    * Valid slots: `"head"`, `"body"`, `"feet"`, `"chips"` (x2), `"tank"`, `"hands"`.
+
+* `_on_equip` and `_on_unequip`: functions to be called when equipped to the slot specified above or unequipped respectively.
+    * The only argument to these functions is `player`, the ObjectRef of the player doing the action.
+
+Misc
+----
+
+* `sub_core.give_item(item)`
+    * Returns a function with the parameters `pos`, `node`, `user`, `itemstack`, to be used as an `on_rightclick` function by nodes.
+    * This function gives the player a single item specified by `item`.
+
+* `sub_core.drop_if_slash(item, no_break)`
+    * Returns a function with the same format and usage as the above.
+    * This function spawns the item as a dropped item, and then destroys the node unless `no_slash` is true.
+    * Note that if `no_slash` is not true then the node must be waterloggable, in order to replace it with the correct water type.
+
+* `sub_core.do_item_eat(food, water, itemstack, user)`
+    * Attempts to use itemstack to restore the given percentages of hunger and thirst meters for the user.
+    * If both meters are above 95% already then the itemstack will not be used and nothing will happen.
+    * Note that hunger can overflow over 100% while thirst is capped at 100%.
+
+* `sub_core.item_eat(food, water)`
+    * A wrapper for the above, returns a function to be used in `on_place` and `on_secondary_use`.
+    * Note that `minetest.item_eat` is also available to restore health.
+
+* `sub_core.max_hunger`
+* `sub_core.max_thirst`
+* `sub_core.max_breath`
+    * Time for hunger, thirst and breath to go from full to empty, in seconds.
+    * Default to 3000, 2000 and 45 respectively.
+    * Probably shouldn't be exposed, or at least as settings? I'll deal with this later.
 
 WIP
 ===
