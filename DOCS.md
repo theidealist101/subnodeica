@@ -259,11 +259,11 @@ Inventory
 
 Subnodeica uses the Sfinv framework to define the inventory, however heavily modified to suit its needs. In general, the API should be the same as that of Sfinv, however be aware that the inventory is much larger and takes up the whole left side of the formspec.
 
-* `sub_inv.make_formspec(player, context, content, show_inv, size)`
+* `sub_inv.make_formspec(player, context, content[, show_inv[, size]])`
     * Applies the inventory layout to the given formspec.
     * Parameters the same as `sfinv.make_formspec` which it is intended to replace.
 
-* `sub_inv.add_databank_entry(player, name, text, category, subcategory)`
+* `sub_inv.add_databank_entry(player, name, text[, category[, subcategory]])`
     * Adds an entry to the Databank tab of the given player's inventory (stored in metadata).
     * `name`: the name of the entry in the menu on the left.
     * `text`: the entire text of the entry.
@@ -305,6 +305,147 @@ Misc
     * Time for hunger, thirst and breath to go from full to empty, in seconds.
     * Default to 3000, 2000 and 45 respectively.
     * Probably shouldn't be exposed, or at least as settings? I'll deal with this later.
+
+Mobs
+====
+
+There are various sorts of mobs in Subnodeica, all made using the Mobkit framework. See the Mobkit API for more information.
+
+This game's mob-related scripting is all in `sub_mobs`; the API functions are in `behaviors.lua` while the mobs are in their own files. Some similar mobs are put into the same file with each other: e.g. all scavengers and parasites are in `parasites.lua`, all small catchable fish are in `smallfish.lua`, etc.
+
+Definition
+----------
+
+Entities are defined with `minetest.register_entity` as usual, and have all fields found in Minetest and Mobkit.
+
+* `sub_mobs.actfunc(self, staticdata, dtime)`
+    * Wrapper for `mobkit.actfunc` with a few extra features relating to HP. Recommended to be used in place of the Mobkit version.
+
+* `sub_core.become_corpse(self)`
+    * Removes object and replaces with a corpse, to be used in the entity `on_death` field.
+    * Can be used by any entity, not just Mobkit ones.
+
+The following fields are also used by Subnodeica:
+
+```lua
+{
+    attack = {
+        range = 1,
+        --tool capabilities here
+    }
+    --Attack capabilities of entity, used by some behaviors
+    --I think this might be from Mobkit as well
+
+    explosion = {
+        --same as attack
+    }
+    --Maximum damage capabilities of entity used by sub_mobs.explode
+
+    corpse_despawn = false
+    --If true, its corpse is despawned when the chunk is unloaded
+    --Can be used by any entity
+}
+```
+
+Spawning
+--------
+
+Currently mobs are only spawned during gameplay; I intend to add spawning on generation soon.
+
+* `sub_mobs.registered_spawns`
+    * List of registered spawn definitions.
+
+* `sub_mobs.register_spawn(defs)`
+    * Registers mob spawn definition.
+    * No return value.
+
+A mob spawn definition is a table with the following fields:
+
+```lua
+{
+    name = "sub_mobs:peeper"
+    --Name of entity to be spawned
+
+    biomes = {"sub_core:shallows", "sub_core:forest"}
+    --Biomes whose water the entity can spawn in
+
+    nodes = {"sub_core:stone", "air"}
+    --Other nodes which the entity can spawn in
+
+    chance = 0.01
+    reduction = 0.1
+    --Chance of a spawn attempt succeeding and reduction for each active entity, as used by mobkit.get_spawn_pos_abr
+
+    count = 1
+    count_max = 3
+    --Minimum and maximum number of objects to be spawned at once
+    --count_max defaults to value of count
+
+    height_min = -31000
+    height_max = 0
+    --Lower and upper bounds on height of spawn
+
+    dist = 50
+    --Distance of spawn from player
+}
+```
+
+Behaviors
+---------
+
+All behaviors used in Subnodeica are custom-made - none of the default ones are used. In part this is because Mobkit does not recognise this game's water nodes as being water. Note also that many mobs define their own specialised local behavior functions. See the Mobkit API for explanation on the queue system which these build on.
+
+* `sub_mobs.hq_fish_roam(self, priority, speed[, nopitch])`
+    * Move around randomly underwater, frequently changing direction.
+    * Works by repeatedly choosing a destination within 16m of itself and swimming towards it until sufficiently close.
+    * `nopitch`: used by hoverfish, if true locks pitch to 0 (should probably replace with entity definition property).
+
+* `sub_mobs.hq_fish_flee(self, priority, speed, obj[, jump])`
+    * Flee erratically from `obj` in a similar manner to the above.
+    * Internally mostly the same as above but offset away from the object's position.
+    * `jump`: used by peepers, if true allows destination to be in the air, giving the appearance of leaping out of the water.
+
+* `sub_mobs.hq_herd_roam(self, priority, speed[, herd_weight])`
+    * Move around randomly, changing direction less often than the above.
+    * Specifically, searches a 32m radius and is weighted upwards whereas `hq_fish_roam` is weighted downwards.
+    * `herd_weight`: if defined, offsets search towards other nearby objects of the same type by the given amount.
+
+* `sub_mobs.hq_big_roam(self, priority, speed)`
+    * Move around randomly, changing direction even less often (64m radius, 32m vertically, weighted downwards).
+    * Only really makes sense for leviathans such as reapers and ghosts.
+
+* `sub_mobs.hq_water_chase(self, priority, speed, turn_rate, obj)`
+    * Swim directly towards `obj` and attempt to attack upon coming in range.
+    * Uses a different pathing system: instead of choosing a destination and moving towards it, it constantly interpolates its rotation towards the object by the amount given in `turn_rate` and moves forward.
+    * Only attacks if the `attack` field is defined in the luaentity table, otherwise just closely follows the object; see below.
+
+Misc
+----
+
+* `sub_mobs.containsi(table, value)`
+    * Returns whether value is in an array-like table.
+
+* `sub_mobs.is_larger(self, obj)`
+    * Returns whether ObjectRef `obj` (can be player) is larger than luaentity `self`.
+    * Used in brain functions of small fish to decide whether to flee from something.
+
+* `sub_mobs.in_water(pos)`
+    * Returns whether node at pos should be considered water (and therefore accessible) for pathfinding purposes, as defined by whether it has the group `pathfind_water`.
+    * Used by most behaviors working on the destination pattern rather than the rotation pattern.
+
+* `sub_mobs.check_in_water(self)`
+    * Returns whether luaentity `self` is in water, for use in brain functions.
+    * If not, it also makes it fall down and clears the high queue.
+
+* `sub_mobs.turn_to(rot, dest_rot, turn_rate)`
+    * Returns the rotation vector `rot` interpolated towards `dest_rot` no further than the scalar `turn_rate`.
+    * Accounts for the split in yaw at plus-minus pi.
+    * Used by most behaviors working on the rotation pattern.
+
+* `sub_mobs.explode(self[, pos])`
+    * Causes an explosion at `pos` (defaults to `self.object:get_pos()`), damaging nearby entities but not nodes depending on how close they are.
+    * Damage and range given by `explosion` field in luaentity `self`.
+    * Does not damage `self`; if you want to damage or remove it then that must be done separately.
 
 WIP
 ===
