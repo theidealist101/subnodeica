@@ -127,7 +127,7 @@ minetest.register_entity("sub_vehicles:seamoth", {
 sub_crafts.register_craft({
     type = "constructor",
     output = {"sub_vehicles:seamoth"},
-    output_icon = "seamoth_craft",
+    output_icon = "seamoth_craft.png",
     output_tooltip = "Seamoth",
     recipe = {"sub_crafts:titanium_ingot", "sub_vehicles:power_cell", "sub_crafts:glass 2", "sub_crafts:lubricant", "sub_core:lead"}
 })
