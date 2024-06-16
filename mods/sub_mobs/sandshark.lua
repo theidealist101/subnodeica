@@ -116,7 +116,9 @@ minetest.register_entity("sub_mobs:sandshark", {
         full_punch_interval = 1,
         damage_groups = {normal=6}
     },
-    on_death = sub_core.become_corpse
+    on_punch = sub_mobs.punchfunc(1, 0.5),
+    on_death = sub_core.become_corpse,
+    carnivore = true
 })
 
 sub_mobs.register_spawn({

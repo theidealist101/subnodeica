@@ -76,7 +76,8 @@ minetest.register_entity("sub_mobs:peeper", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse,
+    on_punch = sub_mobs.punchfunc(0.5, 0.5),
+    on_death = sub_mobs.deathfunc,
     corpse_despawn = true
 })
 
@@ -125,7 +126,8 @@ minetest.register_entity("sub_mobs:bladderfish", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse,
+    on_punch = sub_mobs.punchfunc(0.5, 0.5),
+    on_death = sub_mobs.deathfunc,
     corpse_despawn = true
 })
 
@@ -174,7 +176,8 @@ minetest.register_entity("sub_mobs:boomerang", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse,
+    on_punch = sub_mobs.punchfunc(0.5, 0.5),
+    on_death = sub_mobs.deathfunc,
     corpse_despawn = true
 })
 
@@ -223,7 +226,8 @@ minetest.register_entity("sub_mobs:garryfish", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse,
+    on_punch = sub_mobs.punchfunc(0.5, 0.5),
+    on_death = sub_mobs.deathfunc,
     corpse_despawn = true
 })
 
@@ -274,7 +278,8 @@ minetest.register_entity("sub_mobs:spadefish", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse,
+    on_punch = sub_mobs.punchfunc(0.5, 0.5),
+    on_death = sub_mobs.deathfunc,
     corpse_despawn = true
 })
 
@@ -322,7 +327,8 @@ minetest.register_entity("sub_mobs:hoopfish", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse,
+    on_punch = sub_mobs.punchfunc(0.5, 0.5),
+    on_death = sub_mobs.deathfunc,
     corpse_despawn = true
 })
 
@@ -370,7 +376,8 @@ minetest.register_entity("sub_mobs:hoverfish", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse,
+    on_punch = sub_mobs.punchfunc(0.5, 0.5),
+    on_death = sub_mobs.deathfunc,
     corpse_despawn = true
 })
 
@@ -418,7 +425,8 @@ minetest.register_entity("sub_mobs:eyeye", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse,
+    on_punch = sub_mobs.punchfunc(0.5, 0.5),
+    on_death = sub_mobs.deathfunc,
     corpse_despawn = true
 })
 
@@ -466,7 +474,8 @@ minetest.register_entity("sub_mobs:reginald", {
         gas = 100,
         fire = 100
     },
-    on_death = sub_core.become_corpse,
+    on_punch = sub_mobs.punchfunc(0.5, 0.5),
+    on_death = sub_mobs.deathfunc,
     corpse_despawn = true
 })
 

@@ -56,6 +56,7 @@ minetest.register_entity("sub_mobs:skyray", {
         gas = 100,
         fire = 100
     },
+    on_punch = sub_mobs.punchfunc(0.5, 0.5),
     on_death = sub_core.become_corpse,
     corpse_despawn = true
 })

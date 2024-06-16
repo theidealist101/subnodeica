@@ -74,6 +74,7 @@ minetest.register_entity("sub_mobs:gasopod", {
         normal = 100,
         fire = 100
     },
+    on_punch = sub_mobs.punchfunc(2, 0.5),
     on_death = sub_core.become_corpse
 })
 

@@ -115,5 +115,6 @@ minetest.register_entity("sub_mobs:crashfish", {
         full_punch_interval = 1,
         damage_groups = {normal=8}
     },
+    on_punch = sub_mobs.punchfunc(0.5, 0.5),
     on_death = sub_core.become_corpse
 })

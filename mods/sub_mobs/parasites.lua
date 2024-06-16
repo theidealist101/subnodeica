@@ -68,6 +68,7 @@ minetest.register_entity("sub_mobs:biter", {
         full_punch_interval = 1,
         damage_groups = {normal=1, corpse_eat=1}
     },
+    on_punch = sub_mobs.punchfunc(0.5, 0.5),
     on_death = sub_core.become_corpse,
     corpse_despawn = true
 })
@@ -199,6 +200,7 @@ minetest.register_entity("sub_mobs:mesmer", {
         full_punch_interval = 1,
         damage_groups = {normal=7}
     },
+    on_punch = sub_mobs.punchfunc(0.5, 0.5),
     on_death = sub_core.become_corpse,
     corpse_despawn = true
 })

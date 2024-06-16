@@ -41,6 +41,37 @@ function sub_mobs.actfunc(self, staticdata, dtime)
     self.object:set_hp(self.hp)
 end
 
+--Function for on_punch, adds bleeding effects
+function sub_mobs.punchfunc(radius, strength)
+    local offset = vector.new(radius, radius, radius)
+    return function (self, _, _, _, _, damage)
+        local pos = self.object:get_pos()
+        minetest.add_particlespawner({
+            amount = damage*2*radius,
+            time = 0.1,
+            texture = {
+                name = "blood.png",
+                alpha = 0.5,
+                scale = 10*radius,
+            },
+            pos = {min=pos-offset, max=pos+offset},
+            exptime = 2,
+            attract = {
+                kind = "point",
+                strength = -strength,
+                origin = pos
+            }
+        })
+    end
+end
+
+--Function for on_death, turns mob into corpse unless killed by a carnivore
+function sub_mobs.deathfunc(self, killer)
+    if not killer or killer:is_player() or not killer:get_luaentity().carnivore then
+        sub_core.become_corpse(self)
+    end
+end
+
 --Another utility function, turns up to a certain angle
 function sub_mobs.turn_to(rot, dest_rot, turn_rate)
     local diff = dest_rot-rot
