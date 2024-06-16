@@ -447,5 +447,65 @@ Misc
     * Damage and range given by `explosion` field in luaentity `self`.
     * Does not damage `self`; if you want to damage or remove it then that must be done separately.
 
+More Misc
+=========
+
+Waypoints
+---------
+
+The mod `sub_nav` adds a global waypoint system for Subnautica's locator beacons, stored using mod storage. API may be found in `sub_nav/waypoints.lua`.
+
+* `sub_nav.set_waypoint(pos, defs)`
+    * Adds a waypoint at `pos`, defined by `defs`.
+    * Returns an ID which may be used with other functions. Must be stored if you want to be able to do anything with it later.
+
+* `sub_nav.remove_waypoint(id)`
+    * Removes the waypoint with ID given by `id`.
+    * If the waypoint does not exist, nothing happens.
+
+* `sub_nav.move_waypoint(id, pos)`
+    * Moves the waypoint with ID given by `id` to `pos`, if it exists. Vehicles should probably do this every step.
+    * Returns whether the waypoint existed.
+
+* `sub_nav.waypoint_pairs()`
+    * Returns an iterator function and a table, to be used in a `for` loop as such:
+        ```lua
+        for pos, defs in sub_nav.waypoint_pairs() do
+            --Stuff to be done for each waypoint
+        end
+        ```
+
+* `sub_nav.registered_on_loads`
+    * List of functions to be called on load. See below.
+
+* `sub_nav.register_on_load(function())`
+    * Registers a function to be called when the waypoint storage is initialised for the first time.
+    * Should be used to add starting waypoints like the one for Lifepod 5.
+
+* `sub_navs.update(player)`
+    * Updates waypoint display for given player.
+    * Called automatically on join.
+
+* `sub_navs.update_all()`
+    * Calls `sub_nav.update` for every connected player.
+    * Called every step.
+
+Vehicles
+--------
+
+Functions relating to vehicles are in `sub_vehicles/init.lua`.
+
+* `sub_vehicles.add_huds(player, vehicle)`
+    * Adds HUD showing vehicle health to player, to be called on entering a vehicle.
+    * No return value, IDs are stored internally.
+
+* `sub_vehicles.remove_huds(player)`
+    * Removes vehicle HUDs from player, to be called on exiting a vehicle.
+    * Assumes the HUDs are there, if not it may throw an exception.
+
+* `sub_vehicles.update_huds(player)`
+    * Updates vehicle HUDs for player, to be called on step.
+    * Gets the vehicle from the player's attach.
+
 WIP
 ===
