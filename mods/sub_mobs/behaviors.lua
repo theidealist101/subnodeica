@@ -51,7 +51,7 @@ function sub_mobs.punchfunc(radius, strength)
             time = 0.1,
             texture = {
                 name = "blood.png",
-                alpha = 0.5,
+                alpha = 0.8,
                 scale = 10*radius,
             },
             pos = {min=pos-offset, max=pos+offset},
