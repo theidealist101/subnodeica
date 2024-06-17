@@ -65,6 +65,7 @@ sub_mobs.register_spawn({
     name = "sub_mobs:skyray",
     nodes = {"air"},
     chance = 1,
+    gen_chance = 1,
     reduction = 0.01,
     height_min = 16,
     height_max = 32

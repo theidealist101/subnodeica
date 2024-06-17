@@ -15,6 +15,7 @@ function sub_mobs.register_spawn(defs)
         table.insert(defs.nodes, sub_core.registered_biomes[biome].node_water)
     end
     defs.chance = defs.chance or 0
+    defs.gen_chance = defs.gen_chance or 0
     defs.count = defs.count or 1
     defs.count_max = defs.count_max or defs.count
     defs.reduction = defs.reduction or 0
@@ -31,13 +32,14 @@ minetest.register_globalstep(function (dtime)
 
         --choose spawn position and check if there is space
         local spawnpos = mobkit.get_spawn_pos_abr(dtime, 1, defs.dist, defs.chance, defs.reduction)
-        if spawnpos and #minetest.get_objects_inside_radius(spawnpos, 50) < 50 then
+        if spawnpos and #minetest.get_objects_inside_radius(spawnpos, 200) < 50 then
             spawnpos = spawnpos+vector.new(0, 1, 0) --to bring it off the ground
             spawnpos.y = math.random(math.max(spawnpos.y, defs.height_min), defs.height_max)
 
             --check if correct node to spawn in
+            local nodename = minetest.get_node(spawnpos).name
             for i, node in ipairs(defs.nodes) do
-                if minetest.get_node(spawnpos).name == node then
+                if nodename == node then
 
                     --attempt to spawn the mob or mobs
                     for _ = 1, math.random(defs.count, defs.count_max) do
@@ -46,6 +48,32 @@ minetest.register_globalstep(function (dtime)
                     return
                 end
             end
+        end
+    end
+end)
+
+local function attempt_spawn(minp, maxp, rand, vm, defs)
+    for _ = 1, 8 do
+        --choose spawn position and check if correct node to spawn in
+        local spawnpos = vector.new(rand:next(minp.x, maxp.x), rand:next(minp.y, maxp.y), rand:next(minp.z, maxp.z))
+        local nodename = vm:get_node_at(spawnpos).name
+        if spawnpos.y > defs.height_min and spawnpos.y < defs.height_max and sub_mobs.containsi(defs.nodes, nodename) then
+
+            --attempt to spawn the mob or mobs
+            for _ = 1, math.random(defs.count, defs.count_max) do
+                minetest.add_entity(spawnpos, defs.name)
+            end
+            minetest.log("spawned "..defs.name)
+            return
+        end
+    end
+end
+
+sub_core.register_on_generate(function (minp, maxp, seed, vm)
+    local rand = PcgRandom(seed) --hence mobs should depend solely on seed
+    for i, defs in ipairs(sub_mobs.registered_spawns) do
+        if math.abs(rand:next())%1000000 < defs.gen_chance*1000000 then
+            attempt_spawn(minp, maxp, rand, vm, defs)
         end
     end
 end)

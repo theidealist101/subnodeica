@@ -93,6 +93,7 @@ sub_mobs.register_spawn({
     name = "sub_mobs:peeper",
     biomes = {"sub_core:shallows", "sub_core:forest", "sub_core:grassland"},
     chance = 1,
+    gen_chance = 1,
     reduction = 0.01
 })
 
@@ -143,6 +144,7 @@ sub_mobs.register_spawn({
     name = "sub_mobs:bladderfish",
     biomes = {"sub_core:shallows"},
     chance = 1,
+    gen_chance = 1,
     reduction = 0.01
 })
 
@@ -193,6 +195,7 @@ sub_mobs.register_spawn({
     name = "sub_mobs:boomerang",
     biomes = {"sub_core:shallows", "sub_core:forest", "sub_core:grassland"},
     chance = 1,
+    gen_chance = 1,
     reduction = 0.01
 })
 
@@ -243,6 +246,7 @@ sub_mobs.register_spawn({
     name = "sub_mobs:garryfish",
     biomes = {"sub_core:shallows"},
     chance = 0.4,
+    gen_chance = 0.4,
     reduction = 0.05
 })
 
@@ -295,6 +299,7 @@ sub_mobs.register_spawn({
     name = "sub_mobs:spadefish",
     biomes = {"sub_core:grassland"},
     chance = 1,
+    gen_chance = 1,
     reduction = 0.01
 })
 
@@ -344,6 +349,7 @@ sub_mobs.register_spawn({
     name = "sub_mobs:hoopfish",
     biomes = {"sub_core:forest", "sub_core:grassland"},
     chance = 0.6,
+    gen_chance = 0.6,
     reduction = 0.04
 })
 
@@ -393,6 +399,7 @@ sub_mobs.register_spawn({
     name = "sub_mobs:hoverfish",
     biomes = {"sub_core:forest"},
     chance = 1,
+    gen_chance = 1,
     reduction = 0.04
 })
 
@@ -442,6 +449,7 @@ sub_mobs.register_spawn({
     name = "sub_mobs:eyeye",
     biomes = {"sub_core:forest"},
     chance = 0.5,
+    gen_chance = 0.5,
     reduction = 0.01
 })
 
@@ -491,6 +499,7 @@ sub_mobs.register_spawn({
     name = "sub_mobs:reginald",
     biomes = {"sub_core:grassland"},
     chance = 0.5,
+    gen_chance = 0.5,
     reduction = 0.01
 })
 

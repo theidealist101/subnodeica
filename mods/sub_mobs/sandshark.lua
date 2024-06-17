@@ -124,7 +124,8 @@ minetest.register_entity("sub_mobs:sandshark", {
 sub_mobs.register_spawn({
     name = "sub_mobs:sandshark",
     biomes = {"sub_core:grassland"},
-    chance = 0.1,
+    chance = 0.01,
+    gen_chance = 0.5,
     reduction = 0.04,
     height_max = -50
 })

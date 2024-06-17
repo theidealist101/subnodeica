@@ -122,6 +122,7 @@ minetest.register_entity("sub_mobs:stalker", {
 sub_mobs.register_spawn({
     name = "sub_mobs:stalker",
     biomes = {"sub_core:forest"},
-    chance = 0.1,
+    chance = 0.01,
+    gen_chance = 0.5,
     reduction = 0.04
 })

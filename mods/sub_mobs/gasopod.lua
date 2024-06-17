@@ -81,7 +81,8 @@ minetest.register_entity("sub_mobs:gasopod", {
 sub_mobs.register_spawn({
     name = "sub_mobs:gasopod",
     biomes = {"sub_core:shallows"},
-    chance = 0.1,
+    chance = 0.05,
+    gen_chance = 0.2,
     reduction = 0.1,
     count_max = 3,
     height_min = -15

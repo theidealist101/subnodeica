@@ -76,7 +76,8 @@ minetest.register_entity("sub_mobs:biter", {
 sub_mobs.register_spawn({
     name = "sub_mobs:biter",
     biomes = {"sub_core:grassland"},
-    chance = 0.1,
+    chance = 0.01,
+    gen_chance = 0.1,
     reduction = 0.01,
     count = 3,
     count_max = 6

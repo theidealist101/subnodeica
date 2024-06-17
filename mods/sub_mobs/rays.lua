@@ -46,5 +46,6 @@ sub_mobs.register_spawn({
     name = "sub_mobs:rabbitray",
     biomes = {"sub_core:shallows", "sub_core:forest"},
     chance = 0.4,
+    gen_chance = 0.4,
     reduction = 0.05
 })

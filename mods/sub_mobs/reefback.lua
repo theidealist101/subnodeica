@@ -112,7 +112,8 @@ minetest.register_entity("sub_mobs:reefback_baby", {
 sub_mobs.register_spawn({
     name = "sub_mobs:reefback",
     biomes = {"sub_core:grassland"},
-    chance = 0.1,
+    chance = 0.05,
+    gen_chance = 0.3,
     reduction = 0.1,
     dist = 100,
     height_min = -40
@@ -121,7 +122,8 @@ sub_mobs.register_spawn({
 sub_mobs.register_spawn({
     name = "sub_mobs:reefback_baby",
     biomes = {"sub_core:grassland"},
-    chance = 0.1,
+    chance = 0.05,
+    gen_chance = 0.3,
     reduction = 0.1,
     dist = 100,
     height_min = -40
