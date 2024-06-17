@@ -63,7 +63,6 @@ local function attempt_spawn(minp, maxp, rand, vm, defs)
             for _ = 1, math.random(defs.count, defs.count_max) do
                 minetest.add_entity(spawnpos, defs.name)
             end
-            minetest.log("spawned "..defs.name)
             return
         end
     end
