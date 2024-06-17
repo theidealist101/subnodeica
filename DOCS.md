@@ -321,9 +321,17 @@ Entities are defined with `minetest.register_entity` as usual, and have all fiel
 * `sub_mobs.actfunc(self, staticdata, dtime)`
     * Wrapper for `mobkit.actfunc` with a few extra features relating to HP. Recommended to be used in place of the Mobkit version.
 
+
+* `sub_mobs.punchfunc(radius, strength)`
+    * Returns a function to be used in `on_punch`.
+    * Emits blood particles within `radius`, repelled from the center by `strength`, depending on the amount of damage.
+
 * `sub_core.become_corpse(self)`
     * Removes object and replaces with a corpse, to be used in the entity `on_death` field.
     * Can be used by any entity, not just Mobkit ones.
+
+* `sub_mobs.deathfunc(self, killer)`
+    * Same as above but only if the killer has the `carnivore` field in its luaentity table as `true`.
 
 The following fields are also used by Subnodeica:
 
@@ -332,18 +340,21 @@ The following fields are also used by Subnodeica:
     attack = {
         range = 1,
         --tool capabilities here
-    }
+    },
     --Attack capabilities of entity, used by some behaviors
     --I think this might be from Mobkit as well
 
     explosion = {
         --same as attack
-    }
+    },
     --Maximum damage capabilities of entity used by sub_mobs.explode
 
-    corpse_despawn = false
+    corpse_despawn = false,
     --If true, its corpse is despawned when the chunk is unloaded
     --Can be used by any entity
+
+    carnivore = false
+    --If true then small fish killed by it will not leave behind corpses
 }
 ```
 
