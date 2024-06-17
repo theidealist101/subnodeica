@@ -387,6 +387,9 @@ A mob spawn definition is a table with the following fields:
     reduction = 0.1
     --Chance of a spawn attempt succeeding and reduction for each active entity, as used by mobkit.get_spawn_pos_abr
 
+    gen_chance = 0.1
+    --Chance of a spawn attempt occurring each time a mapchunk is generated.
+
     count = 1
     count_max = 3
     --Minimum and maximum number of objects to be spawned at once
