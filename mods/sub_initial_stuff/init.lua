@@ -25,8 +25,37 @@ minetest.register_node("sub_initial_stuff:light", {
     sunlight_propagates = true,
     walkable = false,
     pointable = false,
-    buildable_to = true,
     light_source = 14
+})
+
+minetest.register_node("sub_initial_stuff:ladder", {
+    description = "Ladder",
+    drawtype = "signlike",
+    tiles = {"sub_initial_stuff_ladder.png"},
+    selection_box = {
+        type = "fixed",
+        fixed = {-0.5, -0.5, -0.5, 0.5, -0.375, 0.5}
+    },
+    paramtype = "light",
+    paramtype2 = "wallmounted",
+    sunlight_propagates = true,
+    walkable = false,
+    climbable = true,
+})
+
+minetest.register_node("sub_initial_stuff:lifepod_ladder", {
+    description = "Lifepod Ladder",
+    drawtype = "signlike",
+    tiles = {"sub_initial_stuff_lifepod_ladder.png"},
+    selection_box = {
+        type = "fixed",
+        fixed = {-0.5, -0.5, -0.5, 0.5, -0.375, 0.5}
+    },
+    paramtype = "light",
+    paramtype2 = "wallmounted",
+    sunlight_propagates = true,
+    walkable = false,
+    climbable = true,
 })
 
 minetest.register_on_newplayer(function(player)
