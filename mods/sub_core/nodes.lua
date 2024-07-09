@@ -396,22 +396,6 @@ sub_core.register_waterloggable("sub_core:quartz_outcrop", {
     end
 })
 
---A couple basic structural nodes (will be moved to sub_wrecks or sub_bases later, dunno which)
-minetest.register_node("sub_core:titanium_block", {
-    description = "Titanium Block",
-    tiles = {"sub_core_titanium_block.png"}
-})
-
-minetest.register_node("sub_core:dark_titanium_block", {
-    description = "Dark Titanium Block",
-    tiles = {"sub_core_dark_titanium_block.png"}
-})
-
-minetest.register_node("sub_core:black_titanium_block", {
-    description = "Black Titanium Block",
-    tiles = {"sub_core_black_titanium_block.png"}
-})
-
 --Metal salvage, source of titanium and also used to get stalker teeth
 sub_core.register_waterloggable("sub_core:salvage1", {
     description = "Metal Salvage",
