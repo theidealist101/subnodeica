@@ -40,6 +40,7 @@ sub_core.register_water("sub_core:forest_water", {
 minetest.register_node("sub_core:forest_grass", sub_core.add_water_physics({
     description = "Forest Grass",
     drawtype = "plantlike",
+    paramtype2 = "meshoptions",
     tiles = {"default_junglegrass.png"},
     inventory_image = "default_junglegrass.png",
     selection_box = {
@@ -55,6 +56,7 @@ minetest.register_node("sub_core:forest_grass", sub_core.add_water_physics({
 sub_core.register_decor({
     biome = "sub_core:forest",
     fill_ratio = 0.6,
+    param2 = 8,
     decor = "sub_core:forest_grass"
 })
 

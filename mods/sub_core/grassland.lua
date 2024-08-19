@@ -139,6 +139,7 @@ sub_core.register_decor({
 minetest.register_node("sub_core:blood_grass", sub_core.add_water_physics({
     description = "Blood Grass",
     drawtype = "plantlike",
+    paramtype2 = "meshoptions",
     tiles = {"sub_core_blood_grass.png"},
     inventory_image = "sub_core_blood_grass.png",
     selection_box = {
@@ -154,6 +155,7 @@ minetest.register_node("sub_core:blood_grass", sub_core.add_water_physics({
 minetest.register_node("sub_core:pink_blood_grass", sub_core.add_water_physics({
     description = "Pink Blood Grass",
     drawtype = "plantlike",
+    paramtype2 = "meshoptions",
     tiles = {"sub_core_pink_blood_grass.png"},
     inventory_image = "sub_core_pink_blood_grass.png",
     selection_box = {
@@ -169,6 +171,7 @@ minetest.register_node("sub_core:pink_blood_grass", sub_core.add_water_physics({
 sub_core.register_decor({
     biome = "sub_core:grassland",
     fill_ratio = 0.8,
+    param2 = 8,
     decor = "sub_core:blood_grass",
     noise = {
         offset = 0,
@@ -183,6 +186,7 @@ sub_core.register_decor({
 sub_core.register_decor({
     biome = "sub_core:grassland",
     fill_ratio = 0.1,
+    param2 = 8,
     decor = "sub_core:pink_blood_grass",
     noise = {
         offset = -0.2,
