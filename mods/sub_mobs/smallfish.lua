@@ -86,7 +86,8 @@ minetest.register_craftitem("sub_mobs:item_peeper", {
     inventory_image = "sub_mobs_peeper.png",
     stack_max = 1,
     on_place = smallfish_place("sub_mobs:peeper"),
-    on_secondary_use = smallfish_place("sub_mobs:peeper")
+    on_secondary_use = smallfish_place("sub_mobs:peeper"),
+    on_use = sub_core.item_eat(20, -15)
 })
 
 sub_mobs.register_spawn({
@@ -137,7 +138,8 @@ minetest.register_craftitem("sub_mobs:item_bladderfish", {
     inventory_image = "sub_mobs_bladderfish.png",
     stack_max = 1,
     on_place = smallfish_place("sub_mobs:bladderfish"),
-    on_secondary_use = smallfish_place("sub_mobs:bladderfish")
+    on_secondary_use = smallfish_place("sub_mobs:bladderfish"),
+    on_use = sub_core.item_eat(9, -4)
 })
 
 sub_mobs.register_spawn({
@@ -188,7 +190,8 @@ minetest.register_craftitem("sub_mobs:item_boomerang", {
     inventory_image = "sub_mobs_boomerang.png",
     stack_max = 1,
     on_place = smallfish_place("sub_mobs:boomerang"),
-    on_secondary_use = smallfish_place("sub_mobs:boomerang")
+    on_secondary_use = smallfish_place("sub_mobs:boomerang"),
+    on_use = sub_core.item_eat(12, -8)
 })
 
 sub_mobs.register_spawn({
@@ -239,7 +242,8 @@ minetest.register_craftitem("sub_mobs:item_garryfish", {
     inventory_image = "sub_mobs_garryfish.png",
     stack_max = 1,
     on_place = smallfish_place("sub_mobs:garryfish"),
-    on_secondary_use = smallfish_place("sub_mobs:garryfish")
+    on_secondary_use = smallfish_place("sub_mobs:garryfish"),
+    on_use = sub_core.item_eat(12, -12)
 })
 
 sub_mobs.register_spawn({
@@ -292,7 +296,8 @@ minetest.register_craftitem("sub_mobs:item_spadefish", {
     inventory_image = "sub_mobs_spadefish.png",
     stack_max = 1,
     on_place = smallfish_place("sub_mobs:spadefish"),
-    on_secondary_use = smallfish_place("sub_mobs:spadefish")
+    on_secondary_use = smallfish_place("sub_mobs:spadefish"),
+    on_use = sub_core.item_eat(13, -6)
 })
 
 sub_mobs.register_spawn({
@@ -342,7 +347,8 @@ minetest.register_craftitem("sub_mobs:item_hoopfish", {
     inventory_image = "sub_mobs_hoopfish.png",
     stack_max = 1,
     on_place = smallfish_place("sub_mobs:hoopfish"),
-    on_secondary_use = smallfish_place("sub_mobs:hoopfish")
+    on_secondary_use = smallfish_place("sub_mobs:hoopfish"),
+    on_use = sub_core.item_eat(12, -6)
 })
 
 sub_mobs.register_spawn({
@@ -392,7 +398,8 @@ minetest.register_craftitem("sub_mobs:item_hoverfish", {
     inventory_image = "sub_mobs_hoverfish.png",
     stack_max = 1,
     on_place = smallfish_place("sub_mobs:hoverfish"),
-    on_secondary_use = smallfish_place("sub_mobs:hoverfish")
+    on_secondary_use = smallfish_place("sub_mobs:hoverfish"),
+    on_use = sub_core.item_eat(13, -9)
 })
 
 sub_mobs.register_spawn({
@@ -442,7 +449,8 @@ minetest.register_craftitem("sub_mobs:item_eyeye", {
     inventory_image = "sub_mobs_eyeye.png",
     stack_max = 1,
     on_place = smallfish_place("sub_mobs:eyeye"),
-    on_secondary_use = smallfish_place("sub_mobs:eyeye")
+    on_secondary_use = smallfish_place("sub_mobs:eyeye"),
+    on_use = sub_core.item_eat(10, 0)
 })
 
 sub_mobs.register_spawn({
@@ -492,7 +500,8 @@ minetest.register_craftitem("sub_mobs:item_reginald", {
     inventory_image = "sub_mobs_reginald.png",
     stack_max = 1,
     on_place = smallfish_place("sub_mobs:reginald"),
-    on_secondary_use = smallfish_place("sub_mobs:reginald")
+    on_secondary_use = smallfish_place("sub_mobs:reginald"),
+    on_use = sub_core.item_eat(25, -10)
 })
 
 sub_mobs.register_spawn({

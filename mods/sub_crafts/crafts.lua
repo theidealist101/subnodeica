@@ -143,8 +143,7 @@ local function cooked_fish(input, output, desc, image, food, water)
     minetest.register_craftitem(output, {
         description = desc,
         inventory_image = image,
-        on_place = sub_core.item_eat(food, water),
-        on_secondary_use = sub_core.item_eat(food, water)
+        on_use = sub_core.item_eat(food, water)
     })
     
     sub_crafts.register_craft({
