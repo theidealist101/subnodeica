@@ -98,6 +98,7 @@ minetest.register_node("sub_bases:hatch", {
         "blank.png",
         "blank.png"
     },
+    use_texture_alpha = "clip",
     paramtype = "light",
     paramtype2 = "wallmounted",
     sunlight_propagates = true,
