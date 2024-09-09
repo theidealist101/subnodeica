@@ -11,3 +11,4 @@ dofile(path.."nodes.lua")
 dofile(path.."shallows.lua")
 dofile(path.."forest.lua")
 dofile(path.."grassland.lua")]]
+dofile(path.."debug_biome.lua")

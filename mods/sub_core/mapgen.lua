@@ -30,6 +30,7 @@ function sub_core.register_biome(name, defs)
     defs.not_generated = defs.not_generated or false
     defs.node_top = defs.node_top or nil --to be switched with mapgen_stone later
     defs.node_stone = defs.node_stone or nil --ditto
+    defs.node_water_surface = defs.node_water_surface or defs.node_water and defs.node_water.."_surface" or "air"
     defs.node_water = defs.node_water or "air"
     defs.vertical_blend = defs.vertical_blend or 0
     --intersperses stone similarly to vertical_blend, and averages the heightmaps (not yet implemented)
@@ -122,7 +123,7 @@ local function init(size)
         if defs.node_top then defs.node_top_id = minetest.get_content_id(defs.node_top) else defs.node_top_id = c_stone end
         if defs.node_stone then defs.node_stone_id = minetest.get_content_id(defs.node_stone) else defs.node_stone_id = c_stone end
         defs.node_water_id = minetest.get_content_id(defs.node_water)
-        defs.node_water_surface_id = minetest.get_content_id(defs.node_water.."_surface")
+        defs.node_water_surface_id = minetest.get_content_id(defs.node_water_surface)
         terrain_data[name] = {}
         terrain_data3d[name] = {}
     end
