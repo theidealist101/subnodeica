@@ -1,0 +1,16 @@
+{
+    "Lua.diagnostics.globals": [
+        "minetest",
+        "vector",
+        "PcgRandom",
+        "ItemStack",
+        "VoxelArea",
+        "dump",
+        "unpack",
+        "mobkit",
+        "sub_core"
+    ],
+    "Lua.diagnostics.disable": [
+        "deprecated"
+    ]
+}
