@@ -1,24 +1,33 @@
 --Debug biome to be used for mapgen testing only
-sub_core.register_biome("sub_core:debug", {
-    name = "Debug",
+sub_core.register_biome("sub_core:debug1", {
+    name = "Debug1",
     node_water_surface = "sub_core:stone",
     heat_point = 0,
     humidity_point = 0,
-    dist_point = 0,
-    noise = {
-        offset = -30,
-        scale = 15,
-        spread = {x=100, y=100, z=100},
-        octaves = 1,
-        persistence = 0.5,
-        lacunarity = 2.0
-    },
-    noise3d = {
-        offset = 0,
-        scale = 10,
-        spread = {x=20, y=20, z=20},
-        octaves = 1,
-        persistence = 0.5,
-        lacunarity = 2.0
-    }
+    height_level = 1
+})
+
+sub_core.register_biome("sub_core:debug2", {
+    name = "Debug2",
+    node_water_surface = "sub_core:stone",
+    heat_point = 0,
+    humidity_point = 0,
+    height_level = 2
+})
+
+sub_core.register_biome("sub_core:debug3", {
+    name = "Debug3",
+    node_water_surface = "sub_core:stone",
+    heat_point = 0,
+    humidity_point = 0,
+    height_level = 3
+})
+
+sub_core.register_biome("sub_core:debug4", {
+    name = "Debug4",
+    node_water_surface = "sub_core:stone",
+    node_stone = "air",
+    heat_point = 0,
+    humidity_point = 0,
+    height_level = 4
 })

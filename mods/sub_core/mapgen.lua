@@ -21,6 +21,16 @@ local humid_table = {
     lacunarity = 2.0
 }
 
+local level_table = {
+    offset = 0,
+    scale = 400,
+    spread = {x=500, y=500, z=500},
+    seed = 103,
+    octaves = 4,
+    persistence = 0.5,
+    lacunarity = 2.0
+}
+
 --Register biomes with parameters needed by this mapgen
 sub_core.registered_biomes = {}
 
@@ -106,26 +116,21 @@ local vm_data = {}
 local param2_data = {}
 local heat_data = {}
 local humid_data = {}
-local terrain_data = {}
-local terrain_data3d = {}
+local level_data = {}
 local decor_data = {}
 local rand_data = {}
 
 --Initializing the perlin maps and positions of important stuff
-local heat_map, humid_map
+local heat_map, humid_map, level_map
 local initialized = false
 
 local function init(size)
+    local c_stone = minetest.get_content_id("mapgen_stone")
     for name, defs in pairs(sub_core.registered_biomes) do
-        defs.noise_map = minetest.get_perlin_map(defs.noise, {x=size, y=size})
-        defs.noise3d_map = minetest.get_perlin_map(defs.noise3d, {x=size, y=size+2, z=size})
-        local c_stone = minetest.get_content_id("mapgen_stone")
         if defs.node_top then defs.node_top_id = minetest.get_content_id(defs.node_top) else defs.node_top_id = c_stone end
         if defs.node_stone then defs.node_stone_id = minetest.get_content_id(defs.node_stone) else defs.node_stone_id = c_stone end
         defs.node_water_id = minetest.get_content_id(defs.node_water)
         defs.node_water_surface_id = minetest.get_content_id(defs.node_water_surface)
-        terrain_data[name] = {}
-        terrain_data3d[name] = {}
     end
     for i, defs in ipairs(sub_core.registered_decors) do
         defs.decor_id = minetest.get_content_id(defs.decor)
@@ -136,6 +141,7 @@ local function init(size)
     end
     heat_map = minetest.get_perlin_map(heat_table, {x=size, y=size})
     humid_map = minetest.get_perlin_map(humid_table, {x=size, y=size})
+    level_map = minetest.get_perlin_map(level_table, {x=size, y=size})
 end
 
 --FUNCTIONS FOR MAPGEN
@@ -146,10 +152,7 @@ local function get_maps(minp, seed)
     local minp3d = {x=minp.x, y=minp.y-1, z=minp.z}
     heat_map:get_2d_map_flat(minp2d, heat_data)
     humid_map:get_2d_map_flat(minp2d, humid_data)
-    for name, defs in pairs(sub_core.registered_biomes) do
-        defs.noise_map:get_2d_map_flat(minp2d, terrain_data[name])
-        defs.noise3d_map:get_3d_map_flat(minp3d, terrain_data3d[name])
-    end
+    level_map:get_2d_map_flat(minp2d, level_data)
     for i, defs in ipairs(sub_core.registered_decors) do
         if defs.noise then defs.noise_map:get_3d_map_flat(minp3d, decor_data[i]) end
         rand_data[i] = PcgRandom(seed+i+minp.x*PcgRandom(minp.y+minp.z^2):next(0, 99999))
@@ -165,15 +168,21 @@ local function get_vm()
     return vm, area
 end
 
+--Get height (without small details) and height level
+local function get_height_data(ni, pos)
+    local level = level_data[ni]+math.sqrt(pos.x^2+pos.z^2)
+    level = level < 500 and 1 or level < 1000 and 2 or level < 2000 and 3 or 4
+    return level == 1 and -50 or level == 2 and -100 or level == 3 and -200 or -32000, level
+end
+
 --Get biome data from internal mapgen variables
-local function get_biome_data(ni, pos)
+local function get_biome_data(ni, pos, level)
     local heat = heat_data[ni]
     local humid = humid_data[ni]
-    local dist_sq = pos.x^2+pos.z^2
     local biome
     for i, defs in pairs(sub_core.registered_biomes) do
-        if not defs.not_generated and defs.y_min <= pos.y and pos.y <= defs.y_max then
-            local biome_dist_sq = (heat-defs.heat_point)^2+(humid-defs.humid_point)^2+0.5*math.abs(math.sqrt(dist_sq)-math.sqrt(defs.dist_point_sq))
+        if not defs.not_generated and level == defs.height_level then
+            local biome_dist_sq = (heat-defs.heat_point)^2+(humid-defs.humid_point)^2
             local biome_dist_tuple = {i, defs, biome_dist_sq}
             if not biome or biome_dist_sq < biome[3] then
                 biome = biome_dist_tuple
@@ -185,10 +194,10 @@ local function get_biome_data(ni, pos)
 end
 
 --Get density similarly
-local function get_density(ni, ni3d, y, size, biome)
-    local density_below = y+terrain_data3d[biome][ni3d]-terrain_data[biome][ni]-1
-    local density = y+terrain_data3d[biome][ni3d+size]-terrain_data[biome][ni]
-    local density_above = y+terrain_data3d[biome][ni3d+size*2]-terrain_data[biome][ni]+1
+local function get_density(height, ni, ni3d, y, size, biome)
+    local density_below = y-height-1
+    local density = y-height
+    local density_above = y-height+1
     return density_below, density, density_above
 end
 
@@ -278,8 +287,9 @@ minetest.register_on_generated(function (minp, maxp, seed)
                 --make sure it's not already generated from a neighbouring chunk
                 if vm_data[vi] == minetest.CONTENT_AIR then
                     local pos = vector.new(x, y, z)
-                    local biome, bdefs = get_biome_data(ni, pos)
-                    local density_below, density, density_above = get_density(ni, ni3d, y, size, biome)
+                    local height, level = get_height_data(ni, pos)
+                    local biome, bdefs = get_biome_data(ni, pos, level)
+                    local density_below, density, density_above = get_density(height, ni, ni3d, y, size, biome)
 
                     local id, param2 = place_decors(ni3d, biome, density_below, density, density_above, param2_rand)
                     if id then
