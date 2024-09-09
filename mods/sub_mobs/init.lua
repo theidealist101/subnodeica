@@ -12,7 +12,8 @@ function sub_mobs.register_spawn(defs)
     defs.biomes = defs.biomes or {}
     defs.nodes = defs.nodes or {}
     for i, biome in pairs(defs.biomes) do
-        table.insert(defs.nodes, sub_core.registered_biomes[biome].node_water)
+        local biome_defs = sub_core.registered_biomes[biome]
+        if biome_defs then table.insert(defs.nodes, biome_defs.node_water) end
     end
     defs.chance = defs.chance or 0
     defs.gen_chance = defs.gen_chance or 0
@@ -82,7 +83,7 @@ local path = minetest.get_modpath("sub_mobs").."/"
 dofile(path.."behaviors.lua")
 dofile(path.."smallfish.lua")
 dofile(path.."parasites.lua")
-dofile(path.."crashfish.lua")
+--dofile(path.."crashfish.lua")
 dofile(path.."gasopod.lua")
 dofile(path.."skyray.lua")
 dofile(path.."rays.lua")

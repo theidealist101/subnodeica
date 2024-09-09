@@ -279,7 +279,7 @@ minetest.register_on_generated(function (minp, maxp, seed)
                     local pos = vector.new(x, y, z)
                     local biome, bdefs = get_biome_data(ni, pos)
                     local density_below, density, density_above = get_density(ni, ni3d, y, size, biome)
-                    
+
                     local id, param2 = place_decors(ni3d, biome, density_below, density, density_above, param2_rand)
                     if id then
                         vm_data[vi] = id
