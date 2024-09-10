@@ -175,7 +175,7 @@ end
 local function get_height_data(ni, pos)
     local dist = math.sqrt(pos.x^2+pos.z^2)
     local level = level_data[ni]+dist
-    local height_offset = height_data[ni]*(dist < 500 and 0.5+0.001*dist or 1)+20-0.01*dist
+    local height_offset = height_data[ni]*(dist < 500 and 0.5+0.001*dist or 1)+20-0.1*dist
     local height = level < 250 and -50
         or level < 500 and -SLOPE_COEFF*(level-250)^SLOPE_POWER-50
         or level < 750 and SLOPE_COEFF*(level-750)^SLOPE_POWER-100

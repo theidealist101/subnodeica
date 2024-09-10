@@ -4,7 +4,7 @@ sub_core.register_biome("sub_core:void", {
     node_top = "sub_core:void_water",
     node_stone = "sub_core:void_water",
     node_water = "sub_core:void_water",
-    height_point = -500
+    height_point = -1000
 })
 
 sub_core.biome_default = "sub_core:void"
