@@ -31,6 +31,16 @@ local level_table = {
     lacunarity = 2.0
 }
 
+local height_table = {
+    offset = 0,
+    scale = 40,
+    spread = {x=500, y=500, z=500},
+    seed = 104,
+    octaves = 5,
+    persistence = 0.5,
+    lacunarity = 2.0
+}
+
 local SLOPE_POWER = 6
 local SLOPE_COEFF = 1/(250*25^(-1/SLOPE_POWER))^SLOPE_POWER
 
@@ -120,11 +130,12 @@ local param2_data = {}
 local heat_data = {}
 local humid_data = {}
 local level_data = {}
+local height_data = {}
 local decor_data = {}
 local rand_data = {}
 
 --Initializing the perlin maps and positions of important stuff
-local heat_map, humid_map, level_map
+local heat_map, humid_map, level_map, height_map
 local initialized = false
 
 local function init(size)
@@ -145,6 +156,7 @@ local function init(size)
     heat_map = minetest.get_perlin_map(heat_table, {x=size, y=size})
     humid_map = minetest.get_perlin_map(humid_table, {x=size, y=size})
     level_map = minetest.get_perlin_map(level_table, {x=size, y=size})
+    height_map = minetest.get_perlin_map(height_table, {x=size, y=size})
 end
 
 --FUNCTIONS FOR MAPGEN
@@ -156,6 +168,7 @@ local function get_maps(minp, seed)
     heat_map:get_2d_map_flat(minp2d, heat_data)
     humid_map:get_2d_map_flat(minp2d, humid_data)
     level_map:get_2d_map_flat(minp2d, level_data)
+    height_map:get_2d_map_flat(minp2d, height_data)
     for i, defs in ipairs(sub_core.registered_decors) do
         if defs.noise then defs.noise_map:get_3d_map_flat(minp3d, decor_data[i]) end
         rand_data[i] = PcgRandom(seed+i+minp.x*PcgRandom(minp.y+minp.z^2):next(0, 99999))
@@ -175,7 +188,7 @@ end
 local function get_height_data(ni, pos)
     local dist = math.sqrt(pos.x^2+pos.z^2)
     local level = level_data[ni]+dist
-    local height_offset = 20-0.1*dist
+    local height_offset = height_data[ni]*(dist < 100 and 0.5+0.005*dist or 1)+20-0.01*dist
     local height = level < 250 and -50
         or level < 500 and -SLOPE_COEFF*(level-250)^SLOPE_POWER-50
         or level < 750 and SLOPE_COEFF*(level-750)^SLOPE_POWER-100
