@@ -7,6 +7,30 @@ It does not use the mapgen async thread as Minetest 5.8 does not have that featu
 
 All mapgen API functions are currently in the mod `sub_core`, mostly in the files `mapgen.lua` and `water.lua`. Biome definitions and decorations may be found each in their own respective files, mostly using nodes defined in `nodes.lua`.
 
+Generation
+----------
+
+The terrain is produced by combination of several Perlin noise functions:
+
+* Main functions, used for choosing biomes:
+    * 2D level noise, which decides the overall height of the area.
+        * The distance from the center is combined with the base noise function, so that more distant areas are deeper.
+        * This is then passed through a piecewise function which snaps it to four different levels (-50, -100, -200, and bottomless) with smooth transitions, to imitate the sudden dropoffs between biomes in Subnautica.
+    * 2D height noise, which decides the shape of the terrain and is added to level noise.
+        * This is only half as strong at the center as it is >500 nodes out, to prevent islands at the center.
+        * The distance is again combined so that further parts of the same level slope gradually away, hence the -200 level is actually around -300 most of the time, and the -50 level approaches -20 at the center.
+* Smaller details for giving character to certain biomes:
+    * 3D "smush" noise, which gives shallower areas more irregularity.
+        * This is strongest at the surface and decreases getting deeper, having no effect beyond -100.
+        * The purpose of this is to imitate the torn-up character of parts of the Safe Shallows and Kelp Forest, compared to the relative smoothness of deeper biomes.
+    * Plans for later:
+        * Kelp trenches in the shallows? Ridges and trenches in the grasslands?
+        * Small tunnel caves and larger caverns with biomes
+        * Likely a fourth level at -300, for the deepest biomes like the grand reef
+        * Mountain noise for the mountains biome, with chance of protruding above water and making an island
+        * Large scale 3D noise which would carve out parts of cliffs and stuff
+        * Smush will have to be decreased around the crash zone
+
 Biomes
 ------
 
@@ -36,24 +60,15 @@ A biome definition is a table with the following fields:
     --Node replacing stone underneath
 
     node_water = "sub_core:shallows_water",
-    --Node used as water - see Water
+    --Node used as filler between the terrain and the surface
 
-    y_max = 31000,
-    y_min = -31000,
-    --Upper and lower limits for biome (biome spawning, NOT terrain)
+    node_water_surface = "sub_core:shallows_water_surface",
+    --Node placed at the top of the water, defaults to the value of node_water plus "_surface"
 
     heat_point = 50,
-    humid_point = 50,
-    --Typical heat and humidity, decided similarly to Minetest's as noise compared to a Voronoi diagram
-    
-    dist_point = 0,
-    --Typical horizontal Euclidean distance from the origin, also used in the Voronoi diagram
-
-    noise = {noise defs},
-    noise3d = {noise defs}
-    --Noise functions combined to form terrain
-    --Definitions are as used by minetest.get_perlin_map
-    --Do not set the seed however, that is taken care of by the mapgen
+    height_point = 0,
+    --Typical heat and height, used to decide which biome to place by comparing to a Voronoi diagram
+    --Height is the sum of height noise and level noise, without considering smaller details like caves or "smush"
 }
 ```
 
