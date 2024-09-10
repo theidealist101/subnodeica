@@ -31,6 +31,9 @@ local level_table = {
     lacunarity = 2.0
 }
 
+local SLOPE_POWER = 6
+local SLOPE_COEFF = 1/(250*25^(-1/SLOPE_POWER))^SLOPE_POWER
+
 --Register biomes with parameters needed by this mapgen
 sub_core.registered_biomes = {}
 
@@ -171,12 +174,19 @@ end
 --Get height (without small details) and height level
 local function get_height_data(ni, pos)
     local level = level_data[ni]+math.sqrt(pos.x^2+pos.z^2)
+    local height = level < 250 and -50
+        or level < 500 and -SLOPE_COEFF*(level-250)^SLOPE_POWER-50
+        or level < 750 and SLOPE_COEFF*(level-750)^SLOPE_POWER-100
+        or level < 1000 and -2*SLOPE_COEFF*(level-750)^SLOPE_POWER-100
+        or level < 1250 and 2*SLOPE_COEFF*(level-1250)^SLOPE_POWER-200
+        or level < 1750 and -200
+        or -8*SLOPE_COEFF*(level-1750)^SLOPE_POWER-200
     level = level < 500 and 1 or level < 1000 and 2 or level < 2000 and 3 or 4
-    return level == 1 and -50 or level == 2 and -100 or level == 3 and -200 or -32000, level
+    return height, level
 end
 
 --Get biome data from internal mapgen variables
-local function get_biome_data(ni, pos, level)
+local function get_biome_data(ni, level)
     local heat = heat_data[ni]
     local humid = humid_data[ni]
     local biome
@@ -288,7 +298,7 @@ minetest.register_on_generated(function (minp, maxp, seed)
                 if vm_data[vi] == minetest.CONTENT_AIR then
                     local pos = vector.new(x, y, z)
                     local height, level = get_height_data(ni, pos)
-                    local biome, bdefs = get_biome_data(ni, pos, level)
+                    local biome, bdefs = get_biome_data(ni, level)
                     local density_below, density, density_above = get_density(height, ni, ni3d, y, size, biome)
 
                     local id, param2 = place_decors(ni3d, biome, density_below, density, density_above, param2_rand)
