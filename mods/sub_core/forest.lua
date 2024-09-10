@@ -5,7 +5,7 @@ sub_core.register_biome("sub_core:forest", {
     node_stone = "sub_core:sandstone",
     node_water = "sub_core:forest_water",
     height_point = -50,
-    heat_point = 40
+    heat_point = 50
 })
 
 sub_core.register_water("sub_core:forest_water", {
