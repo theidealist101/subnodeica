@@ -55,21 +55,7 @@ function sub_core.register_biome(name, defs)
     defs.node_stone = defs.node_stone or nil --ditto
     defs.node_water_surface = defs.node_water_surface or defs.node_water and defs.node_water.."_surface" or "air"
     defs.node_water = defs.node_water or "air"
-    defs.vertical_blend = defs.vertical_blend or 0
-    --intersperses stone similarly to vertical_blend, and averages the heightmaps (not yet implemented)
-    defs.horizontal_blend = defs.horizontal_blend or 0
-    defs.y_max = defs.y_max or 31000
-    defs.y_min = defs.y_min or -31000
-    --how far out it generates
-    defs.dist_point = defs.dist_point or 0
-    defs.dist_point_sq = defs.dist_point^2
-    defs.heat_point = defs.heat_point or 50
-    defs.humid_point = defs.humid_point or 50 --more about nutrients than humidity though
-    --tables for perlin noise functions (each biome gets a different seed)
-    defs.noise = defs.noise or {}
-    defs.noise.seed = #sub_core.registered_biomes
-    defs.noise3d = defs.noise3d or {}
-    defs.noise3d.seed = -defs.noise.seed
+    defs.height_point = defs.height_point or 0
     --add it to the global table
     sub_core.registered_biomes[name] = defs
 end
@@ -184,7 +170,7 @@ local function get_vm()
     return vm, area
 end
 
---Get height (without small details) and height level
+--Get height (without small details)
 local function get_height_data(ni, pos)
     local dist = math.sqrt(pos.x^2+pos.z^2)
     local level = level_data[ni]+dist
@@ -196,18 +182,15 @@ local function get_height_data(ni, pos)
         or level < 1250 and 2*SLOPE_COEFF*(level-1250)^SLOPE_POWER-200
         or level < 1750 and -200
         or -8*SLOPE_COEFF*(level-1750)^SLOPE_POWER-200
-    level = level < 500 and 1 or level < 1000 and 2 or level < 2000 and 3 or 4
-    return height+height_offset, level
+    return height+height_offset
 end
 
 --Get biome data from internal mapgen variables
-local function get_biome_data(ni, level)
-    local heat = heat_data[ni]
-    local humid = humid_data[ni]
+local function get_biome_data(height)
     local biome
     for i, defs in pairs(sub_core.registered_biomes) do
-        if not defs.not_generated and level == defs.height_level then
-            local biome_dist_sq = (heat-defs.heat_point)^2+(humid-defs.humid_point)^2
+        if not defs.not_generated then
+            local biome_dist_sq = (height-defs.height_point)^2
             local biome_dist_tuple = {i, defs, biome_dist_sq}
             if not biome or biome_dist_sq < biome[3] then
                 biome = biome_dist_tuple
@@ -312,8 +295,8 @@ minetest.register_on_generated(function (minp, maxp, seed)
                 --make sure it's not already generated from a neighbouring chunk
                 if vm_data[vi] == minetest.CONTENT_AIR then
                     local pos = vector.new(x, y, z)
-                    local height, level = get_height_data(ni, pos)
-                    local biome, bdefs = get_biome_data(ni, level)
+                    local height = get_height_data(ni, pos)
+                    local biome, bdefs = get_biome_data(height)
                     local density_below, density, density_above = get_density(height, ni, ni3d, y, size, biome)
 
                     local id, param2 = place_decors(ni3d, biome, density_below, density, density_above, param2_rand)
