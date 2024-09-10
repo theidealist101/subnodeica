@@ -173,7 +173,9 @@ end
 
 --Get height (without small details) and height level
 local function get_height_data(ni, pos)
-    local level = level_data[ni]+math.sqrt(pos.x^2+pos.z^2)
+    local dist = math.sqrt(pos.x^2+pos.z^2)
+    local level = level_data[ni]+dist
+    local height_offset = 20-0.1*dist
     local height = level < 250 and -50
         or level < 500 and -SLOPE_COEFF*(level-250)^SLOPE_POWER-50
         or level < 750 and SLOPE_COEFF*(level-750)^SLOPE_POWER-100
@@ -182,7 +184,7 @@ local function get_height_data(ni, pos)
         or level < 1750 and -200
         or -8*SLOPE_COEFF*(level-1750)^SLOPE_POWER-200
     level = level < 500 and 1 or level < 1000 and 2 or level < 2000 and 3 or 4
-    return height, level
+    return height+height_offset, level
 end
 
 --Get biome data from internal mapgen variables
