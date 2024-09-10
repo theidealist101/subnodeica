@@ -23,10 +23,20 @@ local level_table = {
 
 local height_table = {
     offset = 0,
-    scale = 40,
-    spread = {x=500, y=500, z=500},
+    scale = 20,
+    spread = {x=200, y=200, z=200},
     seed = 104,
-    octaves = 5,
+    octaves = 4,
+    persistence = 0.5,
+    lacunarity = 2.0
+}
+
+local smush_table = {
+    offset = -10,
+    scale = 12,
+    spread = {x=20, y=20, z=20},
+    seed = 105,
+    octaves = 3,
     persistence = 0.5,
     lacunarity = 2.0
 }
@@ -106,12 +116,13 @@ local param2_data = {}
 local heat_data = {}
 local level_data = {}
 local height_data = {}
+local smush_data = {}
 local decor_data = {}
 local rand_data = {}
 local biome_data = {}
 
 --Initializing the perlin maps and positions of important stuff
-local heat_map, level_map, height_map
+local heat_map, level_map, height_map, smush_map
 local initialized = false
 
 local function init(size)
@@ -129,9 +140,10 @@ local function init(size)
         table.insert(decor_data, {})
         table.insert(rand_data, {})
     end
-    heat_map = minetest.get_perlin_map(heat_table, {x=size, y=size})
-    level_map = minetest.get_perlin_map(level_table, {x=size, y=size})
-    height_map = minetest.get_perlin_map(height_table, {x=size, y=size})
+    heat_map = minetest.get_perlin_map(heat_table, {x=size, y=size, z=size})
+    level_map = minetest.get_perlin_map(level_table, {x=size, y=size, z=size})
+    height_map = minetest.get_perlin_map(height_table, {x=size, y=size, z=size})
+    smush_map = minetest.get_perlin_map(smush_table, {x=size, y=size+2, z=size})
 end
 
 --FUNCTIONS FOR MAPGEN
@@ -143,6 +155,7 @@ local function get_maps(minp, seed)
     heat_map:get_2d_map_flat(minp2d, heat_data)
     level_map:get_2d_map_flat(minp2d, level_data)
     height_map:get_2d_map_flat(minp2d, height_data)
+    smush_map:get_3d_map_flat(minp3d, smush_data)
     for i, defs in ipairs(sub_core.registered_decors) do
         if defs.noise then defs.noise_map:get_3d_map_flat(minp3d, decor_data[i]) end
         rand_data[i] = PcgRandom(seed+i+minp.x*PcgRandom(minp.y+minp.z^2):next(0, 99999))
@@ -195,10 +208,10 @@ local function get_biome_data(pos, ni, height)
 end
 
 --Get density similarly
-local function get_density(height, ni, ni3d, y, size, biome)
-    local density_below = y-height-1
-    local density = y-height
-    local density_above = y-height+1
+local function get_density(height, ni3d, y, size)
+    local density_below = y-height-1+smush_data[ni3d]
+    local density = y-height+smush_data[ni3d+size]
+    local density_above = y-height+1+smush_data[ni3d+2*size]
     return density_below, density, density_above
 end
 
@@ -290,7 +303,7 @@ minetest.register_on_generated(function (minp, maxp, seed)
                     local pos = vector.new(x, y, z)
                     local height = get_height_data(ni, pos)
                     local biome, bdefs = get_biome_data(pos, ni, height)
-                    local density_below, density, density_above = get_density(height, ni, ni3d, y, size, biome)
+                    local density_below, density, density_above = get_density(height, ni3d, y, size)
 
                     local id, param2 = place_decors(ni3d, biome, density_below, density, density_above, param2_rand)
                     if id then
