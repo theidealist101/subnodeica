@@ -56,6 +56,7 @@ function sub_core.register_biome(name, defs)
     defs.node_water_surface = defs.node_water_surface or defs.node_water and defs.node_water.."_surface" or "air"
     defs.node_water = defs.node_water or "air"
     defs.height_point = defs.height_point or 0
+    defs.heat_point = defs.heat_point or 50
     --add it to the global table
     sub_core.registered_biomes[name] = defs
 end
@@ -114,14 +115,13 @@ end
 local vm_data = {}
 local param2_data = {}
 local heat_data = {}
-local humid_data = {}
 local level_data = {}
 local height_data = {}
 local decor_data = {}
 local rand_data = {}
 
 --Initializing the perlin maps and positions of important stuff
-local heat_map, humid_map, level_map, height_map
+local heat_map, level_map, height_map
 local initialized = false
 
 local function init(size)
@@ -140,7 +140,6 @@ local function init(size)
         table.insert(rand_data, {})
     end
     heat_map = minetest.get_perlin_map(heat_table, {x=size, y=size})
-    humid_map = minetest.get_perlin_map(humid_table, {x=size, y=size})
     level_map = minetest.get_perlin_map(level_table, {x=size, y=size})
     height_map = minetest.get_perlin_map(height_table, {x=size, y=size})
 end
@@ -152,7 +151,6 @@ local function get_maps(minp, seed)
     local minp2d = {x=minp.x, y=minp.z}
     local minp3d = {x=minp.x, y=minp.y-1, z=minp.z}
     heat_map:get_2d_map_flat(minp2d, heat_data)
-    humid_map:get_2d_map_flat(minp2d, humid_data)
     level_map:get_2d_map_flat(minp2d, level_data)
     height_map:get_2d_map_flat(minp2d, height_data)
     for i, defs in ipairs(sub_core.registered_decors) do
@@ -186,11 +184,12 @@ local function get_height_data(ni, pos)
 end
 
 --Get biome data from internal mapgen variables
-local function get_biome_data(height)
+local function get_biome_data(ni, height)
+    local heat = heat_data[ni]
     local biome
     for i, defs in pairs(sub_core.registered_biomes) do
         if not defs.not_generated then
-            local biome_dist_sq = (height-defs.height_point)^2
+            local biome_dist_sq = (height-defs.height_point)^2+(heat-defs.heat_point)^2
             local biome_dist_tuple = {i, defs, biome_dist_sq}
             if not biome or biome_dist_sq < biome[3] then
                 biome = biome_dist_tuple
@@ -296,7 +295,7 @@ minetest.register_on_generated(function (minp, maxp, seed)
                 if vm_data[vi] == minetest.CONTENT_AIR then
                     local pos = vector.new(x, y, z)
                     local height = get_height_data(ni, pos)
-                    local biome, bdefs = get_biome_data(height)
+                    local biome, bdefs = get_biome_data(ni, height)
                     local density_below, density, density_above = get_density(height, ni, ni3d, y, size, biome)
 
                     local id, param2 = place_decors(ni3d, biome, density_below, density, density_above, param2_rand)

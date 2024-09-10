@@ -4,25 +4,8 @@ sub_core.register_biome("sub_core:grassland", {
     node_top = "sub_core:sand",
     node_stone = "sub_core:sandstone",
     node_water = "sub_core:grassland_water",
-    heat_point = 40,
-    humidity_point = 30,
-    dist_point = 400,
-    noise = {
-        offset = -80,
-        scale = 20,
-        spread = {x=200, y=200, z=200},
-        octaves = 3,
-        persistence = 0.5,
-        lacunarity = 2.0
-    },
-    noise3d = {
-        offset = 0,
-        scale = 10,
-        spread = {x=50, y=50, z=50},
-        octaves = 2,
-        persistence = 0.5,
-        lacunarity = 2.0
-    }
+    height_point = -100,
+    heat_point = 50
 })
 
 sub_core.register_water("sub_core:grassland_water", {

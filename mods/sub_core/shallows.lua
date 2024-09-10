@@ -4,25 +4,8 @@ sub_core.register_biome("sub_core:shallows", {
     node_top = "sub_core:sand",
     node_stone = "sub_core:sandstone",
     node_water = "sub_core:shallows_water",
-    heat_point = 60,
-    humidity_point = 60,
-    dist_point = 0,
-    noise = {
-        offset = -20,
-        scale = 5,
-        spread = {x=100, y=100, z=100},
-        octaves = 4,
-        persistence = 0.5,
-        lacunarity = 2.0
-    },
-    noise3d = {
-        offset = 0,
-        scale = 12,
-        spread = {x=20, y=20, z=20},
-        octaves = 3,
-        persistence = 0.5,
-        lacunarity = 2.0
-    }
+    height_point = -30,
+    heat_point = 60
 })
 
 sub_core.register_water("sub_core:shallows_water", {
