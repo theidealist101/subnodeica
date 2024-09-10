@@ -33,7 +33,7 @@ local height_table = {
 
 local smush_table = {
     offset = -10,
-    scale = 12,
+    scale = 15,
     spread = {x=20, y=20, z=20},
     seed = 105,
     octaves = 3,
@@ -209,9 +209,10 @@ end
 
 --Get density similarly
 local function get_density(height, ni3d, y, size)
-    local density_below = y-height-1+smush_data[ni3d]
-    local density = y-height+smush_data[ni3d+size]
-    local density_above = y-height+1+smush_data[ni3d+2*size]
+    local smush_factor = math.min(math.max(0.01*(height+100), 0), 1)
+    local density_below = y-height-1+smush_factor*smush_data[ni3d]
+    local density = y-height+smush_factor*smush_data[ni3d+size]
+    local density_above = y-height+1+smush_factor*smush_data[ni3d+2*size]
     return density_below, density, density_above
 end
 
