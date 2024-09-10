@@ -32,8 +32,8 @@ local height_table = {
 }
 
 local smush_table = {
-    offset = -10,
-    scale = 15,
+    offset = -15,
+    scale = 20,
     spread = {x=20, y=20, z=20},
     seed = 105,
     octaves = 3,
