@@ -25,7 +25,7 @@ The terrain is produced by combination of several Perlin noise functions:
         * The purpose of this is to imitate the torn-up character of parts of the Safe Shallows and Kelp Forest, compared to the relative smoothness of deeper biomes.
     * Plans for later:
         * Kelp trenches in the shallows? Ridges and trenches in the grasslands?
-        * Small tunnel caves and larger caverns with biomes
+        * Larger caverns with biomes
         * Likely a fourth level at -300, for the deepest biomes like the grand reef
         * Mountain noise for the mountains biome, with chance of protruding above water and making an island
         * Large scale 3D noise which would carve out parts of cliffs and stuff
@@ -72,6 +72,9 @@ A biome definition is a table with the following fields:
     height_point = 0,
     --Typical heat and height, used to decide which biome to place by comparing to a Voronoi diagram
     --Height is the sum of height noise and level noise, without considering smaller details like caves or "smush"
+
+    cave_level = 0
+    --Height relative to terrain at which things are considered to be in a cave
 }
 ```
 
@@ -105,7 +108,12 @@ A decor definition is a table with the following fields:
     -- "bottom" is placed under terrain overhangs, e.g. drooping stingers
     -- "surface" is placed in the top layer of the terrain, e.g. sand with lichen
     -- "underground" is placed within the terrain and may be exposed in cliffs or caves, e.g. sandstone with scales
-    -- "cave_top" is placed on top of terrain but only in caves or low points, e.g. brain coral
+
+    in_cave = false,
+    not_surface = false,
+    --By default, decors spawn only on the surface and not in caves
+    --The in_cave parameter allows them to spawn in caves
+    --Additionally, not_surface may be used to prevent them from spawning on the surface
 
     biome = "sub_core:shallows",
     --Name of biome to generate in

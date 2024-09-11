@@ -48,7 +48,7 @@ local decor_noise = {
     spread = {x=4, y=8, z=4},
     octaves = 3,
     persistence = 0.5,
-    lacunarity = 2.0
+    lacunarity = 2
 }
 
 --Various other plants and corals
@@ -75,6 +75,7 @@ sub_core.register_decor({
 
 sub_core.register_decor({
     type = "surface",
+    in_cave = true,
     biome = "sub_core:shallows",
     fill_ratio = 0.7,
     decor = "sub_core:sand_with_lichen",
@@ -89,7 +90,17 @@ sub_core.register_decor({
 })
 
 sub_core.register_decor({
+    type = "surface",
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:shallows",
+    fill_ratio = 0.6,
+    decor = "sub_core:sandstone"
+})
+
+sub_core.register_decor({
     type = "underground",
+    in_cave = true,
     biome = "sub_core:shallows",
     fill_ratio = 0.7,
     decor = "sub_core:sandstone_with_scales",
@@ -99,12 +110,13 @@ sub_core.register_decor({
         spread = {x=4, y=8, z=4},
         octaves = 3,
         persistence = 0.5,
-        lacunarity = 2.0
+        lacunarity = 2
     }
 })
 
 for i = 1, 4 do
     sub_core.register_decor({
+        in_cave = true,
         biome = "sub_core:shallows",
         fill_ratio = 0.1,
         decor = "sub_core:acidshroom"..i,
@@ -124,15 +136,59 @@ sub_core.register_decor({
         spread = {x=4, y=64, z=4},
         octaves = 3,
         persistence = 0.5,
-        lacunarity = 2.0
+        lacunarity = 2
+    }
+})
+
+sub_core.register_decor({
+    type = "underground",
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:shallows",
+    fill_ratio = 0.8,
+    decor = "sub_core:sandstone_with_lichen",
+    noise = {
+        offset = 0,
+        scale = 1,
+        spread = {x=4, y=4, z=4},
+        octaves = 3,
+        persistence = 0.5,
+        lacunarity = 2
     }
 })
 
 sub_core.register_decor({
     type = "underground",
     biome = "sub_core:shallows",
-    fill_ratio = 0.002,
+    fill_ratio = 0.01,
     decor = "sub_core:limestone_outcrop_spawner"
+})
+
+sub_core.register_decor({
+    type = "underground",
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:shallows",
+    fill_ratio = 0.1,
+    decor = "sub_core:limestone_outcrop_spawner"
+})
+
+sub_core.register_decor({
+    type = "underground",
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:shallows",
+    fill_ratio = 0.05,
+    decor = "sub_core:sandstone_outcrop_spawner"
+})
+
+sub_core.register_decor({
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:shallows",
+    fill_ratio = 0.01,
+    decor = "sub_core:quartz_outcrop",
+    param2 = 1
 })
 
 sub_core.register_schem({
@@ -144,7 +200,8 @@ sub_core.register_schem({
 })
 
 sub_core.register_decor({
-    type = "cave_top",
+    in_cave = true,
+    not_surface = true,
     biome = "sub_core:shallows",
     fill_ratio = 0.01,
     decor = "sub_core:brain_coral"
