@@ -83,7 +83,7 @@ local path = minetest.get_modpath("sub_mobs").."/"
 dofile(path.."behaviors.lua")
 dofile(path.."smallfish.lua")
 dofile(path.."parasites.lua")
---dofile(path.."crashfish.lua")
+dofile(path.."crashfish.lua")
 dofile(path.."gasopod.lua")
 dofile(path.."skyray.lua")
 dofile(path.."rays.lua")

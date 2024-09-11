@@ -1,5 +1,5 @@
 --Sulfur plant, spawns in shallows caves
-minetest.register_node("sub_mobs:sulfur_plant", sub_core.add_water_physics({
+sub_core.register_waterloggable("sub_mobs:sulfur_plant", {
     description = "Sulfur Plant",
     drawtype = "mesh",
     mesh = "sulfur_plant.obj",
@@ -9,13 +9,11 @@ minetest.register_node("sub_mobs:sulfur_plant", sub_core.add_water_physics({
         type = "fixed",
         fixed = {-0.375, -0.5, -0.375, 0.375, 0, 0.375}
     },
-    paramtype = "light",
     paramtype2 = "wallmounted",
-    sunlight_propagates = true,
-    walkable = false,
-}, "sub_core:shallows_water"))
+    groups = {sulfur_plant=1}
+})
 
-minetest.register_node("sub_mobs:sulfur_plant_open", sub_core.add_water_physics({
+sub_core.register_waterloggable("sub_mobs:sulfur_plant_open", {
     description = "Open Sulfur Plant",
     drawtype = "mesh",
     mesh = "sulfur_plant_open.obj",
@@ -25,20 +23,17 @@ minetest.register_node("sub_mobs:sulfur_plant_open", sub_core.add_water_physics(
         type = "fixed",
         fixed = {-0.375, -0.5, -0.375, 0.375, 0, 0.375}
     },
-    paramtype = "light",
     paramtype2 = "wallmounted",
-    sunlight_propagates = true,
-    walkable = false,
     groups = {not_in_creative_inventory=1},
     on_timer = function (pos)
         local node = minetest.get_node(pos)
-        node.name = "sub_mobs:sulfur_plant"
+        node.name = sub_core.get_waterlogged("sub_mobs:sulfur_plant", minetest.registered_nodes[node.name]._water_equivalent)
         minetest.swap_node(pos, node)
     end
-}, "sub_core:shallows_water"))
+})
 
 minetest.register_abm({
-    nodenames = {"sub_mobs:sulfur_plant"},
+    nodenames = {"group:sulfur_plant"},
     interval = 1,
     chance = 1,
     min_y = -200,
@@ -47,7 +42,7 @@ minetest.register_abm({
         for i, obj in ipairs(minetest.get_objects_inside_radius(pos, 8)) do
             if obj:is_player() then
                 minetest.add_entity(pos, "sub_mobs:crashfish"):get_luaentity().target = obj
-                node.name = "sub_mobs:sulfur_plant_open"
+                node.name = sub_core.get_waterlogged("sub_mobs:sulfur_plant_open", minetest.registered_nodes[node.name]._water_equivalent)
                 minetest.swap_node(pos, node)
                 minetest.get_node_timer(pos):set(5, 0) --testing purposes, real value 600
             end
@@ -116,5 +111,6 @@ minetest.register_entity("sub_mobs:crashfish", {
         damage_groups = {normal=8}
     },
     on_punch = sub_mobs.punchfunc(0.5, 0.5),
-    on_death = sub_core.become_corpse
+    on_death = sub_core.deathfunc,
+    carnivore = true --so it doesn't leave a corpse when it explodes
 })
