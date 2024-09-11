@@ -45,6 +45,7 @@ local SLOPE_POWER = 6
 local SLOPE_COEFF = 1/(250*25^(-1/SLOPE_POWER))^SLOPE_POWER
 
 local hash = minetest.hash_node_position
+local max = math.max
 
 --Register biomes with parameters needed by this mapgen
 sub_core.registered_biomes = {}
@@ -255,7 +256,9 @@ local function get_density_at(y_diff, ni3d, smush_factor, carve_data, pos)
     for _, func in ipairs(carve_data) do
         density = density+func(pos)
     end
-    return density > 0 and density or y_diff+smush_factor*smush_data[ni3d]
+    density = density > 0 and density or y_diff+smush_factor*smush_data[ni3d]
+    if pos.y > -5 then density = density+2*(pos.y+5) end
+    return density
 end
 
 local up = vector.new(0, 1, 0)
@@ -433,8 +436,6 @@ minetest.register_abm({
 })
 
 --Common carver functions
-local max = math.max
-
 local function add_cave_node(pending, node, dir, random)
     if random:next(0, 2) == 0 then
         dir = vector.normalize(dir+0.2*vector.new(random:next(-1, 1), random:next(-1, 1), random:next(-1, 1)))
