@@ -330,7 +330,8 @@ end
 --MAPGEN
 
 --The actual generating function
-minetest.register_on_generated(function (minp, maxp, seed)
+--Not actually registered unless in mapgen environment
+function sub_core.on_generate(_, minp, maxp, seed)
     --initialize stuff
     local size = maxp.x-minp.x+1
     if not initialized then
@@ -392,10 +393,10 @@ minetest.register_on_generated(function (minp, maxp, seed)
     end
 
     vm:calc_lighting()
-    vm:write_to_map()
+    --vm:write_to_map()
     vm:update_liquids()
     --minetest.fix_light(minp, maxp)
-end)
+end
 
 --ABM updating all spawners
 local dirs = {

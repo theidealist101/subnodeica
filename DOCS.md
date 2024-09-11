@@ -3,8 +3,6 @@ Mapgen
 
 Subnodeica uses the `singlenode` mapgen type; all other types are unavailable. On top of this it puts its own custom mapgen.
 
-It does not use the mapgen async thread as Minetest 5.8 does not have that feature. This may cause significant lag whie exploring a world, manifested in chunks not appearing, entities rubber-banding, etc. - chunk load times in excess of 2000ms have been observed. It is recommended players only drive Seamoths in already explored areas until this is fixed.
-
 All mapgen API functions are currently in the mod `sub_core`, mostly in the files `mapgen.lua` and `water.lua`. Biome definitions and decorations may be found each in their own respective files, mostly using nodes defined in `nodes.lua`.
 
 Generation
@@ -210,15 +208,6 @@ Misc
     * `exposed`, `hidden`: the names of the nodes it will turn into after doing this if exposed or hidden within terrain.
     * `defs`: the node definition table for the spawner, recommended to be just a simple barebones node.
     * See examples in `nodes.lua`.
-
-* `sub_core.registered_on_generates`
-    * List of registered on generate callbacks.
-
-* `sub_core.register_on_generate(function(minp, maxp, seed, voxelmanip))`
-    * Called after the custom mapgen has been run.
-    * `minp`, `maxp`: the two opposite corners of the mapchunk.
-    * `seed`: the seed used to generate the mapchunk.
-    * `voxelmanip`: the VoxelManip created in the mapgen, after terrain and decors but before spawners have been checked.
 
 Items and Crafting
 ==================

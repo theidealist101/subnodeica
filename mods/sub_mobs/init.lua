@@ -53,11 +53,11 @@ minetest.register_globalstep(function (dtime)
     end
 end)
 
-local function attempt_spawn(minp, maxp, rand, vm, defs)
+local function attempt_spawn(minp, maxp, rand, defs)
     for _ = 1, 8 do
         --choose spawn position and check if correct node to spawn in
         local spawnpos = vector.new(rand:next(minp.x, maxp.x), rand:next(minp.y, maxp.y), rand:next(minp.z, maxp.z))
-        local nodename = vm:get_node_at(spawnpos).name
+        local nodename = minetest.get_node(spawnpos).name
         if spawnpos.y > defs.height_min and spawnpos.y < defs.height_max and sub_mobs.containsi(defs.nodes, nodename) then
 
             --attempt to spawn the mob or mobs
@@ -69,11 +69,11 @@ local function attempt_spawn(minp, maxp, rand, vm, defs)
     end
 end
 
-sub_core.register_on_generate(function (minp, maxp, seed, vm)
+minetest.register_on_generated(function (minp, maxp, seed)
     local rand = PcgRandom(seed) --hence mobs should depend solely on seed
     for i, defs in ipairs(sub_mobs.registered_spawns) do
         if math.abs(rand:next())%1000000 < defs.gen_chance*1000000 then
-            attempt_spawn(minp, maxp, rand, vm, defs)
+            attempt_spawn(minp, maxp, rand, defs)
         end
     end
 end)

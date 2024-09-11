@@ -55,24 +55,6 @@ sub_core.register_spawner("sub_mobs:sulfur_plant", "sub_core:sandstone_with_lich
     tiles = {"default_sandstone.png^sub_core_lichen.png"}
 })
 
-sub_core.register_decor({
-    type = "underground",
-    in_cave = true,
-    not_surface = true,
-    biome = "sub_core:shallows",
-    fill_ratio = 0.03,
-    decor = "sub_mobs:sulfur_plant_spawner"
-})
-
-sub_core.register_decor({
-    type = "underground",
-    in_cave = true,
-    not_surface = true,
-    biome = "sub_core:forest",
-    fill_ratio = 0.05,
-    decor = "sub_mobs:sulfur_plant_spawner"
-})
-
 --Function controlling crashfish, swim quickly at the target then blow up
 local function crashfish_brain(self)
     --check there is a target
