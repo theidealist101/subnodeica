@@ -5,6 +5,12 @@ sub_core.register_biome("sub_core:forest", {
     node_stone = "sub_core:sandstone",
     node_water = "sub_core:forest_water",
     height_point = -60,
+    heat_point = 45
+})
+
+sub_core.register_sub_biome("sub_core:deep_forest", "sub_core:forest", {
+    name = "Deep Forest",
+    height_point = -100,
     heat_point = 40
 })
 
@@ -111,7 +117,7 @@ local function place_creepvine(pos)
         minetest.remove_node(pos)
         return
     end
-    
+
     --choose variant
     local rand = PcgRandom(pos.x+PcgRandom(pos.y^pos.z):next())
     local variant = rand:next(1, 4)
@@ -127,7 +133,7 @@ local function place_creepvine(pos)
     end
 
     --build each section
-    local height = rand:next(pos.y+10, -1)
+    local height = rand:next(pos.y+10, math.min(pos.y+60, -1))
     local middle = rand:next((pos.y+height)*0.5, height-4)
     for y = pos.y, height do
         local node

@@ -60,6 +60,15 @@ function sub_core.register_biome(name, defs)
     sub_core.registered_biomes[name] = defs
 end
 
+function sub_core.register_sub_biome(name, parent, new_defs)
+    local defs = table.copy(sub_core.registered_biomes[parent])
+    defs.parent = parent
+    for k, val in pairs(new_defs) do
+        defs[k] = val
+    end
+    sub_core.registered_biomes[name] = defs
+end
+
 --Register decoration
 sub_core.registered_decors = {}
 
@@ -175,7 +184,7 @@ end
 local function get_height_data(ni, pos)
     local dist = math.sqrt(pos.x^2+pos.z^2)
     local level = level_data[ni]+dist
-    local height_offset = height_data[ni]*(dist < 500 and 0.5+0.001*dist or 1)+20-0.1*dist
+    local height_offset = height_data[ni]*(dist < 500 and 0.5+0.001*dist or 1)+20-0.04*dist
     local height = level < 250 and -50
         or level < 500 and -SLOPE_COEFF*(level-250)^SLOPE_POWER-50
         or level < 750 and SLOPE_COEFF*(level-750)^SLOPE_POWER-100
@@ -235,7 +244,7 @@ end
 --Place decorations using internal stuff, designed to be deterministic per position
 local function place_decors(ni3d, biome, density_below, density, density_above, param2_rand)
     for i, defs in ipairs(sub_core.registered_decors) do
-        if rand_data[i]:next(0, 99999) < defs.fill_ratio*100000 and defs.biome == biome
+        if rand_data[i]:next(0, 99999) < defs.fill_ratio*100000 and (defs.biome == biome or defs.biome == sub_core.registered_biomes[biome].parent)
         and (not defs.noise or decor_data[i][ni3d] > 0) then
             if (defs.type == "underground" and density <= 0 and density_above <= 0 and density_below <= 0)
             or (defs.type == "surface" and density <= 0 and density_above > 0)
