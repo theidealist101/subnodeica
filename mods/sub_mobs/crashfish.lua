@@ -44,10 +44,24 @@ minetest.register_abm({
                 minetest.add_entity(pos, "sub_mobs:crashfish"):get_luaentity().target = obj
                 node.name = sub_core.get_waterlogged("sub_mobs:sulfur_plant_open", minetest.registered_nodes[node.name]._water_equivalent)
                 minetest.swap_node(pos, node)
-                minetest.get_node_timer(pos):set(5, 0) --testing purposes, real value 600
+                minetest.get_node_timer(pos):set(600, 0)
             end
         end
     end
+})
+
+sub_core.register_spawner("sub_mobs:sulfur_plant", "sub_core:sandstone_with_lichen", "sub_core:sandstone", {
+    description = "Sulfur Plant Spawner",
+    tiles = {"default_sandstone.png^sub_core_lichen.png"}
+})
+
+sub_core.register_decor({
+    type = "underground",
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:shallows",
+    fill_ratio = 0.05,
+    decor = "sub_mobs:sulfur_plant_spawner"
 })
 
 --Function controlling crashfish, swim quickly at the target then blow up
