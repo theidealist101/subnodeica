@@ -232,14 +232,16 @@ end
 local function get_carve_data(minp, maxp, seed)
     local out = {}
     local random = PcgRandom(2*seed)
-    for i, defs in ipairs(sub_core.registered_carvers) do
-        local pos = vector.new(random:next(minp.x, maxp.x), random:next(minp.y, maxp.y), random:next(minp.z, maxp.z))
-        local ni = (maxp.x-minp.x+1)*(pos.z-minp.z)+pos.x-minp.x+1
-        pos.y = get_height_data(ni, pos)
-        local biome, bdefs = get_biome_data(pos, ni, pos.y)
-        if random:next(0, 99999) < defs.chance*100000 and (defs.biome == biome or defs.biome == bdefs.parent) then
-            local func = defs.func(pos, minp, maxp, random)
-            if func then table.insert(out, func) minetest.log(dump(pos)) end
+    for _ = 1, 4 do
+        for _, defs in ipairs(sub_core.registered_carvers) do
+            local pos = vector.new(random:next(minp.x, maxp.x), random:next(minp.y, maxp.y), random:next(minp.z, maxp.z))
+            local ni = (maxp.x-minp.x+1)*(pos.z-minp.z)+pos.x-minp.x+1
+            pos.y = get_height_data(ni, pos)
+            local biome, bdefs = get_biome_data(pos, ni, pos.y)
+            if random:next(0, 99999) < defs.chance*100000 and (defs.biome == biome or defs.biome == bdefs.parent) then
+                local func = defs.func(pos, minp, maxp, random)
+                if func then table.insert(out, func) end
+            end
         end
     end
     return out
@@ -428,11 +430,41 @@ minetest.register_abm({
 })
 
 --Common carver functions
+local max = math.max
+
+local function add_cave_node(pending, node, dir, random)
+    if random:next(0, 2) == 0 then
+        dir = vector.normalize(dir+0.2*vector.new(random:next(-1, 1), random:next(-1, 1), random:next(-1, 1)))
+    end
+    while dir.x == 0 and dir.y == 0 and dir.z == 0 do
+        dir = vector.normalize(vector.new(random:next(-1, 1), random:next(-1, 1), random:next(-1, 1)))
+    end
+    table.insert(pending, {node+dir, dir})
+end
+
 function sub_core.cave_carver(start_pos, minp, maxp, random)
-    if start_pos.x < minp.x+4 or start_pos.x > maxp.x-4
-    or start_pos.y < minp.y+4 or start_pos.y > maxp.y-4
-    or start_pos.z < minp.z+4 or start_pos.z > maxp.z-4 then return end
+    local nodes = {}
+    local zero = vector.zero()
+    local pending = {{start_pos, zero}}
+
+    while #pending > 0 and #nodes < 128 do
+        local node, dir = unpack(table.remove(pending, 1))
+        if minp.x+2 < node.x and node.x < maxp.x-2
+        and minp.y+2 < node.y and node.y < maxp.y-2
+        and minp.z+2 < node.z and node.z < maxp.z-2 then
+            table.insert(nodes, node)
+            add_cave_node(pending, node, dir, random)
+            if random:next(1, 16) == 1 or #pending < 3 then
+                add_cave_node(pending, node, zero, random)
+            end
+        end
+    end
+
     return function (pos)
-        return math.max(2-vector.distance(pos, start_pos), 0)
+        local out = 0
+        for _, p in ipairs(nodes) do
+            out = out+max(0, 2-vector.distance(p, pos))
+        end
+        return out
     end
 end
