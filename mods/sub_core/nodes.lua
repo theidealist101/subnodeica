@@ -436,6 +436,7 @@ minetest.register_node("sub_core:salvage", {
 minetest.register_node("sub_core:brain_coral", {
     description = "Brain Coral",
     drawtype = "nodebox",
+    visual_scale = 1.1,
     node_box = {
         type = "fixed",
         fixed = {-0.75, -0.5, -0.75, 0.75, 0.5, 0.75}
@@ -475,7 +476,7 @@ minetest.register_abm({
     interval = 1,
     chance = 4,
     action = function (pos)
-        pos.y = pos.y+1
+        pos.y = pos.y+1.1
         minetest.add_entity(pos, "sub_core:coral_bubble")
     end
 })

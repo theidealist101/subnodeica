@@ -144,6 +144,13 @@ sub_core.register_schem({
 })
 
 sub_core.register_decor({
+    type = "cave_top",
+    biome = "sub_core:shallows",
+    fill_ratio = 0.01,
+    decor = "sub_core:brain_coral"
+})
+
+sub_core.register_decor({
     biome = "sub_core:shallows",
     fill_ratio = 0.001,
     max_param2 = 4,

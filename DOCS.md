@@ -105,6 +105,7 @@ A decor definition is a table with the following fields:
     -- "bottom" is placed under terrain overhangs, e.g. drooping stingers
     -- "surface" is placed in the top layer of the terrain, e.g. sand with lichen
     -- "underground" is placed within the terrain and may be exposed in cliffs or caves, e.g. sandstone with scales
+    -- "cave_top" is placed on top of terrain but only in caves or low points, e.g. brain coral
 
     biome = "sub_core:shallows",
     --Name of biome to generate in

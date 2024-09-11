@@ -283,14 +283,15 @@ local function choose_base_node(y, bdefs, density, density_above)
 end
 
 --Place decorations using internal stuff, designed to be deterministic per position
-local function place_decors(ni3d, biome, density_below, density, density_above, param2_rand)
+local function place_decors(ni3d, biome, y_diff, density_below, density, density_above, param2_rand)
     for i, defs in ipairs(sub_core.registered_decors) do
         if rand_data[i]:next(0, 99999) < defs.fill_ratio*100000 and (defs.biome == biome or defs.biome == sub_core.registered_biomes[biome].parent)
         and (not defs.noise or decor_data[i][ni3d] > 0) then
             if (defs.type == "underground" and density <= 0 and density_above <= 0 and density_below <= 0)
             or (defs.type == "surface" and density <= 0 and density_above > 0)
             or (defs.type == "bottom" and density > 0 and density_above <= 0)
-            or (defs.type == "top" and density_below <= 0 and density > 0) then
+            or (defs.type == "top" and density_below <= 0 and density > 0)
+            or (defs.type == "cave_top" and density_below <= 0 and density > 0 and y_diff < 0) then
                 return defs.decor_id, (defs.max_param2 and param2_rand:next(defs.param2, defs.max_param2)) or defs.param2
             end
         end
@@ -357,7 +358,7 @@ minetest.register_on_generated(function (minp, maxp, seed)
                     local biome, bdefs = get_biome_data(pos, ni, height)
                     local density_below, density, density_above = get_density(height, ni3d, pos, size, carve_data)
 
-                    local id, param2 = place_decors(ni3d, biome, density_below, density, density_above, param2_rand)
+                    local id, param2 = place_decors(ni3d, biome, pos.y-height, density_below, density, density_above, param2_rand)
                     if id then
                         vm_data[vi] = id
                         param2_data[vi] = param2
