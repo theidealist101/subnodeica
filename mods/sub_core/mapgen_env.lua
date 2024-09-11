@@ -6,6 +6,8 @@ function minetest.register_globalstep(...) end
 function minetest.register_node(...) end
 function sub_core.drop_if_slash(...) end
 function minetest.register_craftitem(...) end
+function minetest.set_mapgen_setting(...) end
+function minetest.fix_light(...) end
 
 local path = minetest.get_modpath("sub_core").."/"
 dofile(path.."water.lua")

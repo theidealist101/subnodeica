@@ -395,8 +395,11 @@ function sub_core.on_generate(_, minp, maxp, seed)
     vm:calc_lighting()
     --vm:write_to_map()
     vm:update_liquids()
-    --minetest.fix_light(minp, maxp)
 end
+
+minetest.set_mapgen_setting("water_level", -31000, true)
+
+minetest.register_on_generated(minetest.fix_light)
 
 --ABM updating all spawners
 local dirs = {
