@@ -60,6 +60,15 @@ sub_core.register_decor({
     in_cave = true,
     not_surface = true,
     biome = "sub_core:shallows",
+    fill_ratio = 0.03,
+    decor = "sub_mobs:sulfur_plant_spawner"
+})
+
+sub_core.register_decor({
+    type = "underground",
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:forest",
     fill_ratio = 0.05,
     decor = "sub_mobs:sulfur_plant_spawner"
 })

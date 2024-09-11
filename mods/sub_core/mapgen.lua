@@ -391,7 +391,7 @@ minetest.register_on_generated(function (minp, maxp, seed)
     vm:calc_lighting()
     vm:write_to_map()
     vm:update_liquids()
-    minetest.fix_light(minp, maxp)
+    --minetest.fix_light(minp, maxp)
 end)
 
 --ABM updating all spawners

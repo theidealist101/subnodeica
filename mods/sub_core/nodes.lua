@@ -58,6 +58,11 @@ minetest.register_node("sub_core:sandstone_with_scales", {
     tiles = {"default_sandstone.png^sub_core_scales.png"}
 })
 
+minetest.register_node("sub_core:sandstone_with_moss", {
+    description = "Sandstone with Moss",
+    tiles = {"default_sandstone.png^sub_core_moss.png"}
+})
+
 --Common decorations that appear in many biomes
 sub_core.register_waterloggable("sub_core:veined_nettle", {
     description = "Veined Nettle",

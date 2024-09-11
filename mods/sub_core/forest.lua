@@ -5,7 +5,8 @@ sub_core.register_biome("sub_core:forest", {
     node_stone = "sub_core:sandstone",
     node_water = "sub_core:forest_water",
     height_point = -60,
-    heat_point = 45
+    heat_point = 45,
+    cave_level = -4
 })
 
 sub_core.register_sub_biome("sub_core:deep_forest", "sub_core:forest", {
@@ -237,17 +238,62 @@ sub_core.register_decor({
 })
 
 sub_core.register_decor({
+    type = "surface",
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:forest",
+    fill_ratio = 0.9,
+    decor = "sub_core:sandstone"
+})
+
+sub_core.register_decor({
+    type = "underground",
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:forest",
+    fill_ratio = 0.6,
+    decor = "sub_core:sandstone_with_moss"
+})
+
+sub_core.register_decor({
     type = "underground",
     biome = "sub_core:forest",
-    fill_ratio = 0.002,
+    fill_ratio = 0.01,
     decor = "sub_core:limestone_outcrop_spawner"
 })
 
 sub_core.register_decor({
     type = "underground",
     biome = "sub_core:forest",
-    fill_ratio = 0.001,
+    fill_ratio = 0.005,
     decor = "sub_core:sandstone_outcrop_spawner"
+})
+
+sub_core.register_decor({
+    type = "underground",
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:forest",
+    fill_ratio = 0.1,
+    decor = "sub_core:limestone_outcrop_spawner"
+})
+
+sub_core.register_decor({
+    type = "underground",
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:forest",
+    fill_ratio = 0.08,
+    decor = "sub_core:sandstone_outcrop_spawner"
+})
+
+sub_core.register_decor({
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:shallows",
+    fill_ratio = 0.01,
+    decor = "sub_core:quartz_outcrop",
+    param2 = 1
 })
 
 sub_core.register_schem({
@@ -259,8 +305,22 @@ sub_core.register_schem({
 })
 
 sub_core.register_decor({
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:forest",
+    fill_ratio = 0.01,
+    decor = "sub_core:brain_coral"
+})
+
+sub_core.register_decor({
     biome = "sub_core:forest",
     fill_ratio = 0.003,
     max_param2 = 4,
     decor = "sub_core:salvage1"
+})
+
+sub_core.register_carver({
+    biome = "sub_core:forest",
+    chance = 0.5,
+    func = sub_core.cave_carver
 })
