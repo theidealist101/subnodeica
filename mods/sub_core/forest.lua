@@ -10,7 +10,7 @@ sub_core.register_biome("sub_core:forest", {
 
 sub_core.register_sub_biome("sub_core:deep_forest", "sub_core:forest", {
     name = "Deep Forest",
-    height_point = -100,
+    height_point = -95,
     heat_point = 40
 })
 

@@ -44,6 +44,8 @@ local smush_table = {
 local SLOPE_POWER = 6
 local SLOPE_COEFF = 1/(250*25^(-1/SLOPE_POWER))^SLOPE_POWER
 
+local hash = minetest.hash_node_position
+
 --Register biomes with parameters needed by this mapgen
 sub_core.registered_biomes = {}
 
@@ -67,6 +69,16 @@ function sub_core.register_sub_biome(name, parent, new_defs)
         defs[k] = val
     end
     sub_core.registered_biomes[name] = defs
+end
+
+--Register carving functions for terrain
+sub_core.registered_carvers = {}
+
+function sub_core.register_carver(defs)
+    defs.biome = defs.biome
+    defs.chance = defs.chance or 1
+    defs.func = defs.func
+    table.insert(sub_core.registered_carvers, defs)
 end
 
 --Register decoration
@@ -216,12 +228,41 @@ local function get_biome_data(pos, ni, height)
     return biome[1], biome[2]
 end
 
+--Get carving data for caves and other features in whole chunk
+local function get_carve_data(minp, maxp, seed)
+    local out = {}
+    local random = PcgRandom(2*seed)
+    for i, defs in ipairs(sub_core.registered_carvers) do
+        local pos = vector.new(random:next(minp.x, maxp.x), random:next(minp.y, maxp.y), random:next(minp.z, maxp.z))
+        local ni = (maxp.x-minp.x+1)*(pos.z-minp.z)+pos.x-minp.x+1
+        pos.y = get_height_data(ni, pos)
+        local biome = get_biome_data(pos, ni, pos.y)
+        if rand_data[i]:next(0, 99999) < defs.chance*100000 and (defs.biome == biome or defs.biome == sub_core.registered_biomes[biome].parent) then
+            out[hash(pos)] = defs.func(pos, minp, maxp, random)
+        end
+    end
+    return out
+end
+
 --Get density similarly
-local function get_density(height, ni3d, y, size)
+local function get_density_at(y_diff, ni3d, smush_factor, carve_data, pos)
+    local density = smush_factor*smush_data[ni3d]
+    local pos_hash = hash(pos)
+    for ph, func in pairs(carve_data) do
+        if ph == pos_hash then
+            density = density+func(pos)
+        end
+    end
+    return y_diff+density
+end
+
+local up = vector.new(0, 1, 0)
+
+local function get_density(height, ni3d, pos, size, carve_data)
     local smush_factor = math.min(math.max(0.01*(height+100), 0), 1)
-    local density_below = y-height-1+smush_factor*smush_data[ni3d]
-    local density = y-height+smush_factor*smush_data[ni3d+size]
-    local density_above = y-height+1+smush_factor*smush_data[ni3d+2*size]
+    local density_below = get_density_at(pos.y-height-1, ni3d, smush_factor, carve_data, pos-up)
+    local density = get_density_at(pos.y-height, ni3d+size, smush_factor, carve_data, pos)
+    local density_above = get_density_at(pos.y-height+1, ni3d+2*size, smush_factor, carve_data, pos+up)
     return density_below, density, density_above
 end
 
@@ -300,6 +341,7 @@ minetest.register_on_generated(function (minp, maxp, seed)
     local schem_rand = PcgRandom(-seed)
     local schem_places = {}
     get_maps(minp, seed)
+    local carve_data = get_carve_data(minp, maxp, seed)
 
     --loop over each node
     local ni3d = 1
@@ -313,7 +355,7 @@ minetest.register_on_generated(function (minp, maxp, seed)
                     local pos = vector.new(x, y, z)
                     local height = get_height_data(ni, pos)
                     local biome, bdefs = get_biome_data(pos, ni, height)
-                    local density_below, density, density_above = get_density(height, ni3d, y, size)
+                    local density_below, density, density_above = get_density(height, ni3d, pos, size, carve_data)
 
                     local id, param2 = place_decors(ni3d, biome, density_below, density, density_above, param2_rand)
                     if id then
