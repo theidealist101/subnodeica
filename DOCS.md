@@ -43,6 +43,9 @@ The biome system used in Subnodeica is completely separate to the default one in
     * Registers a biome definition to be generated.
     * No return value.
 
+* `sub_core.register_sub_biome(name, parent, defs)`
+    * Registers a biome definition inheriting from another parent biome, including decorations.
+
 A biome definition is a table with the following fields:
 
 ```lua
