@@ -156,3 +156,9 @@ sub_core.register_decor({
     max_param2 = 4,
     decor = "sub_core:salvage1"
 })
+
+sub_core.register_carver({
+    biome = "sub_core:shallows",
+    chance = 1,
+    func = sub_core.cave_carver
+})

@@ -236,9 +236,10 @@ local function get_carve_data(minp, maxp, seed)
         local pos = vector.new(random:next(minp.x, maxp.x), random:next(minp.y, maxp.y), random:next(minp.z, maxp.z))
         local ni = (maxp.x-minp.x+1)*(pos.z-minp.z)+pos.x-minp.x+1
         pos.y = get_height_data(ni, pos)
-        local biome = get_biome_data(pos, ni, pos.y)
-        if rand_data[i]:next(0, 99999) < defs.chance*100000 and (defs.biome == biome or defs.biome == sub_core.registered_biomes[biome].parent) then
-            out[hash(pos)] = defs.func(pos, minp, maxp, random)
+        local biome, bdefs = get_biome_data(pos, ni, pos.y)
+        if random:next(0, 99999) < defs.chance*100000 and (defs.biome == biome or defs.biome == bdefs.parent) then
+            local func = defs.func(pos, minp, maxp, random)
+            if func then table.insert(out, func) minetest.log(dump(pos)) end
         end
     end
     return out
@@ -246,14 +247,11 @@ end
 
 --Get density similarly
 local function get_density_at(y_diff, ni3d, smush_factor, carve_data, pos)
-    local density = smush_factor*smush_data[ni3d]
-    local pos_hash = hash(pos)
-    for ph, func in pairs(carve_data) do
-        if ph == pos_hash then
-            density = density+func(pos)
-        end
+    local density = 0
+    for _, func in ipairs(carve_data) do
+        density = density+func(pos)
     end
-    return y_diff+density
+    return density > 0 and density or y_diff+smush_factor*smush_data[ni3d]
 end
 
 local up = vector.new(0, 1, 0)
@@ -428,3 +426,13 @@ minetest.register_abm({
     chance = 1,
     action = place_spawner
 })
+
+--Common carver functions
+function sub_core.cave_carver(start_pos, minp, maxp, random)
+    if start_pos.x < minp.x+4 or start_pos.x > maxp.x-4
+    or start_pos.y < minp.y+4 or start_pos.y > maxp.y-4
+    or start_pos.z < minp.z+4 or start_pos.z > maxp.z-4 then return end
+    return function (pos)
+        return math.max(2-vector.distance(pos, start_pos), 0)
+    end
+end
