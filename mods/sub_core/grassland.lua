@@ -5,7 +5,8 @@ sub_core.register_biome("sub_core:grassland", {
     node_stone = "sub_core:sandstone",
     node_water = "sub_core:grassland_water",
     height_point = -100,
-    heat_point = 50
+    heat_point = 50,
+    cave_level = -4
 })
 
 sub_core.register_water("sub_core:grassland_water", {
@@ -112,10 +113,67 @@ sub_core.register_decor({
 })
 
 sub_core.register_decor({
+    type = "surface",
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:grassland",
+    fill_ratio = 0.6,
+    decor = "sub_core:sandstone"
+})
+
+sub_core.register_decor({
+    type = "underground",
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:grassland",
+    fill_ratio = 0.1,
+    decor = "sub_core:limestone_outcrop_spawner"
+})
+
+sub_core.register_decor({
+    type = "underground",
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:grassland",
+    fill_ratio = 0.08,
+    decor = "sub_core:sandstone_outcrop_spawner"
+})
+
+sub_core.register_decor({
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:grassland",
+    fill_ratio = 0.01,
+    decor = "sub_core:quartz_outcrop",
+    param2 = 1
+})
+
+sub_core.register_decor({
+    type = "bottom",
+    biome = "sub_core:grassland",
+    fill_ratio = 0.1,
+    decor = "sub_core:drooping_stinger"
+})
+
+sub_core.register_decor({
+    in_cave = true,
+    not_surface = true,
+    biome = "sub_core:grassland",
+    fill_ratio = 0.004,
+    decor = "sub_core:regress_shell"
+})
+
+sub_core.register_decor({
     biome = "sub_core:grassland",
     fill_ratio = 0.001,
     max_param2 = 4,
     decor = "sub_core:salvage1"
+})
+
+sub_core.register_carver({
+    biome = "sub_core:grassland",
+    chance = 0.2,
+    func = sub_core.cave_carver
 })
 
 --Grass covering the floor in blob shapes

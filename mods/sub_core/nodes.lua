@@ -164,6 +164,23 @@ sub_core.register_waterloggable("sub_core:violet_beau", {
     groups = {attached_node=1}
 })
 
+sub_core.register_waterloggable("sub_core:regress_shell", {
+    description = "Regress Shell",
+    drawtype = "mesh",
+    mesh = "palm.obj",
+    tiles = {"regress_shell.png"},
+    use_texture_alpha = "clip",
+    selection_box = {
+        type = "fixed",
+        fixed = {-0.375, -0.5, -0.375, 0.375, 0.25, 0.375}
+    },
+    paramtype = "light",
+    sunlight_propagates = true,
+    walkable = false,
+    buildable_to = true,
+    groups = {attached_node=1}
+})
+
 --Acid mushrooms, important for batteries
 local function acidshroom_on_rightclick(pos, node, user, itemstack)
     minetest.set_node(pos, {name=minetest.registered_nodes[node.name]._water_equivalent})
