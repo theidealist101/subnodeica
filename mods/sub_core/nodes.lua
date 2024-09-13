@@ -77,7 +77,6 @@ sub_core.register_waterloggable("sub_core:veined_nettle", {
     paramtype = "light",
     sunlight_propagates = true,
     walkable = false,
-    buildable_to = true,
     groups = {attached_node=1}
 })
 
@@ -94,7 +93,6 @@ sub_core.register_waterloggable("sub_core:writhing_weed", {
     paramtype = "light",
     sunlight_propagates = true,
     walkable = false,
-    buildable_to = true,
     groups = {attached_node=1}
 })
 
@@ -111,7 +109,6 @@ sub_core.register_waterloggable("sub_core:blue_palm", {
     paramtype = "light",
     sunlight_propagates = true,
     walkable = false,
-    buildable_to = true,
     groups = {attached_node=1}
 })
 
@@ -128,7 +125,6 @@ sub_core.register_waterloggable("sub_core:furled_papyrus", {
     paramtype = "light",
     sunlight_propagates = true,
     walkable = false,
-    buildable_to = true,
     groups = {attached_node=1}
 })
 
@@ -144,7 +140,6 @@ sub_core.register_waterloggable("sub_core:redwort", {
     paramtype = "light",
     sunlight_propagates = true,
     walkable = false,
-    buildable_to = true,
     groups = {attached_node=1}
 })
 
@@ -160,15 +155,30 @@ sub_core.register_waterloggable("sub_core:violet_beau", {
     paramtype = "light",
     sunlight_propagates = true,
     walkable = false,
-    buildable_to = true,
     groups = {attached_node=1}
 })
 
 sub_core.register_waterloggable("sub_core:regress_shell", {
     description = "Regress Shell",
     drawtype = "mesh",
-    mesh = "palm.obj",
+    mesh = "regress_shell.obj",
     tiles = {"regress_shell.png"},
+    use_texture_alpha = "clip",
+    selection_box = {
+        type = "fixed",
+        fixed = {-0.375, -0.5, -0.375, 0.375, 0, 0.375}
+    },
+    paramtype = "light",
+    sunlight_propagates = true,
+    walkable = false,
+    groups = {attached_node=1}
+})
+
+sub_core.register_waterloggable("sub_core:rouge_cradle", {
+    description = "Rouge Cradle",
+    drawtype = "mesh",
+    mesh = "rouge_cradle.obj",
+    tiles = {"rouge_cradle.png"},
     use_texture_alpha = "clip",
     selection_box = {
         type = "fixed",
@@ -177,7 +187,6 @@ sub_core.register_waterloggable("sub_core:regress_shell", {
     paramtype = "light",
     sunlight_propagates = true,
     walkable = false,
-    buildable_to = true,
     groups = {attached_node=1}
 })
 
