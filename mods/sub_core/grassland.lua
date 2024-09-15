@@ -149,6 +149,8 @@ sub_core.register_decor({
 })
 
 sub_core.register_decor({
+    in_cave = true,
+    not_surface = true,
     type = "bottom",
     biome = "sub_core:grassland",
     fill_ratio = 0.1,
