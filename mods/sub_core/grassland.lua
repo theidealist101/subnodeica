@@ -248,3 +248,47 @@ sub_core.register_decor({
         lacunarity = 2.0
     }
 })
+
+--Pillar carvers, the funny little stool shapes which make the grasslands distinctive
+
+local sqrt, cos, hypot, min = math.sqrt, math.cos, math.hypot, math.min
+
+local function get_pillar_density(pos, start_pos, height, width)
+    local pi_h = math.pi/height
+    local width_sq = width^2
+    local y_diff = pos.y-start_pos.y
+    local x_diff = hypot(pos.x-start_pos.x, pos.z-start_pos.z)
+    if x_diff > width or y_diff < -width*0.5 or y_diff > height+width*0.25 then return 0 end
+    local w = y_diff < 0 and sqrt(width_sq*0.25-y_diff^2)
+        or y_diff < height and width*0.25*(3-cos(pi_h*y_diff))
+        or sqrt(width_sq-16*(y_diff-height)^2)
+    return min(0, x_diff-w)
+end
+
+local function pillar_carver(start_pos, minp, maxp, random)
+    local height = random:next(15, 25)
+    local width = height*0.1*random:next(3, 5)
+    if minp.x+width > start_pos.x or start_pos.x > maxp.x-width
+    or minp.y+width*0.5 > start_pos.y or start_pos.y > maxp.y-height-width*0.25
+    or minp.z+width > start_pos.z or start_pos.z > maxp.z-width then return end
+
+    if random:next(0, 3) == 0 then
+        local height2 = random:next(10, 20)
+        local width2 = height2*0.1*random:next(3, 5)
+        if start_pos.y < maxp.y-height-height2-width2*0.25 then
+            local start_pos2 = start_pos+vector.new(0, height, 0)
+            return function (pos)
+                return get_pillar_density(pos, start_pos, height, width)+get_pillar_density(pos, start_pos2, height2, width2)
+            end
+        end
+    end
+    return function (pos)
+        return get_pillar_density(pos, start_pos, height, width)
+    end
+end
+
+sub_core.register_carver({
+    biome = "sub_core:grassland",
+    chance = 1,
+    func = pillar_carver
+})

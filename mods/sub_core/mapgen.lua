@@ -256,7 +256,7 @@ local function get_density_at(y_diff, ni3d, smush_factor, carve_data, pos)
     for _, func in ipairs(carve_data) do
         density = density+func(pos)
     end
-    density = density > 0 and density or y_diff+smush_factor*smush_data[ni3d]
+    if density == 0 then density = y_diff+smush_factor*smush_data[ni3d] end
     if pos.y > -5 then density = density+2*(pos.y+5) end
     return density
 end
