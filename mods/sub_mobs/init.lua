@@ -23,6 +23,7 @@ function sub_mobs.register_spawn(defs)
     defs.dist = defs.dist or 50
     defs.height_min = defs.height_min or -31000
     defs.height_max = defs.height_max or 0
+    defs.staticdata = defs.staticdata
     table.insert(sub_mobs.registered_spawns, defs)
 end
 
@@ -62,7 +63,7 @@ local function attempt_spawn(minp, maxp, rand, defs)
 
             --attempt to spawn the mob or mobs
             for _ = 1, math.random(defs.count, defs.count_max) do
-                minetest.add_entity(spawnpos, defs.name)
+                minetest.add_entity(spawnpos, defs.name, defs.staticdata)
             end
             return
         end
@@ -82,6 +83,7 @@ end)
 local path = minetest.get_modpath("sub_mobs").."/"
 dofile(path.."behaviors.lua")
 dofile(path.."smallfish.lua")
+dofile(path.."shoals.lua")
 dofile(path.."parasites.lua")
 dofile(path.."crashfish.lua")
 dofile(path.."gasopod.lua")
