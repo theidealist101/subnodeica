@@ -252,15 +252,16 @@ sub_core.register_decor({
 --Pillar carvers, the funny little stool shapes which make the grasslands distinctive
 
 local sqrt, cos, hypot, min = math.sqrt, math.cos, math.hypot, math.min
+local inv2 = 1/sqrt(2)
 
 local function get_pillar_density(pos, start_pos, height, width)
-    local pi_h = math.pi/height
+    local pi_h = 2*math.pi/height
     local width_sq = width^2
     local y_diff = pos.y-start_pos.y
     local x_diff = hypot(pos.x-start_pos.x, pos.z-start_pos.z)
     if x_diff > width or y_diff < -width*0.5 or y_diff > height+width*0.25 then return 0 end
     local w = y_diff < 0 and sqrt(width_sq*0.25-y_diff^2)
-        or y_diff < height and width*0.25*(3-cos(pi_h*y_diff))
+        or y_diff < height and width/6*(5+cos(pi_h*y_diff))*(0.1*(1-inv2)*y_diff+inv2)
         or sqrt(width_sq-16*(y_diff-height)^2)
     return min(0, x_diff-w)
 end
@@ -272,7 +273,7 @@ local function pillar_carver(start_pos, minp, maxp, random)
     or minp.y+width*0.5 > start_pos.y or start_pos.y > maxp.y-height-width*0.25
     or minp.z+width > start_pos.z or start_pos.z > maxp.z-width then return end
 
-    if random:next(0, 3) == 0 then
+    if random:next(0, 4) == 0 then
         local height2 = random:next(10, 20)
         local width2 = height2*0.1*random:next(3, 5)
         if start_pos.y < maxp.y-height-height2-width2*0.25 then
