@@ -57,3 +57,17 @@ the image itself is by PilzAdam and BlockMen and is under WTFPL
 The image "menu/overlay.png" is edited from a screenshot taken in Minetest Game and is under CC BY-SA 3.0
 
 The image "mobkit/screenshot.png" is part of Mobkit, see its own license file
+
+All music tracks are written by theidealist using the Sibelius sounds library and are under CC BY-SA 4.0
+
+The following tracks reference musical motifs from the original Subnautica soundtrack, copyright of Simon Chylinski:
+
+theme.ogg:
+- the opening of Salutations, here played in woodwind and strings at 1:08-1:35
+- the theme of Into The Unknown, in the glockenspiel at 2:07-2:18
+
+The following tracks use sound effects under the Pixabay content license (see https://pixabay.com/service/terms/):
+
+theme.ogg:
+- https://pixabay.com/sound-effects/gentle-ocean-waves-mix-2018-19693/
+- https://pixabay.com/sound-effects/airplane-landing-6732/
