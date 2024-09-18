@@ -250,7 +250,6 @@ sub_core.register_decor({
 })
 
 --Pillar carvers, the funny little stool shapes which make the grasslands distinctive
-
 local sqrt, cos, hypot, min = math.sqrt, math.cos, math.hypot, math.min
 local inv2 = 1/sqrt(2)
 

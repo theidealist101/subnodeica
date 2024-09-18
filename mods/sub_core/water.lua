@@ -35,7 +35,7 @@ function sub_core.register_water(name, defs)
     groups.water = groups.water or 1
     groups.pathfind_water = groups.pathfind_water or 1
     local fog = defs.fog
-    
+
     --register surface node
     minetest.register_node(name.."_surface", {
         description = desc.." Surface",
@@ -119,6 +119,63 @@ function sub_core.register_waterloggable(name, defs)
     sub_core.registered_waterloggables[name] = defs
 end
 
+--Register a music track to be played depending on biome, or more specifically on water type
+sub_core.registered_musics = {}
+
+function sub_core.register_music(defs)
+    defs.biomes = defs.biomes or {}
+    defs.nodes = defs.nodes or {}
+    defs.length = defs.length or 0
+    table.insert(sub_core.registered_musics, defs)
+end
+
+minetest.register_on_mods_loaded(function()
+    for _, defs in ipairs(sub_core.registered_musics) do
+        for _, biome in pairs(defs.biomes) do
+            local biome_defs = sub_core.registered_biomes[biome]
+            if biome_defs then table.insert(defs.nodes, biome_defs.node_water) end
+        end
+    end
+end)
+
+--Update music per player depending on the node they're in
+local music_handles = {}
+local music_defs = {}
+local music_timeouts = {}
+
+local function update_music(player, node, node_def, dtime)
+    local name = player:get_player_name()
+    local timeout = music_timeouts[name]
+    if not timeout then timeout = math.random(0, 30)
+    else timeout = timeout-dtime end
+
+    --stop track if leaving the biome
+    if music_defs[player] and table.indexof(music_defs[player].nodes, node_def._water_equivalent or node) <= 0 then
+        minetest.sound_fade(music_handles[player], 0.2, 0)
+        timeout = math.random(0, 30)
+    end
+
+    --start a new track if necessary
+    if timeout <= 0 then
+        local defs
+        for _ = 1, 100 do
+            defs = sub_core.registered_musics[math.random(#sub_core.registered_musics)]
+            if table.indexof(defs.nodes, node_def._water_equivalent or node) > 0 then break else defs = nil end
+        end
+        if defs then
+            music_defs[player] = defs
+            music_handles[player] = minetest.sound_play(defs, {to_player=name})
+            timeout = defs.length+math.random(60, 120)
+        else
+            timeout = math.random(0, 30)
+        end
+    end
+
+    music_timeouts[name] = timeout
+end
+
+local air_def = minetest.registered_nodes["air"]
+
 --Make player see fog as defined by the node their eyes are in (TODO: make it biome instead, when biome smoothing added?)
 minetest.register_globalstep(function(dtime)
     for i, player in ipairs(minetest.get_connected_players()) do
@@ -126,7 +183,8 @@ minetest.register_globalstep(function(dtime)
         eye_pos.x = math.round(eye_pos.x)
         eye_pos.y = math.round(eye_pos.y)
         eye_pos.z = math.round(eye_pos.z)
-        local node_def = minetest.registered_nodes[minetest.get_node(eye_pos).name]
+        local nodename = minetest.get_node(eye_pos).name
+        local node_def = minetest.registered_nodes[nodename]
         if node_def and node_def._fog then
             local light = minetest.get_natural_light(eye_pos)/15
             local color = {
@@ -147,11 +205,21 @@ minetest.register_globalstep(function(dtime)
             player:set_sun({visible=false, sunrise_visible=false})
             player:set_moon({visible=false})
             player:set_stars({visible=false})
+            update_music(player, nodename, node_def, dtime)
         else
             player:set_sky()
             player:set_sun()
             player:set_moon()
             player:set_stars()
+            update_music(player, "air", air_def, dtime)
         end
     end
 end)
+
+--Music definitions
+sub_core.register_music({
+    name = "drums_in_the_deep",
+    gain = 0.8,
+    biomes = {"sub_core:grassland"},
+    length = 210
+})

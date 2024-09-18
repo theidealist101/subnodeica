@@ -8,10 +8,11 @@ function sub_core.drop_if_slash(...) end
 function minetest.register_craftitem(...) end
 function minetest.set_mapgen_setting(...) end
 function minetest.fix_light(...) end
+function minetest.register_on_mods_loaded(...) end
 
 local path = minetest.get_modpath("sub_core").."/"
-dofile(path.."water.lua")
 dofile(path.."mapgen.lua")
+dofile(path.."water.lua")
 dofile(path.."void.lua")
 dofile(path.."shallows.lua")
 dofile(path.."forest.lua")
