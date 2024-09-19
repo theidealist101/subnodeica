@@ -66,6 +66,9 @@ theme.ogg:
 - the opening of Salutations, here played in woodwind and strings at 1:08-1:35
 - the theme of Into The Unknown, in the glockenspiel at 2:07-2:18
 
+all_is_found.ogg:
+- the theme of Into The Unknown, quoted extensively throughout with the first appearance being at 0:29-0:48
+
 The following tracks use sound effects under the Pixabay content license (see https://pixabay.com/service/terms/):
 
 theme.ogg:

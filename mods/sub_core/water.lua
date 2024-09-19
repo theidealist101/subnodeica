@@ -152,6 +152,7 @@ local function update_music(player, node, node_def, dtime)
     --stop track if leaving the biome
     if music_defs[player] and table.indexof(music_defs[player].nodes, node_def._water_equivalent or node) <= 0 then
         minetest.sound_fade(music_handles[player], 0.2, 0)
+        music_defs[player] = nil
         timeout = math.random(0, 30)
     end
 
@@ -222,4 +223,11 @@ sub_core.register_music({
     gain = 0.8,
     biomes = {"sub_core:grassland"},
     length = 210
+})
+
+sub_core.register_music({
+    name = "all_is_found",
+    gain = 0.6,
+    biomes = {"sub_core:shallows"},
+    length = 220
 })
