@@ -71,6 +71,7 @@ function sub_core.register_water(name, defs)
         color = color,
         post_effect_color = tint,
         groups = groups,
+        sounds = {footstep={name="zapsplat_nature_water_deep_step_into_splash_85050", gain=0.1}},
         _fog = fog,
         _water = true,
         _water_equivalent = name,
@@ -95,6 +96,7 @@ function sub_core.register_water(name, defs)
         color = color,
         post_effect_color = tint,
         groups = groups,
+        sounds = {footstep={name="zapsplat_nature_water_underwater_pass_by_swim_scuba_diver_bubbles_001_96969", gain=0.1}},
         _fog = fog,
         _water = true,
         _water_equivalent = name,
@@ -185,8 +187,10 @@ local function update_music(player, node, node_def, dtime)
 end
 
 local diag = vector.new(1, 1, 1)
+local splash_counter = 0
 
-local function update_ambience(player, node, node_def, eye_pos)
+local function update_ambience(player, node, node_def, eye_pos, dtime)
+    splash_counter = splash_counter+dtime
     if node_def._water and water_ambience[player] ~= true then
         if ambience_handles[player] then
             minetest.sound_stop(ambience_handles[player])
@@ -251,14 +255,14 @@ minetest.register_globalstep(function(dtime)
             player:set_moon({visible=false})
             player:set_stars({visible=false})
             update_music(playername, nodename, node_def, dtime)
-            update_ambience(playername, nodename, node_def, eye_pos+player:get_velocity())
+            update_ambience(playername, nodename, node_def, eye_pos+player:get_velocity(), dtime)
         else
             player:set_sky()
             player:set_sun()
             player:set_moon()
             player:set_stars()
             update_music(playername, "air", air_def, dtime)
-            update_ambience(playername, "air", air_def, eye_pos+player:get_velocity())
+            update_ambience(playername, "air", air_def, eye_pos+player:get_velocity(), dtime)
         end
     end
 end)

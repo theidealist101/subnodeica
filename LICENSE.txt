@@ -83,4 +83,8 @@ The following sound effects used in the game are also under the same license:
 The following are under the Soundsnap license:
 
 - https://www.soundsnap.com/water_from_underwater_perspective_submerging_and_plunging_hard_and_rising
-- (https://www.soundsnap.com/large_bubbles_releasing_air_from_bucket_underwater_blub_ripple_small_emerge_from_water)
+
+The following are under the Zapsplat license:
+
+- https://www.zapsplat.com/music/foot-step-into-deep-water-splash/
+- https://www.zapsplat.com/music/deep-underwater-pass-by-swim-past-could-be-scuba-diver-with-bubbles-1/
