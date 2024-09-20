@@ -74,3 +74,13 @@ The following tracks use sound effects under the Pixabay content license (see ht
 theme.ogg:
 - https://pixabay.com/sound-effects/gentle-ocean-waves-mix-2018-19693/
 - https://pixabay.com/sound-effects/airplane-landing-6732/
+
+The following sound effects used in the game are also under the same license:
+
+- https://pixabay.com/sound-effects/underwater-ambiencewav-14428/
+- https://pixabay.com/sound-effects/gentle-ocean-waves-mix-2018-19693/
+
+The following are under the Soundsnap license:
+
+- https://www.soundsnap.com/water_from_underwater_perspective_submerging_and_plunging_hard_and_rising
+- (https://www.soundsnap.com/large_bubbles_releasing_air_from_bucket_underwater_blub_ripple_small_emerge_from_water)

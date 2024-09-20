@@ -8,9 +8,11 @@ function sub_core.add_water_physics(t, water)
     out.walkable = false
     out.liquid_move_physics = true
     out.post_effect_color = water_defs.post_effect_color
+    out.suspension_color = water_defs.suspension_color
     out.groups = out.groups or {}
     out.groups.pathfind_water = out.groups.pathfind_water or 1
     out._fog = water_defs._fog
+    out._water = water_defs._water
     out._water_equivalent = water
     out.drowning = 1
     return out
@@ -31,6 +33,7 @@ function sub_core.register_water(name, defs)
     local desc = defs.description or ""
     local color = defs.color or {r=255, g=255, b=255}
     local tint = defs.tint or {r=255, g=255, b=255, a=0}
+    local suspension_color = minetest.colorspec_to_colorstring(defs.suspension_color or defs.color)
     local groups = defs.groups or {}
     groups.water = groups.water or 1
     groups.pathfind_water = groups.pathfind_water or 1
@@ -69,7 +72,9 @@ function sub_core.register_water(name, defs)
         post_effect_color = tint,
         groups = groups,
         _fog = fog,
+        _water = true,
         _water_equivalent = name,
+        _suspension_color = suspension_color,
         drowning = 1
     })
 
@@ -91,7 +96,9 @@ function sub_core.register_water(name, defs)
         post_effect_color = tint,
         groups = groups,
         _fog = fog,
+        _water = true,
         _water_equivalent = name,
+        _suspension_color = suspension_color,
         drowning = 1
     })
 
@@ -142,6 +149,7 @@ end)
 local music_handles = {}
 local ambience_handles = {}
 local water_ambience = {}
+local suspension_particles = {}
 local music_defs = {}
 local music_timeouts = {}
 
@@ -176,15 +184,37 @@ local function update_music(player, node, node_def, dtime)
     music_timeouts[player] = timeout
 end
 
-local function update_ambience(player, node, node_def)
-    if node_def._water_equivalent and water_ambience[player] ~= true then
-        if ambience_handles[player] then minetest.sound_stop(ambience_handles[player]) end
+local diag = vector.new(1, 1, 1)
+
+local function update_ambience(player, node, node_def, eye_pos)
+    if node_def._water and water_ambience[player] ~= true then
+        if ambience_handles[player] then
+            minetest.sound_stop(ambience_handles[player])
+            minetest.sound_play({name="474977-Water-Underwater-Submerge-Plunge-Hard-Rise-Instamic"}, {object=minetest.get_player_by_name(player)}, true)
+        end
         ambience_handles[player] = minetest.sound_play({name="underwater-ambiencewav-14428", gain=0.2}, {to_player=player, loop=true})
         water_ambience[player] = true
-    elseif not node_def._water_equivalent and water_ambience[player] ~= false then
-        if ambience_handles[player] then minetest.sound_stop(ambience_handles[player]) end
+    elseif not node_def._water and water_ambience[player] ~= false then
+        if ambience_handles[player] then
+            minetest.sound_stop(ambience_handles[player])
+            minetest.sound_play({name="water-splash-199583"}, {object=minetest.get_player_by_name(player)}, true)
+        end
         ambience_handles[player] = minetest.sound_play({name="gentle-ocean-waves-mix-2018-19693", gain=0.5}, {to_player=player, loop=true})
         water_ambience[player] = false
+    end
+    if node_def._water_equivalent and not suspension_particles[player] then
+        local max_pos = eye_pos+32*diag
+        max_pos.y = math.min(max_pos.y, 0)
+        suspension_particles[player] = minetest.add_particlespawner({
+            time = 1,
+            amount = 200,
+            --playername = player,
+            texture = "suspension_particle.png^[colorize:"..node_def._suspension_color..":128",
+            pos = {min=eye_pos-32*diag, max=max_pos},
+            vel = {min=-0.1*diag, max=0.1*diag},
+            exptime = 10
+        })
+        minetest.after(1, function() suspension_particles[player] = nil end)
     end
 end
 
@@ -221,14 +251,14 @@ minetest.register_globalstep(function(dtime)
             player:set_moon({visible=false})
             player:set_stars({visible=false})
             update_music(playername, nodename, node_def, dtime)
-            update_ambience(playername, nodename, node_def)
+            update_ambience(playername, nodename, node_def, eye_pos+player:get_velocity())
         else
             player:set_sky()
             player:set_sun()
             player:set_moon()
             player:set_stars()
             update_music(playername, "air", air_def, dtime)
-            update_ambience(playername, "air", air_def)
+            update_ambience(playername, "air", air_def, eye_pos+player:get_velocity())
         end
     end
 end)

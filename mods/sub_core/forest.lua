@@ -182,6 +182,7 @@ minetest.register_node("sub_core:drooping_stinger", {
     groups = {drooping_stinger=1},
     liquid_move_physics = true,
     post_effect_color = {r=60, g=120, b=0, a=100},
+    _water = true,
     _fog = {
         fog_distance = 10,
         fog_start = 0,
@@ -200,6 +201,7 @@ minetest.register_node("sub_core:drooping_stinger_tip", {
     damage_per_second = 3,
     liquid_move_physics = true,
     post_effect_color = {r=60, g=120, b=0, a=100},
+    _water = true,
     _fog = {
         fog_distance = 10,
         fog_start = 0,
