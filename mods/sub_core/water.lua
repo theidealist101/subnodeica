@@ -11,6 +11,10 @@ function sub_core.add_water_physics(t, water)
     out._suspension_color = water_defs._suspension_color
     out.groups = out.groups or {}
     out.groups.pathfind_water = out.groups.pathfind_water or 1
+    out.sounds = out.sounds or {}
+    for name, def in pairs(water_defs.sounds) do
+        out.sounds[name] = out.sounds[name] or def
+    end
     out._fog = water_defs._fog
     out._water = water_defs._water
     out._water_equivalent = water
@@ -128,7 +132,6 @@ function sub_core.register_waterloggable(name, defs)
     sub_core.registered_waterloggables[name] = defs
 end
 
-local air_def = minetest.registered_nodes["air"]
 local diag = vector.new(1, 1, 1)
 
 --Make player see fog as defined by the node their eyes are in (TODO: make it biome instead, when biome smoothing added?)

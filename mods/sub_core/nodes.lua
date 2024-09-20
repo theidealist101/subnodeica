@@ -358,6 +358,11 @@ sub_core.register_spawner("sub_core:limestone_outcrop", "sub_core:sandstone", "s
     tiles = {"default_sandstone.png"}
 })
 
+sub_core.register_spawner("sub_core:limestone_outcrop", "sub_core:stone", "sub_core:stone", {
+    description = "Limestone Spawner",
+    tiles = {"default_stone.png"}
+}, "sub_core:limestone_outcrop_stone_spawner")
+
 minetest.register_craftitem("sub_core:lead", {
     description = "Lead",
     inventory_image = "sub_core_lead.png"
@@ -402,6 +407,11 @@ sub_core.register_spawner("sub_core:sandstone_outcrop", "sub_core:sandstone", "s
     description = "Sandstone Spawner",
     tiles = {"default_sandstone.png"}
 })
+
+sub_core.register_spawner("sub_core:sandstone_outcrop", "sub_core:stone", "sub_core:stone", {
+    description = "Sandstone Spawner",
+    tiles = {"default_stone.png"}
+}, "sub_core:sandstone_outcrop_stone_spawner")
 
 minetest.register_craftitem("sub_core:quartz", {
     description = "Quartz",
@@ -456,6 +466,7 @@ minetest.register_node("sub_core:salvage", {
     tiles = {"salvage1.png"},
     use_texture_alpha = "opaque",
     groups = {metal=1},
+    node_placement_prediction = "air",
     on_place = function (itemstack, user, pointed)
         local node = minetest.get_node(pointed.under)
         local defs = minetest.registered_nodes[node.name]

@@ -2,7 +2,6 @@
 sub_core.register_biome("sub_core:grassland", {
     name = "Grassland",
     node_top = "sub_core:sand",
-    node_stone = "sub_core:sandstone",
     node_water = "sub_core:grassland_water",
     height_point = -100,
     heat_point = 50,
@@ -95,14 +94,14 @@ sub_core.register_decor({
     type = "underground",
     biome = "sub_core:grassland",
     fill_ratio = 0.001,
-    decor = "sub_core:limestone_outcrop_spawner"
+    decor = "sub_core:limestone_outcrop_stone_spawner"
 })
 
 sub_core.register_decor({
     type = "underground",
     biome = "sub_core:grassland",
     fill_ratio = 0.002,
-    decor = "sub_core:sandstone_outcrop_spawner"
+    decor = "sub_core:sandstone_outcrop_stone_spawner"
 })
 
 sub_core.register_decor({
@@ -127,7 +126,7 @@ sub_core.register_decor({
     not_surface = true,
     biome = "sub_core:grassland",
     fill_ratio = 0.1,
-    decor = "sub_core:limestone_outcrop_spawner"
+    decor = "sub_core:limestone_outcrop_stone_spawner"
 })
 
 sub_core.register_decor({
@@ -136,7 +135,7 @@ sub_core.register_decor({
     not_surface = true,
     biome = "sub_core:grassland",
     fill_ratio = 0.08,
-    decor = "sub_core:sandstone_outcrop_spawner"
+    decor = "sub_core:sandstone_outcrop_stone_spawner"
 })
 
 sub_core.register_decor({

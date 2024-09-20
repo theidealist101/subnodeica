@@ -105,12 +105,13 @@ end
 
 sub_core.registered_spawners = {}
 
-function sub_core.register_spawner(name, exposed, hidden, defs)
+function sub_core.register_spawner(name, exposed, hidden, defs, actual_name)
     defs = table.copy(defs)
     defs.groups = defs.groups or {}
     defs.groups.spawner = 1
-    minetest.register_node(name.."_spawner", defs)
-    sub_core.registered_spawners[name.."_spawner"] = {exposed, hidden, name}
+    actual_name = actual_name or name.."_spawner"
+    minetest.register_node(actual_name, defs)
+    sub_core.registered_spawners[actual_name] = {exposed, hidden, name}
 end
 
 sub_core.registered_schems = {}
