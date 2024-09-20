@@ -8,7 +8,7 @@ function sub_core.add_water_physics(t, water)
     out.walkable = false
     out.liquid_move_physics = true
     out.post_effect_color = water_defs.post_effect_color
-    out.suspension_color = water_defs.suspension_color
+    out._suspension_color = water_defs._suspension_color
     out.groups = out.groups or {}
     out.groups.pathfind_water = out.groups.pathfind_water or 1
     out._fog = water_defs._fog
