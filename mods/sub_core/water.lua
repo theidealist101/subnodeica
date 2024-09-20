@@ -140,12 +140,13 @@ end)
 
 --Update music per player depending on the node they're in
 local music_handles = {}
+local ambience_handles = {}
+local water_ambience = {}
 local music_defs = {}
 local music_timeouts = {}
 
 local function update_music(player, node, node_def, dtime)
-    local name = player:get_player_name()
-    local timeout = music_timeouts[name]
+    local timeout = music_timeouts[player]
     if not timeout then timeout = math.random(0, 30)
     else timeout = timeout-dtime end
 
@@ -165,14 +166,26 @@ local function update_music(player, node, node_def, dtime)
         end
         if defs then
             music_defs[player] = defs
-            music_handles[player] = minetest.sound_play(defs, {to_player=name})
+            music_handles[player] = minetest.sound_play(defs, {to_player=player})
             timeout = defs.length+math.random(60, 120)
         else
             timeout = math.random(0, 30)
         end
     end
 
-    music_timeouts[name] = timeout
+    music_timeouts[player] = timeout
+end
+
+local function update_ambience(player, node, node_def)
+    if node_def._water_equivalent and water_ambience[player] ~= true then
+        if ambience_handles[player] then minetest.sound_stop(ambience_handles[player]) end
+        ambience_handles[player] = minetest.sound_play({name="underwater-ambiencewav-14428", gain=0.2}, {to_player=player, loop=true})
+        water_ambience[player] = true
+    elseif not node_def._water_equivalent and water_ambience[player] ~= false then
+        if ambience_handles[player] then minetest.sound_stop(ambience_handles[player]) end
+        ambience_handles[player] = minetest.sound_play({name="gentle-ocean-waves-mix-2018-19693", gain=0.5}, {to_player=player, loop=true})
+        water_ambience[player] = false
+    end
 end
 
 local air_def = minetest.registered_nodes["air"]
@@ -186,6 +199,7 @@ minetest.register_globalstep(function(dtime)
         eye_pos.z = math.round(eye_pos.z)
         local nodename = minetest.get_node(eye_pos).name
         local node_def = minetest.registered_nodes[nodename]
+        local playername = player:get_player_name()
         if node_def and node_def._fog then
             local light = minetest.get_natural_light(eye_pos)/15
             local color = {
@@ -206,13 +220,15 @@ minetest.register_globalstep(function(dtime)
             player:set_sun({visible=false, sunrise_visible=false})
             player:set_moon({visible=false})
             player:set_stars({visible=false})
-            update_music(player, nodename, node_def, dtime)
+            update_music(playername, nodename, node_def, dtime)
+            update_ambience(playername, nodename, node_def)
         else
             player:set_sky()
             player:set_sun()
             player:set_moon()
             player:set_stars()
-            update_music(player, "air", air_def, dtime)
+            update_music(playername, "air", air_def, dtime)
+            update_ambience(playername, "air", air_def)
         end
     end
 end)
