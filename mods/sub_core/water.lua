@@ -190,14 +190,14 @@ local function update_ambience(player, node, node_def, eye_pos)
     if node_def._water and water_ambience[player] ~= true then
         if ambience_handles[player] then
             minetest.sound_stop(ambience_handles[player])
-            minetest.sound_play({name="474977-Water-Underwater-Submerge-Plunge-Hard-Rise-Instamic"}, {object=minetest.get_player_by_name(player)}, true)
+            minetest.sound_play({name="474977-Water-Underwater-Submerge-Plunge-Hard-Rise-Instamic", gain=0.4}, {object=minetest.get_player_by_name(player)}, true)
         end
         ambience_handles[player] = minetest.sound_play({name="underwater-ambiencewav-14428", gain=0.2}, {to_player=player, loop=true})
         water_ambience[player] = true
     elseif not node_def._water and water_ambience[player] ~= false then
         if ambience_handles[player] then
             minetest.sound_stop(ambience_handles[player])
-            minetest.sound_play({name="water-splash-199583"}, {object=minetest.get_player_by_name(player)}, true)
+            minetest.sound_play({name="water-splash-199583", gain=0.4}, {object=minetest.get_player_by_name(player)}, true)
         end
         ambience_handles[player] = minetest.sound_play({name="gentle-ocean-waves-mix-2018-19693", gain=0.5}, {to_player=player, loop=true})
         water_ambience[player] = false
