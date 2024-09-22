@@ -452,6 +452,7 @@ sub_core.register_waterloggable("sub_core:salvage1", {
     paramtype2 = "4dir",
     sunlight_propagates = true,
     groups = {metal=1},
+    drop = "sub_core:salvage",
     on_rightclick = function (pos, node, user, itemstack)
         minetest.set_node(pos, {name=minetest.registered_nodes[node.name]._water_equivalent})
         return sub_core.give_item("sub_core:salvage")(pos, node, user, itemstack)
