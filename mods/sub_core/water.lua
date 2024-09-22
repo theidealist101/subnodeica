@@ -156,7 +156,7 @@ local function update_fog(player, node_def, pos)
         player:set_sun({visible=false, sunrise_visible=false})
         player:set_moon({visible=false})
         player:set_stars({visible=false})
-    else
+    elseif pos.y > 0 then
         player:set_sky()
         player:set_sun()
         player:set_moon()
