@@ -32,12 +32,14 @@ end
 local function smallfish_place(name)
     local function out(itemstack, user, pointed)
         --deal with both pointed_thing and pos
-        if type(pointed) == "table" then
-            if pointed.type == "node" then
-                pointed = pointed.above
-            else
-                pointed = user:get_pos()
-            end
+        if pointed.type == "node" then
+            pointed = pointed.above
+        else
+            local pos = user:get_pos()+vector.new(0, 1.625, 0)
+            local ray = minetest.raycast(pos, pos+4*user:get_look_dir())
+            ray:next() --discard the player
+            pointed = ray:next()
+            pointed = pointed and minetest.get_pointed_thing_position(pointed, true) or pos+2*user:get_look_dir()
         end
         minetest.add_entity(pointed, name)
         itemstack:take_item()
@@ -85,8 +87,7 @@ minetest.register_craftitem("sub_mobs:item_peeper", {
     description = "Peeper",
     inventory_image = "sub_mobs_peeper.png",
     stack_max = 1,
-    on_place = smallfish_place("sub_mobs:peeper"),
-    on_secondary_use = smallfish_place("sub_mobs:peeper"),
+    on_drop = smallfish_place("sub_mobs:peeper"),
     on_use = sub_core.item_eat(20, -15)
 })
 
@@ -137,8 +138,7 @@ minetest.register_craftitem("sub_mobs:item_bladderfish", {
     description = "Bladderfish",
     inventory_image = "sub_mobs_bladderfish.png",
     stack_max = 1,
-    on_place = smallfish_place("sub_mobs:bladderfish"),
-    on_secondary_use = smallfish_place("sub_mobs:bladderfish"),
+    on_drop = smallfish_place("sub_mobs:bladderfish"),
     on_use = sub_core.item_eat(9, -4)
 })
 
@@ -189,8 +189,7 @@ minetest.register_craftitem("sub_mobs:item_boomerang", {
     description = "Boomerang",
     inventory_image = "sub_mobs_boomerang.png",
     stack_max = 1,
-    on_place = smallfish_place("sub_mobs:boomerang"),
-    on_secondary_use = smallfish_place("sub_mobs:boomerang"),
+    on_drop = smallfish_place("sub_mobs:boomerang"),
     on_use = sub_core.item_eat(12, -8)
 })
 
@@ -241,8 +240,7 @@ minetest.register_craftitem("sub_mobs:item_garryfish", {
     description = "Garryfish",
     inventory_image = "sub_mobs_garryfish.png",
     stack_max = 1,
-    on_place = smallfish_place("sub_mobs:garryfish"),
-    on_secondary_use = smallfish_place("sub_mobs:garryfish"),
+    on_drop = smallfish_place("sub_mobs:garryfish"),
     on_use = sub_core.item_eat(12, -12)
 })
 
@@ -295,8 +293,7 @@ minetest.register_craftitem("sub_mobs:item_spadefish", {
     description = "Spadefish",
     inventory_image = "sub_mobs_spadefish.png",
     stack_max = 1,
-    on_place = smallfish_place("sub_mobs:spadefish"),
-    on_secondary_use = smallfish_place("sub_mobs:spadefish"),
+    on_drop = smallfish_place("sub_mobs:spadefish"),
     on_use = sub_core.item_eat(13, -6)
 })
 
@@ -346,8 +343,7 @@ minetest.register_craftitem("sub_mobs:item_hoopfish", {
     description = "Hoopfish",
     inventory_image = "sub_mobs_hoopfish.png",
     stack_max = 1,
-    on_place = smallfish_place("sub_mobs:hoopfish"),
-    on_secondary_use = smallfish_place("sub_mobs:hoopfish"),
+    on_drop = smallfish_place("sub_mobs:hoopfish"),
     on_use = sub_core.item_eat(12, -6)
 })
 
@@ -397,8 +393,7 @@ minetest.register_craftitem("sub_mobs:item_hoverfish", {
     description = "Hoverfish",
     inventory_image = "sub_mobs_hoverfish.png",
     stack_max = 1,
-    on_place = smallfish_place("sub_mobs:hoverfish"),
-    on_secondary_use = smallfish_place("sub_mobs:hoverfish"),
+    on_drop = smallfish_place("sub_mobs:hoverfish"),
     on_use = sub_core.item_eat(13, -9)
 })
 
@@ -448,8 +443,7 @@ minetest.register_craftitem("sub_mobs:item_eyeye", {
     description = "Eyeye",
     inventory_image = "sub_mobs_eyeye.png",
     stack_max = 1,
-    on_place = smallfish_place("sub_mobs:eyeye"),
-    on_secondary_use = smallfish_place("sub_mobs:eyeye"),
+    on_drop = smallfish_place("sub_mobs:eyeye"),
     on_use = sub_core.item_eat(10, 0)
 })
 
@@ -499,8 +493,7 @@ minetest.register_craftitem("sub_mobs:item_reginald", {
     description = "Reginald",
     inventory_image = "sub_mobs_reginald.png",
     stack_max = 1,
-    on_place = smallfish_place("sub_mobs:reginald"),
-    on_secondary_use = smallfish_place("sub_mobs:reginald"),
+    on_drop = smallfish_place("sub_mobs:reginald"),
     on_use = sub_core.item_eat(25, -10)
 })
 
