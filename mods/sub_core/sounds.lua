@@ -56,30 +56,40 @@ local function update_music(player, node, node_def, dtime)
 end
 
 local splash_counter = 0
+local old_pos
 
 --Update the ambient sounds depending on where the player is
-local function update_ambience(player, node, node_def, dtime)
+local function update_ambience(player, node, node_def, dtime, pos)
+    local obj = minetest.get_player_by_name(player)
     splash_counter = splash_counter+dtime
-    if node_def._water and water_ambience[player] ~= true then
+    if splash_counter > 0.8 and obj:get_player_control_bits()%128 > 0 then
+        splash_counter = 0
+        minetest.sound_play(
+            {name=(pos.y > 0 and "zapsplat_nature_water_deep_step_into_splash_85050" or "zapsplat_nature_water_underwater_pass_by_swim_scuba_diver_bubbles_001_96969"), gain=0.04},
+            {object=obj}, true
+        )
+    end
+    if node_def._water and water_ambience[player] ~= true and old_pos.y > 0 then
         if ambience_handles[player] then
             minetest.sound_stop(ambience_handles[player])
-            minetest.sound_play({name="474977-Water-Underwater-Submerge-Plunge-Hard-Rise-Instamic", gain=0.4}, {object=minetest.get_player_by_name(player)}, true)
+            minetest.sound_play({name="474977-Water-Underwater-Submerge-Plunge-Hard-Rise-Instamic", gain=0.2}, {object=obj}, true)
         end
         ambience_handles[player] = minetest.sound_play({name="underwater-ambiencewav-14428", gain=0.2}, {to_player=player, loop=true})
         water_ambience[player] = true
-    elseif not node_def._water and water_ambience[player] ~= false then
+    elseif not node_def._water and water_ambience[player] ~= false and pos.y > 0 then
         if ambience_handles[player] then
             minetest.sound_stop(ambience_handles[player])
-            minetest.sound_play({name="water-splash-199583", gain=0.4}, {object=minetest.get_player_by_name(player)}, true)
+            minetest.sound_play({name="water-splash-199583", gain=0.2}, {object=obj}, true)
         end
         ambience_handles[player] = minetest.sound_play({name="gentle-ocean-waves-mix-2018-19693", gain=0.5}, {to_player=player, loop=true})
         water_ambience[player] = false
     end
+    old_pos = pos
 end
 
-function sub_core.update_sounds(player, node, node_def, dtime)
+function sub_core.update_sounds(player, node, node_def, dtime, pos)
     update_music(player, node, node_def, dtime)
-    update_ambience(player, node, node_def, dtime)
+    update_ambience(player, node, node_def, dtime, pos)
 end
 
 --Music definitions

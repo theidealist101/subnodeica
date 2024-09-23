@@ -11,10 +11,6 @@ function sub_core.add_water_physics(t, water)
     out._suspension_color = water_defs._suspension_color
     out.groups = out.groups or {}
     out.groups.pathfind_water = out.groups.pathfind_water or 1
-    out.sounds = out.sounds or {}
-    for name, def in pairs(water_defs.sounds) do
-        out.sounds[name] = out.sounds[name] or def
-    end
     out._fog = water_defs._fog
     out._water = water_defs._water
     out._water_equivalent = water
@@ -75,7 +71,6 @@ function sub_core.register_water(name, defs)
         color = color,
         post_effect_color = tint,
         groups = groups,
-        sounds = {footstep={name="zapsplat_nature_water_deep_step_into_splash_85050", gain=0.1}},
         _fog = fog,
         _water = true,
         _water_equivalent = name,
@@ -100,7 +95,6 @@ function sub_core.register_water(name, defs)
         color = color,
         post_effect_color = tint,
         groups = groups,
-        sounds = {footstep={name="zapsplat_nature_water_underwater_pass_by_swim_scuba_diver_bubbles_001_96969", gain=0.1}},
         _fog = fog,
         _water = true,
         _water_equivalent = name,
@@ -191,6 +185,6 @@ minetest.register_globalstep(function(dtime)
         local playername = player:get_player_name()
         update_fog(player, node_def, eye_pos)
         update_suspension(playername, node_def, eye_pos+player:get_velocity())
-        sub_core.update_sounds(playername, nodename, node_def, dtime)
+        sub_core.update_sounds(playername, nodename, node_def, dtime, eye_pos)
     end
 end)
