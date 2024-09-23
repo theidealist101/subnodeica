@@ -84,7 +84,7 @@ local function update_ambience(player, node, node_def, dtime, pos)
         ambience_handles[player] = minetest.sound_play({name="gentle-ocean-waves-mix-2018-19693", gain=0.5}, {to_player=player, loop=true})
         water_ambience[player] = false
     end
-    old_pos = pos
+    old_pos = node ~= "ignore" and pos or nil
 end
 
 function sub_core.update_sounds(player, node, node_def, dtime, pos)
