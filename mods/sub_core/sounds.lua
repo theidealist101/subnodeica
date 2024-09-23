@@ -69,7 +69,7 @@ local function update_ambience(player, node, node_def, dtime, pos)
             {object=obj}, true
         )
     end
-    if node_def._water and water_ambience[player] ~= true and old_pos.y > 0 then
+    if node_def._water and water_ambience[player] ~= true and (not old_pos or old_pos.y > 0) then
         if ambience_handles[player] then
             minetest.sound_stop(ambience_handles[player])
             minetest.sound_play({name="474977-Water-Underwater-Submerge-Plunge-Hard-Rise-Instamic", gain=0.2}, {object=obj}, true)
