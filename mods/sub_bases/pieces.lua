@@ -3,7 +3,7 @@ sub_bases.register_piece("sub_bases:i_compartment", {
     schems = {
         fixed = {
             name = "i_compartment.mts",
-            pos = vector.new(0, 0, 2)
+            pos = vector.zero()
         }
     },
     recipe = {"sub_core:titanium 2"}

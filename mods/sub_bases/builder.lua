@@ -1,21 +1,3 @@
---Invisible entity containing information about piece at given position
-minetest.register_entity("sub_bases:piece", {
-    initial_properties = {
-        visual = "sprite",
-        textures = {"blank.png"},
-        physical = false,
-        pointable = false
-    },
-    on_activate = function (self, staticdata)
-        if not staticdata or staticdata == "" then self.object:remove() end
-        self.piece, self.parent = unpack(minetest.deserialize(staticdata))
-        self.piece_defs = sub_bases.registered_pieces[self.piece]
-    end,
-    get_staticdata = function (self)
-        return minetest.serialize({self.piece, self.parent}) --position and rotation match that of the entity
-    end
-})
-
 local box_text = "[fill:16x16:0,0:#80c0ffc0"
 local box_text_red = "[fill:16x16:0,0:#ff8080c0"
 local box_text_blue = "[fill:16x16:0,0:#8080ffc0"
@@ -49,7 +31,7 @@ local function get_box_pos(player)
 end
 
 local function check_box_collisions(obj)
-    local size = vector.apply(vector.rotate(vector.floor(0.5*obj:get_luaentity().piece_defs.size), obj:get_rotation()), math.abs)
+    local size = sub_bases.get_piece_size(obj:get_luaentity().piece_defs, obj:get_rotation())
     local pos = obj:get_pos()
     for x = -size.x, size.x do
         for y = -size.y, size.y do
@@ -65,10 +47,10 @@ local aux1 = {}
 
 --Update position of box entity for each player
 minetest.register_globalstep(function ()
-    local players = minetest.get_connected_players()
-    for playername, obj in pairs(box_objs) do
-        local player = minetest.get_player_by_name(playername)
-        if player and table.indexof(players, player) and player:get_wielded_item():get_name() == "sub_bases:builder" then
+    for _, player in ipairs(minetest.get_connected_players()) do
+        local playername = player:get_player_name()
+        local obj = box_objs[playername]
+        if obj and player:get_wielded_item():get_name() == "sub_bases:builder" then
             obj:set_pos(get_box_pos(player))
             if player:get_player_control().aux1 then
                 if not aux1[playername] then
@@ -80,7 +62,7 @@ minetest.register_globalstep(function ()
             end
             local texture = check_box_collisions(obj) and box_text_red or box_text
             obj:set_properties({textures={texture, texture, texture, texture, texture, texture}})
-        else
+        elseif obj then
             obj:remove()
             box_objs[playername] = nil
         end
@@ -88,13 +70,18 @@ minetest.register_globalstep(function ()
 end)
 
 --Habitat builder, places base pieces and modules
-local function place_box(_, user)
+local function place_box(_, user, pointed)
     local playername = user:get_player_name()
     if box_objs[playername] then
         box_objs[playername]:remove()
         box_objs[playername] = nil
     else
-        box_objs[playername] = minetest.add_entity(get_box_pos(user), "sub_bases:box", "sub_bases:i_compartment")
+        local piece = sub_bases.get_piece_at(minetest.get_pointed_thing_position(pointed))
+        if piece then
+            piece:remove()
+        else
+            box_objs[playername] = minetest.add_entity(get_box_pos(user), "sub_bases:box", "sub_bases:i_compartment")
+        end
     end
 end
 
@@ -102,8 +89,10 @@ local function confirm_box(_, user)
     local playername = user:get_player_name()
     local obj = box_objs[playername]
     if obj and not check_box_collisions(obj) then
-        obj:set_properties({textures={box_text_blue, box_text_blue, box_text_blue, box_text_blue, box_text_blue, box_text_blue}})
+        --obj:set_properties({textures={box_text_blue, box_text_blue, box_text_blue, box_text_blue, box_text_blue, box_text_blue}})
         box_objs[playername] = nil
+        sub_bases.place_piece(obj:get_pos(), obj:get_rotation(), obj:get_luaentity().piece)
+        obj:remove()
     end
 end
 
