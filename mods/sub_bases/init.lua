@@ -41,7 +41,7 @@ end
 
 --Utility functions
 function sub_bases.get_piece_size(defs, rot)
-    return vector.apply(vector.rotate(vector.floor(0.5*defs.size), rot), math.abs)
+    return vector.round(vector.apply(vector.rotate(vector.floor(0.5*defs.size), rot), math.abs))
 end
 
 minetest.mkdir(worldpath.."schems")
