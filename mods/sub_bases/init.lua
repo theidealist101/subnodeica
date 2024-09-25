@@ -22,6 +22,23 @@ function sub_bases.register_piece(name, defs)
     })
 end
 
+sub_bases.registered_side_pieces = {}
+
+function sub_bases.register_side_piece(name, defs)
+    defs.size = defs.size or vector.zero()
+    defs.suffix = defs.suffix
+    defs.types = defs.types or {}
+    sub_bases.registered_side_pieces[name] = defs
+    sub_crafts.register_craft({
+        type = "builder",
+        category = defs.category,
+        subcategory = defs.subcategory,
+        output = name,
+        output_icon = defs.icon,
+        recipe = defs.recipe
+    })
+end
+
 --Utility functions
 function sub_bases.get_piece_size(defs, rot)
     return vector.apply(vector.rotate(vector.floor(0.5*defs.size), rot), math.abs)
@@ -36,13 +53,13 @@ end
 local zero = vector.zero()
 
 --Get which schems from piece definition should be used
-local function get_piece_schems(defs)
+local function get_piece_schems(defs, sides)
     local out = {}
     if defs.schems.fixed then
         table.insert(out, defs.schems.fixed)
     end
-    for _, side in ipairs(defs.sides) do
-        table.insert(out, {name=side.type..".mts", pos=side.pos, rot=side.rot})
+    for i, side in ipairs(defs.sides) do
+        table.insert(out, {name=side.type..(sides[i] and "_"..sides[i] or "")..".mts", pos=side.pos, rot=side.rot})
     end
     return out
 end
@@ -80,7 +97,7 @@ minetest.register_entity("sub_bases:piece", {
         local rotation = math.round(math.deg(rot.y)/90)*90
         local size = sub_bases.get_piece_size(self.piece_defs, rot)
         minetest.create_schematic(pos-size, pos+size, {}, get_replace_path(pos))
-        for _, schem in ipairs(get_piece_schems(self.piece_defs)) do
+        for _, schem in ipairs(get_piece_schems(self.piece_defs, {})) do
             minetest.place_schematic(pos+vector.rotate(schem.pos or zero, rot), path.."schems/"..schem.name, tostring((-rotation+(tonumber(schem.rot) or 0))%360), {}, true, "place_center_x, place_center_y, place_center_z")
         end
     end,

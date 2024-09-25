@@ -20,3 +20,10 @@ sub_bases.register_piece("sub_bases:i_compartment", {
     },
     recipe = {"sub_core:titanium 2"}
 })
+
+sub_bases.register_side_piece("sub_bases:hatch", {
+    size = vector.new(1, 1, 1),
+    suffix = "_hatch",
+    types = {"compartment_end"},
+    recipe = {"sub_core:titanium 2", "sub_core:quartz"}
+})
