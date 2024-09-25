@@ -2,8 +2,16 @@ sub_bases.register_piece("sub_bases:i_compartment", {
     size = vector.new(5, 5, 11),
     schems = {
         fixed = {
-            name = "i_compartment.mts",
-            pos = vector.zero()
+            name = "i_compartment.mts"
+        },
+        disconnected_front = {
+            name = "compartment_end.mts",
+            pos = vector.new(0, 0, 4),
+            rot = "180"
+        },
+        disconnected_back = {
+            name = "compartment_end.mts",
+            pos = vector.new(0, 0, -4)
         }
     },
     recipe = {"sub_core:titanium 2"}

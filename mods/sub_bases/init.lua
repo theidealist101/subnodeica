@@ -32,6 +32,17 @@ local function get_replace_path(pos)
     return worldpath.."schems/piece_replace_"..string.format("%.f", minetest.hash_node_position(pos))..".mts"
 end
 
+local zero = vector.zero()
+
+--Get which schems from piece definition should be used (placeholder)
+local function get_piece_schems(defs)
+    local out = {}
+    for _, schem in ipairs({"fixed", "disconnected_top", "disconnected_bottom", "disconnected_left", "disconnected_right", "disconnected_front", "disconnected_back"}) do
+        if defs.schems[schem] then table.insert(out, defs.schems[schem]) end
+    end
+    return out
+end
+
 --Invisible entity containing information about piece at given position
 minetest.register_entity("sub_bases:piece", {
     initial_properties = {
@@ -55,10 +66,12 @@ minetest.register_entity("sub_bases:piece", {
         else piece = self.piece end
         local pos = self.object:get_pos()
         local rot = self.object:get_rotation()
-        local rotation = tostring(math.round(math.deg(rot.y)/90)*90)
+        local rotation = math.round(math.deg(rot.y)/90)*90
         local size = sub_bases.get_piece_size(self.piece_defs, rot)
         minetest.create_schematic(pos-size, pos+size, {}, get_replace_path(pos))
-        minetest.place_schematic(pos+self.piece_defs.schems.fixed.pos, path.."schems/"..self.piece_defs.schems.fixed.name, rotation, {}, true, "place_center_x, place_center_y, place_center_z")
+        for _, schem in ipairs(get_piece_schems(self.piece_defs)) do
+            minetest.place_schematic(pos+vector.rotate(schem.pos or zero, rot), path.."schems/"..schem.name, tostring((-rotation+(tonumber(schem.rot) or 0))%360), {}, true, "place_center_x, place_center_y, place_center_z")
+        end
     end,
     on_deactivate = function (self, removal)
         if removal then
