@@ -10,6 +10,7 @@ function sub_bases.register_piece(name, defs)
     defs.size = defs.size or vector.zero()
     defs.schems = defs.schems or {}
     defs.schems.fixed = defs.schems.fixed
+    defs.sides = defs.sides or {}
     sub_bases.registered_pieces[name] = defs
     sub_crafts.register_craft({
         type = "builder",
@@ -34,11 +35,14 @@ end
 
 local zero = vector.zero()
 
---Get which schems from piece definition should be used (placeholder)
+--Get which schems from piece definition should be used
 local function get_piece_schems(defs)
     local out = {}
-    for _, schem in ipairs({"fixed", "disconnected_top", "disconnected_bottom", "disconnected_left", "disconnected_right", "disconnected_front", "disconnected_back"}) do
-        if defs.schems[schem] then table.insert(out, defs.schems[schem]) end
+    if defs.schems.fixed then
+        table.insert(out, defs.schems.fixed)
+    end
+    for _, side in ipairs(defs.sides) do
+        table.insert(out, {name=side.type..".mts", pos=side.pos, rot=side.rot})
     end
     return out
 end
