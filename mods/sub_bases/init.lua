@@ -76,7 +76,9 @@ minetest.register_entity("sub_bases:piece", {
     on_deactivate = function (self, removal)
         if removal then
             local pos = self.object:get_pos()
-            minetest.place_schematic(pos, get_replace_path(pos), "0", {}, true, "place_center_x, place_center_y, place_center_z")
+            local replace = get_replace_path(pos)
+            minetest.place_schematic(pos, replace, "0", {}, true, "place_center_x, place_center_y, place_center_z")
+            minetest.rmdir(replace)
         end
     end
 })
