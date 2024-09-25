@@ -23,6 +23,7 @@ minetest.register_entity("sub_bases:box", {
 
 --Various utilities involving boxes
 local box_objs = {}
+local selected_pieces = {}
 local eye_offset = vector.new(0, 1.625, 0)
 local rotate_amount = vector.new(0, math.pi/2, 0)
 
@@ -49,8 +50,10 @@ local aux1 = {}
 minetest.register_globalstep(function ()
     for _, player in ipairs(minetest.get_connected_players()) do
         local playername = player:get_player_name()
+        local pos = player:get_pos()+eye_offset
         local obj = box_objs[playername]
-        if obj and player:get_wielded_item():get_name() == "sub_bases:builder" then
+        local building = player:get_wielded_item():get_name() == "sub_bases:builder"
+        if obj and building then --currently placing box
             obj:set_pos(get_box_pos(player))
             if player:get_player_control().aux1 then
                 if not aux1[playername] then
@@ -62,21 +65,37 @@ minetest.register_globalstep(function ()
             end
             local texture = check_box_collisions(obj) and box_text_red or box_text
             obj:set_properties({textures={texture, texture, texture, texture, texture, texture}})
-        elseif obj then
+        elseif obj then --no longer placing box
             obj:remove()
             box_objs[playername] = nil
+        elseif building then --possibly pointing at box
+            local raycast = minetest.raycast(pos, pos+8*player:get_look_dir())
+            raycast:next() --discard player
+            local piece = sub_bases.get_piece_at(minetest.get_pointed_thing_position(raycast:next() or {type="nothing"}))
+            local old_piece = selected_pieces[player]
+            if piece ~= old_piece then
+                selected_pieces[player] = piece
+                if old_piece then old_piece:set_properties({is_visible=false}) end
+                if piece then piece:set_properties({is_visible=true}) end
+            end
+        elseif selected_pieces[player] then --no longer pointing at box
+            selected_pieces[player]:set_properties({is_visible=false})
+            selected_pieces[player] = nil
         end
     end
 end)
 
 --Habitat builder, places base pieces and modules
-local function place_box(_, user, pointed)
+local function place_box(_, user)
     local playername = user:get_player_name()
     if box_objs[playername] then
         box_objs[playername]:remove()
         box_objs[playername] = nil
     else
-        local piece = sub_bases.get_piece_at(minetest.get_pointed_thing_position(pointed))
+        local pos = user:get_pos()+eye_offset
+        local raycast = minetest.raycast(pos, pos+8*user:get_look_dir())
+        raycast:next() --discard player
+        local piece = sub_bases.get_piece_at(minetest.get_pointed_thing_position(raycast:next() or {type="nothing"}))
         if piece then
             piece:remove()
         else

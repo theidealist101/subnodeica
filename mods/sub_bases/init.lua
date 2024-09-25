@@ -43,18 +43,24 @@ local function get_piece_schems(defs)
     return out
 end
 
+local box_text = "[fill:16x16:0,0:#80c0ff80"
+
 --Invisible entity containing information about piece at given position
 minetest.register_entity("sub_bases:piece", {
     initial_properties = {
-        visual = "sprite",
-        textures = {"blank.png"},
+        visual = "cube",
+        textures = {box_text, box_text, box_text, box_text, box_text, box_text},
+        use_texture_alpha = true,
+        glow = 15,
         physical = false,
-        pointable = false
+        pointable = false,
+        is_visible = false
     },
     on_activate = function (self, staticdata)
         if not staticdata or staticdata == "" then return end
         self.piece = staticdata
         self.piece_defs = sub_bases.registered_pieces[staticdata]
+        self.object:set_properties({visual_size=self.piece_defs.size+vector.new(0.1, 0.1, 0.1)})
     end,
     get_staticdata = function (self)
         return self.piece --position and rotation match that of the entity
@@ -63,6 +69,7 @@ minetest.register_entity("sub_bases:piece", {
         if piece then
             self.piece = piece
             self.piece_defs = sub_bases.registered_pieces[piece]
+            self.object:set_properties({visual_size=self.piece_defs.size+vector.new(0.1, 0.1, 0.1)})
         else piece = self.piece end
         local pos = self.object:get_pos()
         local rot = self.object:get_rotation()
