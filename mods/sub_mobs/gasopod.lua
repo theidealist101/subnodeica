@@ -118,7 +118,8 @@ minetest.register_entity("sub_mobs:gas_pod", {
         self.object:remove()
         user:get_inventory():add_item("main", "sub_mobs:item_gas_pod")
     end,
-    get_staticdata = function (self) return tostring(self.timer) end
+    get_staticdata = function (self) return tostring(self.timer) end,
+    _hovertext = "Pick up Gas Pod (RMB)"
 })
 
 minetest.register_craftitem("sub_mobs:item_gas_pod", {

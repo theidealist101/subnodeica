@@ -10,7 +10,8 @@ sub_core.register_waterloggable("sub_mobs:sulfur_plant", {
         fixed = {-0.375, -0.5, -0.375, 0.375, 0, 0.375}
     },
     paramtype2 = "wallmounted",
-    groups = {sulfur_plant=1}
+    groups = {sulfur_plant=1},
+    _hovertext = "Sulfur Plant"
 })
 
 sub_core.register_waterloggable("sub_mobs:sulfur_plant_open", {
@@ -29,7 +30,8 @@ sub_core.register_waterloggable("sub_mobs:sulfur_plant_open", {
         local node = minetest.get_node(pos)
         node.name = sub_core.get_waterlogged("sub_mobs:sulfur_plant", minetest.registered_nodes[node.name]._water_equivalent)
         minetest.swap_node(pos, node)
-    end
+    end,
+    _hovertext = "Sulfur Plant"
 })
 
 minetest.register_abm({

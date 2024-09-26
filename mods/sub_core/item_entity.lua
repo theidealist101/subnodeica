@@ -30,6 +30,8 @@ end
 item_defs.set_item = function (self, item)
     old_item_defs.set_item(self, item)
     self.object:set_properties({infotext="", automatic_rotate=0})
+    local itemname = string.split(self.itemstring, " ")[1]
+    if itemname then self._hovertext = "Pick up "..minetest.registered_items[itemname].description.." (RMB)" end
 end
 
 minetest.register_entity(":__builtin:item", item_defs)

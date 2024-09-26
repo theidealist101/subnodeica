@@ -80,7 +80,8 @@ minetest.register_entity("sub_mobs:peeper", {
     },
     on_punch = sub_mobs.punchfunc(0.5, 0.5),
     on_death = sub_mobs.deathfunc,
-    corpse_despawn = true
+    corpse_despawn = true,
+    _hovertext = "Pick up Peeper (RMB)"
 })
 
 minetest.register_craftitem("sub_mobs:item_peeper", {
@@ -131,7 +132,8 @@ minetest.register_entity("sub_mobs:bladderfish", {
     },
     on_punch = sub_mobs.punchfunc(0.5, 0.5),
     on_death = sub_mobs.deathfunc,
-    corpse_despawn = true
+    corpse_despawn = true,
+    _hovertext = "Pick up Bladderfish (RMB)"
 })
 
 minetest.register_craftitem("sub_mobs:item_bladderfish", {
@@ -182,7 +184,8 @@ minetest.register_entity("sub_mobs:boomerang", {
     },
     on_punch = sub_mobs.punchfunc(0.5, 0.5),
     on_death = sub_mobs.deathfunc,
-    corpse_despawn = true
+    corpse_despawn = true,
+    _hovertext = "Pick up Boomerang (RMB)"
 })
 
 minetest.register_craftitem("sub_mobs:item_boomerang", {
@@ -233,7 +236,8 @@ minetest.register_entity("sub_mobs:garryfish", {
     },
     on_punch = sub_mobs.punchfunc(0.5, 0.5),
     on_death = sub_mobs.deathfunc,
-    corpse_despawn = true
+    corpse_despawn = true,
+    _hovertext = "Pick up Garryfish (RMB)"
 })
 
 minetest.register_craftitem("sub_mobs:item_garryfish", {
@@ -286,7 +290,8 @@ minetest.register_entity("sub_mobs:spadefish", {
     },
     on_punch = sub_mobs.punchfunc(0.5, 0.5),
     on_death = sub_mobs.deathfunc,
-    corpse_despawn = true
+    corpse_despawn = true,
+    _hovertext = "Pick up Spadefish (RMB)"
 })
 
 minetest.register_craftitem("sub_mobs:item_spadefish", {
@@ -336,7 +341,8 @@ minetest.register_entity("sub_mobs:hoopfish", {
     },
     on_punch = sub_mobs.punchfunc(0.5, 0.5),
     on_death = sub_mobs.deathfunc,
-    corpse_despawn = true
+    corpse_despawn = true,
+    _hovertext = "Pick up Hoopfish (RMB)"
 })
 
 minetest.register_craftitem("sub_mobs:item_hoopfish", {
@@ -386,7 +392,8 @@ minetest.register_entity("sub_mobs:hoverfish", {
     },
     on_punch = sub_mobs.punchfunc(0.5, 0.5),
     on_death = sub_mobs.deathfunc,
-    corpse_despawn = true
+    corpse_despawn = true,
+    _hovertext = "Pick up Hoverfish (RMB)"
 })
 
 minetest.register_craftitem("sub_mobs:item_hoverfish", {
@@ -436,7 +443,8 @@ minetest.register_entity("sub_mobs:eyeye", {
     },
     on_punch = sub_mobs.punchfunc(0.5, 0.5),
     on_death = sub_mobs.deathfunc,
-    corpse_despawn = true
+    corpse_despawn = true,
+    _hovertext = "Pick up Eyeye (RMB)"
 })
 
 minetest.register_craftitem("sub_mobs:item_eyeye", {
@@ -486,7 +494,8 @@ minetest.register_entity("sub_mobs:reginald", {
     },
     on_punch = sub_mobs.punchfunc(0.5, 0.5),
     on_death = sub_mobs.deathfunc,
-    corpse_despawn = true
+    corpse_despawn = true,
+    _hovertext = "Pick up Reginald (RMB)"
 })
 
 minetest.register_craftitem("sub_mobs:item_reginald", {

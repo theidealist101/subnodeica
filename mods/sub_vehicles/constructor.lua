@@ -36,6 +36,7 @@ minetest.register_entity("sub_vehicles:constructor", {
         self.object:remove()
         user:get_inventory():add_item("main", "sub_vehicles:item_constructor")
     end,
+    _hovertext = "Pack up Mobile Vehicle Bay (RMB)"
 })
 
 minetest.register_entity("sub_vehicles:constructor_console", {
@@ -50,7 +51,8 @@ minetest.register_entity("sub_vehicles:constructor_console", {
     end,
     on_rightclick = function (self, user)
         minetest.show_formspec(user:get_player_name(), "sub_crafts:constructor_formspec", sub_crafts.get_formspec(user, "constructor"))
-    end
+    end,
+    _hovertext = "Use Mobile Vehicle Bay (RMB)"
 })
 
 minetest.register_node("sub_vehicles:item_constructor", {
