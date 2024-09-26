@@ -58,6 +58,7 @@ minetest.register_node("sub_bases:ladder", {
     sunlight_propagates = true,
     walkable = false,
     climbable = true,
+    _hovertext = "Ladder (climbable)"
 })
 
 minetest.register_node("sub_bases:lifepod_ladder", {
@@ -73,6 +74,7 @@ minetest.register_node("sub_bases:lifepod_ladder", {
     sunlight_propagates = true,
     walkable = false,
     climbable = true,
+    _hovertext = "Ladder (climbable)"
 })
 
 local function hatch_on_rightclick(pos, _, clicker, _, pointed)
@@ -102,5 +104,6 @@ minetest.register_node("sub_bases:hatch", {
     paramtype = "light",
     paramtype2 = "wallmounted",
     sunlight_propagates = true,
-    on_rightclick = hatch_on_rightclick
+    on_rightclick = hatch_on_rightclick,
+    _hovertext = "Use Hatch (RMB)"
 })

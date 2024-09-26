@@ -77,7 +77,8 @@ sub_core.register_waterloggable("sub_core:veined_nettle", {
     paramtype = "light",
     sunlight_propagates = true,
     walkable = false,
-    groups = {attached_node=1}
+    groups = {attached_node=1},
+    _hovertext = "Veined Nettle"
 })
 
 sub_core.register_waterloggable("sub_core:writhing_weed", {
@@ -93,7 +94,8 @@ sub_core.register_waterloggable("sub_core:writhing_weed", {
     paramtype = "light",
     sunlight_propagates = true,
     walkable = false,
-    groups = {attached_node=1}
+    groups = {attached_node=1},
+    _hovertext = "Writhing Weed"
 })
 
 sub_core.register_waterloggable("sub_core:blue_palm", {
@@ -109,7 +111,8 @@ sub_core.register_waterloggable("sub_core:blue_palm", {
     paramtype = "light",
     sunlight_propagates = true,
     walkable = false,
-    groups = {attached_node=1}
+    groups = {attached_node=1},
+    _hovertext = "Blue Palm"
 })
 
 sub_core.register_waterloggable("sub_core:furled_papyrus", {
@@ -125,7 +128,8 @@ sub_core.register_waterloggable("sub_core:furled_papyrus", {
     paramtype = "light",
     sunlight_propagates = true,
     walkable = false,
-    groups = {attached_node=1}
+    groups = {attached_node=1},
+    _hovertext = "Furled Papyrus"
 })
 
 sub_core.register_waterloggable("sub_core:redwort", {
@@ -140,7 +144,8 @@ sub_core.register_waterloggable("sub_core:redwort", {
     paramtype = "light",
     sunlight_propagates = true,
     walkable = false,
-    groups = {attached_node=1}
+    groups = {attached_node=1},
+    _hovertext = "Redwort"
 })
 
 sub_core.register_waterloggable("sub_core:violet_beau", {
@@ -155,7 +160,8 @@ sub_core.register_waterloggable("sub_core:violet_beau", {
     paramtype = "light",
     sunlight_propagates = true,
     walkable = false,
-    groups = {attached_node=1}
+    groups = {attached_node=1},
+    _hovertext = "Violet Beau"
 })
 
 sub_core.register_waterloggable("sub_core:regress_shell", {
@@ -171,7 +177,8 @@ sub_core.register_waterloggable("sub_core:regress_shell", {
     paramtype = "light",
     sunlight_propagates = true,
     walkable = false,
-    groups = {attached_node=1}
+    groups = {attached_node=1},
+    _hovertext = "Regress Shell"
 })
 
 sub_core.register_waterloggable("sub_core:rouge_cradle", {
@@ -187,7 +194,8 @@ sub_core.register_waterloggable("sub_core:rouge_cradle", {
     paramtype = "light",
     sunlight_propagates = true,
     walkable = false,
-    groups = {attached_node=1}
+    groups = {attached_node=1},
+    _hovertext = "Rouge Cradle"
 })
 
 --Acid mushrooms, important for batteries
@@ -211,7 +219,8 @@ sub_core.register_waterloggable("sub_core:acidshroom1", {
     sunlight_propagates = true,
     walkable = false,
     groups = {attached_node=1},
-    on_rightclick = acidshroom_on_rightclick
+    on_rightclick = acidshroom_on_rightclick,
+    _hovertext = "Pick up Acidshroom (RMB)"
 })
 
 sub_core.register_waterloggable("sub_core:acidshroom2", {
@@ -229,7 +238,8 @@ sub_core.register_waterloggable("sub_core:acidshroom2", {
     sunlight_propagates = true,
     walkable = false,
     groups = {attached_node=1},
-    on_rightclick = acidshroom_on_rightclick
+    on_rightclick = acidshroom_on_rightclick,
+    _hovertext = "Pick up Acidshroom (RMB)"
 })
 
 sub_core.register_waterloggable("sub_core:acidshroom3", {
@@ -247,7 +257,8 @@ sub_core.register_waterloggable("sub_core:acidshroom3", {
     sunlight_propagates = true,
     walkable = false,
     groups = {attached_node=1},
-    on_rightclick = acidshroom_on_rightclick
+    on_rightclick = acidshroom_on_rightclick,
+    _hovertext = "Pick up Acidshroom (RMB)"
 })
 
 sub_core.register_waterloggable("sub_core:acidshroom4", {
@@ -265,7 +276,8 @@ sub_core.register_waterloggable("sub_core:acidshroom4", {
     sunlight_propagates = true,
     walkable = false,
     groups = {attached_node=1},
-    on_rightclick = acidshroom_on_rightclick
+    on_rightclick = acidshroom_on_rightclick,
+    _hovertext = "Pick up Acidshroom (RMB)"
 })
 
 minetest.register_craftitem("sub_core:item_acidshroom", {
@@ -288,7 +300,8 @@ sub_core.register_waterloggable("sub_core:table_coral", {
     paramtype2 = "wallmounted",
     sunlight_propagates = true,
     walkable = false,
-    on_punch = sub_core.drop_if_slash("sub_core:table_coral_sample")
+    on_punch = sub_core.drop_if_slash("sub_core:table_coral_sample"),
+    _hovertext = "Table Coral"
 })
 
 minetest.register_craftitem("sub_core:table_coral_sample", {
@@ -310,7 +323,8 @@ sub_core.register_spawner("sub_core:table_coral", "sub_core:sandstone_with_liche
 minetest.register_node("sub_core:coral_tube", {
     description = "Coral Tube Block",
     tiles = {"sub_core_coral_tube.png"},
-    on_punch = sub_core.drop_if_slash("sub_core:coral_tube_sample", true)
+    on_punch = sub_core.drop_if_slash("sub_core:coral_tube_sample", true),
+    _hovertext = "Giant Coral Tubes"
 })
 
 minetest.register_craftitem("sub_core:coral_tube_sample", {
@@ -350,7 +364,8 @@ sub_core.register_waterloggable("sub_core:limestone_outcrop", {
         else
             minetest.add_item(pos, "sub_core:copper")
         end
-    end
+    end,
+    _hovertext = "Break Limestone Outcrop (LMB)"
 })
 
 sub_core.register_spawner("sub_core:limestone_outcrop", "sub_core:sandstone", "sub_core:sandstone", {
@@ -400,7 +415,8 @@ sub_core.register_waterloggable("sub_core:sandstone_outcrop", {
         else
             minetest.add_item(pos, "sub_core:silver")
         end
-    end
+    end,
+    _hovertext = "Break Sandstone Outcrop (LMB)"
 })
 
 sub_core.register_spawner("sub_core:sandstone_outcrop", "sub_core:sandstone", "sub_core:sandstone", {
@@ -434,7 +450,8 @@ sub_core.register_waterloggable("sub_core:quartz_outcrop", {
     on_rightclick = function (pos, node, user, itemstack)
         minetest.set_node(pos, {name=minetest.registered_nodes[node.name]._water_equivalent})
         return sub_core.give_item("sub_core:quartz")(pos, node, user, itemstack)
-    end
+    end,
+    _hovertext = "Pick up Quartz (RMB)"
 })
 
 --Metal salvage, source of titanium and also used to get stalker teeth
@@ -456,7 +473,8 @@ sub_core.register_waterloggable("sub_core:salvage1", {
     on_rightclick = function (pos, node, user, itemstack)
         minetest.set_node(pos, {name=minetest.registered_nodes[node.name]._water_equivalent})
         return sub_core.give_item("sub_core:salvage")(pos, node, user, itemstack)
-    end
+    end,
+    _hovertext = "Pick up Metal Salvage (RMB)"
 })
 
 minetest.register_node("sub_core:salvage", {
@@ -484,7 +502,8 @@ minetest.register_node("sub_core:brain_coral", {
         type = "fixed",
         fixed = {-0.75, -0.5, -0.75, 0.75, 0.5, 0.75}
     },
-    tiles = {"sub_core_brain_coral.png"}
+    tiles = {"sub_core_brain_coral.png"},
+    _hovertext = "Brain Coral"
 })
 
 minetest.register_entity("sub_core:coral_bubble", {
