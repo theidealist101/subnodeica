@@ -67,7 +67,7 @@ minetest.register_node("sub_crafts:medkit_fabricator", {
     on_rightclick = function (pos, node, user, itemstack)
         local meta = minetest.get_meta(pos)
         local now = minetest.get_gametime()
-        local last_used = meta:get_int("last_used")
+        local last_used = meta:get("last_used") or -600
         if now-last_used < 600 then return end
         meta:set_int("last_used", now)
         return sub_core.give_item("sub_crafts:medkit")(pos, node, user, itemstack)
@@ -75,7 +75,7 @@ minetest.register_node("sub_crafts:medkit_fabricator", {
     _hovertext = function (itemstack, user, pointed)
         local meta = minetest.get_meta(pointed.under)
         local now = minetest.get_gametime()
-        local last_used = meta:get_int("last_used")
+        local last_used = meta:get("last_used") or -600
         if now-last_used < 600 then
             return "Medical Kit Fabricator ("..math.floor(math.min(now-last_used, 600)/6).."%)"
         else
