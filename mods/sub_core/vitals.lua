@@ -181,13 +181,17 @@ minetest.register_globalstep(function(dtime)
         local raycast = minetest.raycast(eye_pos, eye_pos+4*obj:get_look_dir())
         raycast:next() --discard player
         local pointed = raycast:next() or {type="nothing"}
-        if pointed.type == "node" then
-            hovertext = minetest.get_meta(pointed.under):get("hovertext")
-            if not hovertext then
-                hovertext = minetest.registered_nodes[minetest.get_node(pointed.under).name]._hovertext
-                if type(hovertext) == "function" then hovertext = hovertext(itemstack, obj, pointed) end
+        if not itemstack:is_empty() then
+            hovertext = itemstack:get_meta():get("hovertext") or minetest.registered_items[itemstack:get_name()]._hovertext
+        end
+        if not hovertext then
+            if pointed.type == "node" then
+                hovertext = minetest.get_meta(pointed.under):get("hovertext") or minetest.registered_nodes[minetest.get_node(pointed.under).name]._hovertext
+            elseif pointed.type == "object" then
+                hovertext = pointed.ref:get_luaentity()._hovertext
             end
         end
+        if type(hovertext) == "function" then hovertext = hovertext(itemstack, obj, pointed) end
         obj:hud_change(hovertext_huds[name], "text", hovertext or "")
     end
 end)

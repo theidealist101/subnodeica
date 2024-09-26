@@ -26,7 +26,8 @@ minetest.register_entity("sub_nav:beacon", {
     end,
     get_staticdata = function (self)
         return tostring(self.waypoint)
-    end
+    end,
+    _hovertext = "Pick up Beacon (RMB)"
 })
 
 minetest.register_craftitem("sub_nav:item_beacon", {
