@@ -103,7 +103,7 @@ function sub_crafts.get_formspec(player, rtype, category, subcategory)
     local doable_elems = {}
     local x_offset = 20
     local y_offset = 20
-    local height = 0
+    local height = 0.5*(1+PADDING)*(1-#level1._i)
     local offset = 0
     for defs, doable in dict.pairs(level1) do
         local name
@@ -122,7 +122,7 @@ function sub_crafts.get_formspec(player, rtype, category, subcategory)
         height = height+1+PADDING
     end
     local max_height = height
-    height = offset
+    height = offset+0.5*(1+PADDING)*(1-#level2._i)
     offset = 0
     for defs, doable in dict.pairs(level2) do
         local name
@@ -141,7 +141,7 @@ function sub_crafts.get_formspec(player, rtype, category, subcategory)
         height = height+1+PADDING
     end
     max_height = math.max(height, max_height)
-    height = offset
+    height = offset+0.5*(1+PADDING)*(1-math.ceil(#level3._i/4))
     offset = 0
     local x = 2+2*PADDING
     for defs, doable in dict.pairs(level3) do
@@ -155,5 +155,5 @@ function sub_crafts.get_formspec(player, rtype, category, subcategory)
         end
     end
     max_height = math.max(height+1+PADDING, max_height)
-    return "formspec_version[4]size["..(2*x_offset+1)..","..(2*y_offset+2+PADDING)..",true]".."style["..table.concat(doable_elems, ",")..";bgcolor=#00ffff]"..table.concat(out)
+    return "formspec_version[4]size["..(2*x_offset+1)..","..(2*y_offset+1)..",true]".."style["..table.concat(doable_elems, ",")..";bgcolor=#00ffff]"..table.concat(out)
 end
