@@ -19,7 +19,7 @@ local function get_databank_formspec(player, context)
                 y = y+0.5
                 if sname == subcategory and type(s) == "table" then
                     for ename, e in pairs(s) do
-                        local ename2 = sname.."|"..ename
+                        local ename2 = sname2.."|"..ename
                         table.insert(out, table.concat({"button[0.5,", y, ";4,0.5;", ename2, ";", ename, "]"}))
                         y = y+0.5
                     end
@@ -134,9 +134,62 @@ To find this again, open your inventory and go to Databank > Survival Package > 
 Do give feedback on Github and report any bugs you find! Have fun!]]
 }
 
+local additional_technical = {
+    ["Emergency Lifepod"] = [[Standard features:
+- Short-range radio (250km uninterrupted range)
+- Wall-mounted fabricator for survival equipment manufacture, and for rendering organic substances edible
+- Medical kit fabricator
+- Onboard air-break and flotation devices, for land, sea or space recovery
+- Solar power cells x3
+- Emergency exits in the floor and roof
+
+Standard provisions:
+- 2x All-Environment Protection Suits
+- 2x Ready-to-eat nutrient blocks
+- 2x Drinking water provision
+- 1x Emergency medkit
+- 2x Emergency flares
+
+Some lifepods may be equipped with different supplies, such as radiation suits and replacement parts. Board the right lifepod for the right situation.]],
+    ["AEP Suit"] = [["The Alterra AEP Suit: A single solution for a universe of infinite danger."
+
+You are currently wearing the All-Environment Protection suit: a hermetically-sealed personal environment, designed to withstand the most extreme conditions in the known universe.
+
+- Onboard temperature and hydration regulation
+- Compatible with a range of attachments
+- Slimline build for maximum freedom of movement
+- Biometric sensors
+- Contextual heads-up display
+
+AEP suits should always be equipped BEFORE lifepod launch, in case of hull breach.]],
+    ["Aurora Ship Status"] = [[Ship Class: Alterra Long-Range Capital Ship
+Mission: Ariadne Arm Phasegate Installation, 3 year operation time
+Crew: Command Team (23), Engineering Team (85), Support Crew (40), Passengers (9)
+
+Status:
+- Sustained heavy damage in orbit of planet 4546B
+- Cause unknown
+- Evacuation data unavailable
+
+Engineering section:
+- Dark-matter ion drive core V8
+- Manned robotics suite
+- Advanced scanner suite
+- Long-range communications relay
+- 0.25 cubic kilometers storage for phasegate apparatus
+
+Habitation section:
+- Accommodation for 150 people
+- Multiple canteens serving healthy fresh and rehydrated food
+- Leisure facilities including VR suite and virtual cinema]]
+}
+
 minetest.register_on_newplayer(function(player)
     for name, text in pairs(survival_package) do
         sub_inv.add_databank_entry(player, name, text, "Survival Package")
+    end
+    for name, text in pairs(additional_technical) do
+        sub_inv.add_databank_entry(player, name, text, "Survival Package", "Additional Technical")
     end
     local context = sfinv.get_or_create_context(player)
     context.databank_nav_category = "Survival Package"
