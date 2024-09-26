@@ -187,7 +187,8 @@ minetest.register_node("sub_core:drooping_stinger", {
         fog_distance = 10,
         fog_start = 0,
         fog_color = {r=192, g=255, b=0}
-    }
+    },
+    drowning = 1
 })
 
 minetest.register_node("sub_core:drooping_stinger_tip", {
@@ -206,7 +207,8 @@ minetest.register_node("sub_core:drooping_stinger_tip", {
         fog_distance = 10,
         fog_start = 0,
         fog_color = {r=192, g=255, b=0}
-    }
+    },
+    drowning = 1
 })
 
 local up = vector.new(0, 1, 0)

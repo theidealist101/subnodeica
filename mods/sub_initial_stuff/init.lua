@@ -15,6 +15,11 @@ minetest.register_on_newplayer(function(player)
     minetest.place_schematic(vector.zero(), minetest.get_modpath("sub_initial_stuff").."/schems/lifepod5.mts", nil, nil, true, "place_center_x, place_center_z")
 end)
 
+minetest.register_on_respawnplayer(function(player)
+    player:set_pos(vector.new(0, 1, -1))
+    return true
+end)
+
 --Place waypoint on first load
 sub_nav.register_on_load(function()
     sub_nav.set_waypoint(vector.new(0, 1, 0), {

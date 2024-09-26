@@ -3,6 +3,8 @@ sub_core.max_hunger = 3000
 sub_core.max_thirst = 2000
 sub_core.max_breath = 45
 
+local enable_damage = minetest.settings:get_bool("enable_damage")
+
 --HUDs for each player
 local hunger_huds = {}
 local hunger_huds2 = {}
@@ -103,12 +105,14 @@ minetest.register_on_joinplayer(function(player)
         fire = 100
     })
     local meta = player:get_meta()
-    if not meta:contains("hunger") then meta:set_float("hunger", sub_core.max_hunger) end
-    if not meta:contains("thirst") then meta:set_float("thirst", sub_core.max_thirst) end
     local name = player:get_player_name()
-    hunger_huds[name] = player:hud_add(hunger_hud_defs)
-    hunger_huds2[name] = player:hud_add(hunger_hud_defs2)
-    thirst_huds[name] = player:hud_add(thirst_hud_defs)
+    if enable_damage then
+        if not meta:contains("hunger") then meta:set_float("hunger", sub_core.max_hunger) end
+        if not meta:contains("thirst") then meta:set_float("thirst", sub_core.max_thirst) end
+        hunger_huds[name] = player:hud_add(hunger_hud_defs)
+        hunger_huds2[name] = player:hud_add(hunger_hud_defs2)
+        thirst_huds[name] = player:hud_add(thirst_hud_defs)
+    end
     depth_huds[name] = player:hud_add(depth_hud_defs)
     hovertext_huds[name] = player:hud_add(hovertext_hud_defs)
     if drown_huds[name] then --in case the player died of drowning
@@ -134,43 +138,50 @@ minetest.register_globalstep(function(dtime)
         local name = obj:get_player_name()
 
         --update hunger
-        local hunger = meta:get_float("hunger")
-        if hunger <= 0 then
-        else
-            obj:hud_change(hunger_huds[name], "number", math.min(math.ceil(hunger*20/sub_core.max_hunger), 20))
-            obj:hud_change(hunger_huds2[name], "number", math.max(math.ceil(hunger*20/sub_core.max_hunger)-20, 0))
-            meta:set_float("hunger", hunger-dtime)
-        end
+        if enable_damage then
+            local hunger = meta:get_float("hunger")
+            if hunger <= 0 then
+            else
+                obj:hud_change(hunger_huds[name], "number", math.min(math.ceil(hunger*20/sub_core.max_hunger), 20))
+                obj:hud_change(hunger_huds2[name], "number", math.max(math.ceil(hunger*20/sub_core.max_hunger)-20, 0))
+                meta:set_float("hunger", hunger-dtime)
+            end
 
-        --update thirst
-        local thirst = meta:get_float("thirst")
-        if thirst <= 0 then
-        else
-            obj:hud_change(thirst_huds[name], "number", math.ceil(thirst*20/sub_core.max_thirst))
-            meta:set_float("thirst", thirst-dtime)
+            --update thirst
+            local thirst = meta:get_float("thirst")
+            if thirst <= 0 then
+            else
+                obj:hud_change(thirst_huds[name], "number", math.ceil(thirst*20/sub_core.max_thirst))
+                meta:set_float("thirst", thirst-dtime)
+            end
         end
 
         --update breath
         local eye_pos = obj:get_pos()+vector.new(0, 1.625, 0)
         local node_def = minetest.registered_nodes[minetest.get_node(vector.round(eye_pos)).name]
         local breath = obj:get_breath()
+        local drown_progress = meta:get_float("drown_progress")
         local parent = obj:get_attach()
-        if parent and parent:get_luaentity().breathable then
-            meta:set_float("drown_progress", math.max(meta:get_float("drown_progress")-2*dtime, 0))
+        if obj:get_hp() <= 0 then
+            drown_progress = drown_progress+dtime
+        elseif parent and parent:get_luaentity().breathable then
+            drown_progress = drown_progress-2*dtime
             obj:set_breath(breath+3) --has to counteract natural depletion
         elseif node_def and node_def.drowning and node_def.drowning > 0 then
             if breath <= 0 then
-                meta:set_float("drown_progress", meta:get_float("drown_progress")+dtime)
-                if meta:get_float("drown_progress") > 8 then
-                    obj:set_hp(0, "drown")
+                drown_progress = drown_progress+dtime
+                if drown_progress >= 8 then
+                    obj:set_hp(0, {type="drown", death=true})
                 end
             end
         else
-            meta:set_float("drown_progress", math.max(meta:get_float("drown_progress")-2*dtime, 0))
+            drown_progress = drown_progress-2*dtime
             obj:set_breath(breath+1) --just to speed up natural regen a bit
         end
+        drown_progress = math.min(math.max(drown_progress, 0), 8)
+        meta:set_float("drown_progress", drown_progress)
         meta:set_int("breath", breath) --saves it in case the player quits and returns
-        obj:hud_change(drown_huds[name], "text", "sub_core_fade_hud.png^[opacity:"..math.min(math.floor(meta:get_float("drown_progress")*64), 255))
+        obj:hud_change(drown_huds[name], "text", "sub_core_fade_hud.png^[opacity:"..math.min(math.floor(drown_progress*64), 255))
 
         --update depth
         obj:hud_change(depth_huds[name], "text", (eye_pos.y > 0 and "0m") or tostring(math.round(-eye_pos.y)).."m")
@@ -194,4 +205,13 @@ minetest.register_globalstep(function(dtime)
         if type(hovertext) == "function" then hovertext = hovertext(itemstack, obj, pointed) end
         obj:hud_change(hovertext_huds[name], "text", hovertext or "")
     end
+end)
+
+minetest.register_on_player_hpchange(function(player, hp_change, reason)
+    if reason.type == "drown" and not reason.death then return 0, true end
+    return hp_change
+end, true)
+
+minetest.register_on_respawnplayer(function(player)
+    player:get_meta():set_float("drown_progress", 8)
 end)
