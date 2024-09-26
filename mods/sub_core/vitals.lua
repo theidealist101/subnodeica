@@ -9,9 +9,10 @@ local hunger_huds2 = {}
 local thirst_huds = {}
 local drown_huds = {}
 local depth_huds = {}
+local hovertext_huds = {}
 
 local hunger_hud_defs = {
-    hud_elem_type = "statbar",
+    type = "statbar",
     position = {x=0.5, y=1},
     size = {x=24, y=24},
     alignment = {x=-1, y=-1},
@@ -21,7 +22,7 @@ local hunger_hud_defs = {
 }
 
 local hunger_hud_defs2 = {
-    hud_elem_type = "statbar",
+    type = "statbar",
     position = {x=0.5, y=1},
     size = {x=24, y=24},
     alignment = {x=-1, y=-1},
@@ -31,7 +32,7 @@ local hunger_hud_defs2 = {
 }
 
 local thirst_hud_defs = {
-    hud_elem_type = "statbar",
+    type = "statbar",
     position = {x=0.5, y=1},
     size = {x=24, y=24},
     alignment = {x=-1, y=-1},
@@ -41,7 +42,7 @@ local thirst_hud_defs = {
 }
 
 local drown_hud_defs = {
-    hud_elem_type = "image",
+    type = "image",
     text = "sub_core_fade_hud.png^[opacity:0",
     position = {x=0.5, y=0.5},
     z_index = 1000,
@@ -49,7 +50,7 @@ local drown_hud_defs = {
 }
 
 local depth_hud_defs = {
-    hud_elem_type = "text",
+    type = "text",
     position = {x=0.5, y=0},
     offset = {x=0, y=32},
     scale = {x=100, y=100},
@@ -57,6 +58,17 @@ local depth_hud_defs = {
     style = 4,
     number = 0x9ffeff,
     text = "0m"
+}
+
+local hovertext_hud_defs = {
+    type = "text",
+    position = {x=0.5, y=0.5},
+    offset = {x=0, y=32},
+    scale = {x=100, y=100},
+    size = {x=1, y=1},
+    style = 0,
+    number = 0xffffff,
+    text = ""
 }
 
 --Functions for adding to stats
@@ -98,6 +110,7 @@ minetest.register_on_joinplayer(function(player)
     hunger_huds2[name] = player:hud_add(hunger_hud_defs2)
     thirst_huds[name] = player:hud_add(thirst_hud_defs)
     depth_huds[name] = player:hud_add(depth_hud_defs)
+    hovertext_huds[name] = player:hud_add(hovertext_hud_defs)
     if drown_huds[name] then --in case the player died of drowning
         player:hud_remove(drown_huds[name])
     end
@@ -139,10 +152,7 @@ minetest.register_globalstep(function(dtime)
 
         --update breath
         local eye_pos = obj:get_pos()+vector.new(0, 1.625, 0)
-        eye_pos.x = math.round(eye_pos.x)
-        eye_pos.y = math.round(eye_pos.y)
-        eye_pos.z = math.round(eye_pos.z)
-        local node_def = minetest.registered_nodes[minetest.get_node(eye_pos).name]
+        local node_def = minetest.registered_nodes[minetest.get_node(vector.round(eye_pos)).name]
         local breath = obj:get_breath()
         local parent = obj:get_attach()
         if parent and parent:get_luaentity().breathable then
@@ -164,5 +174,20 @@ minetest.register_globalstep(function(dtime)
 
         --update depth
         obj:hud_change(depth_huds[name], "text", (eye_pos.y > 0 and "0m") or tostring(math.round(-eye_pos.y)).."m")
+
+        --update hovertext
+        local hovertext
+        local itemstack = obj:get_wielded_item()
+        local raycast = minetest.raycast(eye_pos, eye_pos+4*obj:get_look_dir())
+        raycast:next() --discard player
+        local pointed = raycast:next() or {type="nothing"}
+        if pointed.type == "node" then
+            hovertext = minetest.get_meta(pointed.under):get("hovertext")
+            if not hovertext then
+                hovertext = minetest.registered_nodes[minetest.get_node(pointed.under).name]._hovertext
+                if type(hovertext) == "function" then hovertext = hovertext(itemstack, obj, pointed) end
+            end
+        end
+        obj:hud_change(hovertext_huds[name], "text", hovertext or "")
     end
 end)
