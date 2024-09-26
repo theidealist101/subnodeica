@@ -537,5 +537,21 @@ Functions relating to vehicles are in `sub_vehicles/init.lua`.
     * Updates vehicle HUDs for player, to be called on step.
     * Gets the vehicle from the player's attach.
 
+Hovertext
+---------
+
+Nodes, items and entities can define a string, or function returning a string, to be shown when hovered over with the crosshair.
+
+* First the `"hovertext"` entry in the metadata of the held item is checked and then the `_hovertext` field in the item definition.
+
+* If neither of these are defined, it checks if the player is pointing at something.
+    * If pointing at a node, it checks the `"hovertext"` node meta entry and the `_hovertext` field in the node definition.
+    * If an object, it only checks the `_hovertext` field in its Lua entity table.
+
+* If the hovertext is a function, its return value is displayed instead, called with the following arguments:
+    * `itemstack`: the held item.
+    * `player`: the player viewing it.
+    * `pointed_thing`: an exact pointed_thing from a raycast, where `pointed.under` is the node position, or `pointed.ref` is the object.
+
 WIP
 ===
