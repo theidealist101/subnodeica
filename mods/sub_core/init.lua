@@ -19,6 +19,9 @@ dict.metatable = {
             end
         end
         table.insert(self._i, {key, val})
+    end,
+    __len = function (self)
+        return #self._i
     end
 }
 
