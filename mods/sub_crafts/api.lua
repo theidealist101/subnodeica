@@ -74,7 +74,7 @@ function sub_crafts.get_formspec(player, rtype, category, subcategory)
     local inv = player:get_inventory()
 
     --get all applicable recipes and subgroups
-    local level1, level2, level3 = {}, {}, {}
+    local level1, level2, level3 = dict.new(), dict.new(), dict.new()
     for i, defs in ipairs(sub_crafts.registered_crafts) do
         local doable = sub_crafts.can_do_recipe(inv, defs.recipe)
         if defs.type == rtype then
@@ -105,7 +105,7 @@ function sub_crafts.get_formspec(player, rtype, category, subcategory)
     local y_offset = 20
     local height = 0
     local offset = 0
-    for defs, doable in pairs(level1) do
+    for defs, doable in dict.pairs(level1) do
         local name
         if type(defs) == "string" then
             if defs == category then offset = height end
@@ -124,7 +124,7 @@ function sub_crafts.get_formspec(player, rtype, category, subcategory)
     local max_height = height
     height = offset
     offset = 0
-    for defs, doable in pairs(level2) do
+    for defs, doable in dict.pairs(level2) do
         local name
         if type(defs) == "string" then
             if defs == subcategory then offset = height end
@@ -144,7 +144,7 @@ function sub_crafts.get_formspec(player, rtype, category, subcategory)
     height = offset
     offset = 0
     local x = 2+2*PADDING
-    for defs, doable in pairs(level3) do
+    for defs, doable in dict.pairs(level3) do
         local name = category.."|"..subcategory.."|"..escape_colon(defs.output[1])
         table.insert(out, table.concat({"item_image_button[", x_offset+x, ",", y_offset+height, ";1,1;", defs.output[1], ";", name, ";]"}))
         if doable then table.insert(doable_elems, name) end

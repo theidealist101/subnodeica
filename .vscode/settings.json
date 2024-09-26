@@ -8,7 +8,8 @@
         "dump",
         "unpack",
         "mobkit",
-        "sub_core"
+        "sub_core",
+        "dict",
     ],
     "Lua.diagnostics.disable": [
         "deprecated"
