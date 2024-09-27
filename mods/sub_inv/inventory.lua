@@ -30,14 +30,22 @@ minetest.register_on_joinplayer(function(player)
     for i, name in ipairs({"head", "body", "feet", "tank", "hands"}) do
         inv:set_size(name, 1)
         if not inv:is_empty(name) then
-            local defs = inv:get_stack(name, 0)
-            if defs and defs._on_equip then defs._on_equip(player) end
+            local item = inv:get_stack(name, 1)
+            local defs = item:get_definition()
+            if defs and defs._on_equip then
+                defs._on_equip(player, item)
+                inv:set_stack(name, 1, item)
+            end
         end
     end
     inv:set_size("chips", 2)
-    if not inv:is_empty("chips") then for i = 0, 1 do
-        local defs = inv:get_stack("chips", i):get_definition()
-        if defs and defs._on_equip then defs._on_equip(player) end
+    if not inv:is_empty("chips") then for i = 1, 2 do
+        local item = inv:get_stack("chips", i)
+        local defs = item:get_definition()
+        if defs and defs._on_equip then
+            defs._on_equip(player, item)
+            inv:set_stack("chips", i, item)
+        end
     end end
     player:hud_set_hotbar_itemcount(6)
 end)

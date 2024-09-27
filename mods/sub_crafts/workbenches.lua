@@ -37,7 +37,11 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                     inv:remove_item("main", ItemStack(item))
                 end
                 for i, item in ipairs(recipe.output) do
-                    inv:add_item("main", ItemStack(item))
+                    item = ItemStack(item)
+                    for _, func in ipairs(sub_crafts.registered_on_crafts) do
+                        item = func(item, player) or item
+                    end
+                    inv:add_item("main", item)
                 end
                 table.remove(names, #names)
             end

@@ -135,7 +135,7 @@ minetest.register_on_joinplayer(function(player)
     if meta:get_float("drown_progress") > 4 then meta:set_float("drown_progress", 4) end
     drown_huds[name] = player:hud_add(drown_hud_defs)
     local props = player:get_properties()
-    props.breath_max = 45
+    props.breath_max = sub_core.max_breath+sub_core.o2_monoid:value(player)
     player:set_properties(props)
     player:set_eye_offset(vector.zero())
     player:set_breath(meta:get("breath") or 45)
@@ -172,6 +172,7 @@ minetest.register_globalstep(function(dtime)
 
         --update breath
         local eye_pos = obj:get_pos()+vector.new(0, 1.625, 0)
+        local inv = obj:get_inventory()
         local node_def = minetest.registered_nodes[minetest.get_node(vector.round(eye_pos)).name]
         local breath = obj:get_breath()
         local drown_progress = meta:get_float("drown_progress")
@@ -179,8 +180,7 @@ minetest.register_globalstep(function(dtime)
         if obj:get_hp() <= 0 then
             drown_progress = drown_progress+dtime
         elseif parent and parent:get_luaentity().breathable then
-            drown_progress = drown_progress-2*dtime
-            obj:set_breath(breath+3) --has to counteract natural depletion
+            breath = breath+3 --has to counteract natural depletion
         elseif node_def and node_def.drowning and node_def.drowning > 0 then
             if breath <= 0 then
                 drown_progress = drown_progress+dtime
@@ -189,12 +189,20 @@ minetest.register_globalstep(function(dtime)
                 end
             end
         else
+            breath = breath+1 --just to speed up natural regen a bit
+        end
+        if breath > 0 then
             drown_progress = drown_progress-2*dtime
-            obj:set_breath(breath+1) --just to speed up natural regen a bit
         end
         drown_progress = math.min(math.max(drown_progress, 0), 8)
         meta:set_float("drown_progress", drown_progress)
+        obj:set_breath(breath)
         meta:set_int("breath", breath) --saves it in case the player quits and returns
+        if not inv:is_empty("tank") then
+            local item = inv:get_stack("tank", 1)
+            item:set_wear(math.min(math.max(math.floor(65535-65535*(breath-sub_core.max_breath)/sub_core.o2_monoid:value(obj)), 0), 65535))
+            inv:set_stack("tank", 1, item)
+        end
         obj:hud_change(drown_huds[name], "text", "sub_core_fade_hud.png^[opacity:"..math.min(math.floor(drown_progress*64), 255))
 
         --update depth

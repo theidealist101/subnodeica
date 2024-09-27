@@ -50,6 +50,13 @@ function sub_crafts.register_craft(defs)
     return #sub_crafts.registered_crafts
 end
 
+--Register functions to be called after crafting
+sub_crafts.registered_on_crafts = {}
+
+function sub_crafts.register_on_craft(func)
+    table.insert(sub_crafts.registered_on_crafts, func)
+end
+
 --Get whether player has the necessary items and blueprints to do a recipe
 function sub_crafts.can_do_recipe(inv, recipe)
     for i, item in ipairs(recipe) do
