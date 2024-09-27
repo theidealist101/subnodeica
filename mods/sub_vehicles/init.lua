@@ -26,5 +26,6 @@ function sub_vehicles.remove_huds(player)
 end
 
 local path = minetest.get_modpath("sub_vehicles").."/"
+dofile(path.."seaglide.lua")
 dofile(path.."seamoth.lua")
 dofile(path.."constructor.lua")
