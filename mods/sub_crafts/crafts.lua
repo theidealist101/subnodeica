@@ -192,6 +192,26 @@ sub_crafts.register_on_craft(function(itemstack, player)
     end
 end)
 
+--Fins, equippable item which increases player's speed in water
+minetest.register_craftitem("sub_crafts:fins", {
+    description = "Fins",
+    inventory_image = "sub_crafts_fins.png",
+    _equip = "feet",
+    _on_equip = function (player, itemstack)
+        itemstack:get_meta():set_int("monoid", sub_core.swim_monoid:add_change(player, 1.15))
+    end,
+    _on_unequip = function (player, itemstack)
+        sub_core.swim_monoid:del_change(player, itemstack:get_meta():get_int("monoid"))
+    end
+})
+
+sub_crafts.register_craft({
+    category = "personal",
+    subcategory = "equipment",
+    output = {"sub_crafts:fins"},
+    recipe = {"sub_crafts:rubber", "sub_crafts:rubber"}
+})
+
 --First aid kit, pretty much the only method of restoring player's hp
 minetest.register_craftitem("sub_crafts:medkit", {
     description = "First Aid Kit",

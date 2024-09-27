@@ -97,7 +97,17 @@ function sub_core.item_eat(food, water)
     end
 end
 
---Player monoids for speed and O2 capacity
+--Player monoids for swim speed and O2 capacity
+sub_core.swim_monoid = player_monoids.make_monoid({
+    identity = 1,
+    combine = function(a, b) return a*b end,
+    fold = function (t)
+        local out = 1
+        for _, v in pairs(t) do out = out*v end
+        return out
+    end
+})
+
 sub_core.o2_monoid = player_monoids.make_monoid({
     identity = 0,
     combine = function(a, b) return a+b end,
@@ -207,6 +217,13 @@ minetest.register_globalstep(function(dtime)
 
         --update depth
         obj:hud_change(depth_huds[name], "text", (eye_pos.y > 0 and "0m") or tostring(math.round(-eye_pos.y)).."m")
+
+        --update swim speed
+        if minetest.registered_nodes[minetest.get_node(vector.round(obj:get_pos())).name].liquid_move_physics then
+            obj:set_physics_override({speed=sub_core.swim_monoid:value(obj)})
+        else
+            obj:set_physics_override({speed=1})
+        end
 
         --update hovertext
         local hovertext
