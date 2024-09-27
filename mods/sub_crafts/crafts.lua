@@ -164,6 +164,26 @@ cooked_fish("sub_mobs:item_hoverfish", "sub_crafts:cooked_hoverfish", "Cooked Ho
 cooked_fish("sub_mobs:item_eyeye", "sub_crafts:cooked_eyeye", "Cooked Eyeye", "sub_crafts_cooked_eyeye.png", 18, 10)
 cooked_fish("sub_mobs:item_reginald", "sub_crafts:cooked_reginald", "Cooked Reginald", "sub_crafts_cooked_reginald.png", 44, 4)
 
+--Standard O2 tank, equippable item which increases player's oxygen capacity
+minetest.register_craftitem("sub_crafts:o2_tank", {
+    description = "Standard O2 Tank",
+    inventory_image = "sub_crafts_o2_tank.png",
+    _equip = "tank",
+    _on_equip = function (player, itemstack)
+        itemstack:get_meta():set_int("monoid", sub_core.o2_monoid:add_change(player, 30))
+    end,
+    _on_unequip = function (player, itemstack)
+        sub_core.o2_monoid:del_change(player, itemstack:get_meta():get_int("monoid"))
+    end
+})
+
+sub_crafts.register_craft({
+    category = "personal",
+    subcategory = "equipment",
+    output = {"sub_crafts:o2_tank"},
+    recipe = {"sub_core:titanium", "sub_core:titanium", "sub_core:titanium"}
+})
+
 --First aid kit, pretty much the only method of restoring player's hp
 minetest.register_craftitem("sub_crafts:medkit", {
     description = "First Aid Kit",

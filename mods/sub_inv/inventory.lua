@@ -61,14 +61,16 @@ end)
 
 --Add actions for when equippable items are added or removed
 minetest.register_on_player_inventory_action(function(player, action, inv, inv_info)
-    local old_list, new_list, item
+    local old_list, new_list, new_index, item
     if action == "put" then
         new_list = inv_info.listname
+        new_index = inv_info.index
         item = inv_info.stack
     elseif action == "move" then
         old_list = inv_info.from_list
         new_list = inv_info.to_list
-        item = inv:get_stack(inv_info.to_list, inv_info.to_index)
+        new_index = inv_info.to_index
+        item = inv:get_stack(new_list, new_index)
     elseif action == "take" then
         old_list = inv_info.listname
         item = inv_info.stack
@@ -76,7 +78,8 @@ minetest.register_on_player_inventory_action(function(player, action, inv, inv_i
     local defs = item:get_definition()
     if not defs then return end
     for i, name in ipairs({"head", "body", "feet", "tank", "hands", "chips"}) do
-        if old_list == name and defs._on_unequip then defs._on_unequip(player) end
-        if new_list == name and defs._on_equip then defs._on_equip(player) end
+        if old_list == name and defs._on_unequip then defs._on_unequip(player, item) end
+        if new_list == name and defs._on_equip then defs._on_equip(player, item) end
     end
+    if new_list then inv:set_stack(new_list, new_index, item) end
 end)

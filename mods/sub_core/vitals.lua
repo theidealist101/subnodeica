@@ -97,6 +97,20 @@ function sub_core.item_eat(food, water)
     end
 end
 
+--Player monoids for speed and O2 capacity
+sub_core.o2_monoid = player_monoids.make_monoid({
+    identity = 0,
+    combine = function(a, b) return a+b end,
+    fold = function (t)
+        local out = 0
+        for _, v in pairs(t) do out = out+v end
+        return out
+    end,
+    apply = function (val, player)
+        player:set_properties({breath_max=sub_core.max_breath+val})
+    end
+})
+
 --Give player correct armor groups and stuff
 minetest.register_on_joinplayer(function(player)
     player:set_armor_groups({
