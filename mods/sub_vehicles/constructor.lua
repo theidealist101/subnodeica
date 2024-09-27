@@ -55,13 +55,10 @@ minetest.register_entity("sub_vehicles:constructor_console", {
     _hovertext = "Use Mobile Vehicle Bay (RMB)"
 })
 
-minetest.register_node("sub_vehicles:item_constructor", {
+minetest.register_craftitem("sub_vehicles:item_constructor", {
     description = "Mobile Vehicle Bay",
     stack_max = 1,
-    drawtype = "mesh",
-    mesh = "item_constructor.obj",
-    tiles = {"constructor.png"},
-    use_texture_alpha = "clip",
+    inventory_image = "sub_vehicles_constructor.png",
     on_place = function (itemstack, user, pointed)
         minetest.add_entity(pointed.above, "sub_vehicles:constructor")
         itemstack:take_item()
