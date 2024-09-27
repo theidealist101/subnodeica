@@ -185,8 +185,28 @@ sub_crafts.register_craft({
     recipe = {"sub_core:titanium", "sub_core:titanium", "sub_core:titanium"}
 })
 
+minetest.register_tool("sub_crafts:double_o2_tank", {
+    description = "High Capacity O2 Tank",
+    inventory_image = "sub_crafts_double_o2_tank.png",
+    _equip = "tank",
+    _on_equip = function (player, itemstack)
+        itemstack:get_meta():set_int("monoid", sub_core.o2_monoid:add_change(player, 90))
+        player:set_breath(math.min(player:get_breath()+90*(1-itemstack:get_wear()/65535), sub_core.max_breath+90))
+    end,
+    _on_unequip = function (player, itemstack)
+        sub_core.o2_monoid:del_change(player, itemstack:get_meta():get_int("monoid"))
+    end
+})
+
+sub_crafts.register_craft({
+    category = "personal",
+    subcategory = "equipment",
+    output = {"sub_crafts:double_o2_tank"},
+    recipe = {"sub_crafts:o2_tank", "sub_crafts:glass", "sub_crafts:glass", "sub_core:titanium", "sub_core:titanium", "sub_core:titanium", "sub_core:titanium", "sub_core:silver"}
+})
+
 sub_crafts.register_on_craft(function(itemstack, player)
-    if itemstack:get_name() == "sub_crafts:o2_tank" then
+    if itemstack:get_name() == "sub_crafts:o2_tank" or itemstack:get_name() == "sub_crafts:double_o2_tank" then
         itemstack:set_wear(65535)
         return itemstack
     end
