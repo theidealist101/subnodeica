@@ -168,8 +168,9 @@ cooked_fish("sub_mobs:item_reginald", "sub_crafts:cooked_reginald", "Cooked Regi
 minetest.register_craftitem("sub_crafts:medkit", {
     description = "First Aid Kit",
     inventory_image = "sub_crafts_medkit.png",
-    on_place = minetest.item_eat(10),
-    on_secondary_use = minetest.item_eat(10)
+    on_use = function (itemstack, user, pointed)
+        if user:get_hp() < 20 then return minetest.do_item_eat(10, nil, itemstack, user, pointed) end
+    end
 })
 
 sub_crafts.register_craft({
