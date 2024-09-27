@@ -19,6 +19,8 @@ minetest.register_node("sub_crafts:fabricator", {
     _hovertext = "Use Fabricator (RMB)"
 })
 
+local creative = minetest.settings:get_bool("creative_mode")
+
 --Function for navigating the fabricator menu and crafting items
 minetest.register_on_player_receive_fields(function(player, formname, fields)
     if formname ~= "sub_crafts:fabricator_formspec" then return end
@@ -33,8 +35,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
             table.insert(names2, 1, table.remove(names2, #names2))
             local recipe = sub_crafts.get_recipe("fabricator", unpack(names2))
             if recipe and sub_crafts.can_do_recipe(inv, recipe.recipe) then
-                for i, item in ipairs(recipe.recipe) do
-                    inv:remove_item("main", ItemStack(item))
+                if not creative then
+                    for i, item in ipairs(recipe.recipe) do
+                        inv:remove_item("main", ItemStack(item))
+                    end
                 end
                 for i, item in ipairs(recipe.output) do
                     item = ItemStack(item)

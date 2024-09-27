@@ -238,7 +238,7 @@ minetest.register_globalstep(function(dtime)
             if pointed.type == "node" then
                 hovertext = minetest.get_meta(pointed.under):get("hovertext") or minetest.registered_nodes[minetest.get_node(pointed.under).name]._hovertext
             elseif pointed.type == "object" then
-                hovertext = pointed.ref:get_luaentity()._hovertext
+                hovertext = (pointed.ref:get_luaentity() or {})._hovertext
             end
         end
         if type(hovertext) == "function" then hovertext = hovertext(itemstack, obj, pointed) end

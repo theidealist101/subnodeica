@@ -76,6 +76,8 @@ sub_crafts.register_craft({
     recipe = {"sub_crafts:titanium_ingot", "sub_crafts:lubricant", "sub_vehicles:power_cell"}
 })
 
+local creative = minetest.settings:get_bool("creative_mode")
+
 --largely copied from sub_crafts
 minetest.register_on_player_receive_fields(function(player, formname, fields)
     if formname ~= "sub_crafts:constructor_formspec" then return end
@@ -90,8 +92,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
             table.insert(names2, 1, table.remove(names2, #names2))
             local recipe = sub_crafts.get_recipe("constructor", unpack(names2))
             if recipe and sub_crafts.can_do_recipe(inv, recipe.recipe) then
-                for i, item in ipairs(recipe.recipe) do
-                    inv:remove_item("main", ItemStack(item))
+                if not creative then
+                    for i, item in ipairs(recipe.recipe) do
+                        inv:remove_item("main", ItemStack(item))
+                    end
                 end
                 minetest.add_entity(
                     player:get_pos()+8*mobkit.rot_to_dir(vector.new(0, player:get_look_horizontal(), 0))+vector.new(0, 4, 0),

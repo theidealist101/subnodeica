@@ -31,6 +31,8 @@
 -- "cyclops" (cyclops upgrade fabricator)
 -- "launch" (neptune launch terminal)
 
+local creative = minetest.settings:get_bool("creative_mode")
+
 --Convert colon into double hyphen (because colons in names in style[] elements weren't working)
 local function escape_colon(str)
     return table.concat(string.split(str, ":"), "--")
@@ -59,6 +61,7 @@ end
 
 --Get whether player has the necessary items and blueprints to do a recipe
 function sub_crafts.can_do_recipe(inv, recipe)
+    if creative then return true end
     for i, item in ipairs(recipe) do
         if not inv:contains_item("main", ItemStack(item)) then return false end
     end
