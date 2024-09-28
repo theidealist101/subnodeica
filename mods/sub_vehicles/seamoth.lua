@@ -19,7 +19,7 @@ local function seamoth_on_step(self, dtime, moveresult)
 
     --check for collisions
     local speed = vector.length(self.object:get_velocity())
-    if enable_damage and #moveresult.collisions > 0 and speed > 10 and self.iframes <= 0 then
+    if #moveresult.collisions > 0 and speed > 10 and self.iframes <= 0 then
         for i, col in ipairs(moveresult.collisions) do
             if col.type == "object" then
                 col.object:punch(self.object, speed/MAX_SPEED, seamoth_collide)
