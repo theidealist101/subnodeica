@@ -94,19 +94,23 @@ end)
 
 local wielded_items = {}
 
-minetest.register_globalstep(function ()
+minetest.register_globalstep(function (dtime)
     for _, player in ipairs(minetest.get_connected_players()) do
         local item = player:get_wielded_item()
+        local defs = item:get_definition()
         local playername = player:get_player_name()
         local old_item = wielded_items[playername]
         if not old_item or item:get_name() ~= old_item:get_name() then
             wielded_items[playername] = item
-            local defs = item:get_definition()
             if defs._equip == "wield" then defs._on_equip(player, item) end
             if old_item then
                 local old_defs = old_item:get_definition()
                 if old_defs._equip == "wield" then old_defs._on_unequip(player, old_item) end
             end
+        end
+        if defs._equip == "wield" and defs._equip_tick then
+            defs._equip_tick(player, item, dtime)
+            player:get_inventory():set_stack(player:get_wield_list(), player:get_wield_index(), item)
         end
     end
 end)

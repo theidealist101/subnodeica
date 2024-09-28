@@ -84,8 +84,8 @@ sub_crafts.register_craft({
     recipe = {"sub_core:copper 2"}
 })
 
---Battery, essential for tools
-minetest.register_craftitem("sub_crafts:battery", {
+--Battery, essential for tools, has a limited amount of power
+minetest.register_tool("sub_crafts:battery", {
     description = "Battery",
     inventory_image = "sub_crafts_battery.png"
 })
@@ -96,6 +96,43 @@ sub_crafts.register_craft({
     output = {"sub_crafts:battery"},
     recipe = {"sub_core:item_acidshroom 2", "sub_core:copper"}
 })
+
+--Battery switching function, to be used in on_use by battery-powered tools
+function sub_crafts.switch_battery(itemstack, user, pointed)
+    local inv = user:get_inventory()
+    local out = {"bgcolor[black;neither]"}
+    local x_offset = 0
+    for i = 1, inv:get_size("main") do
+        local item = inv:get_stack("main", i)
+        if item:get_name() == "sub_crafts:battery" then
+            table.insert(out, "item_image_button["..x_offset..",0;1,1;sub_crafts:battery;slot"..i..";]")
+            --TODO: show wear here as well
+            x_offset = x_offset+1.25
+        end
+    end
+    if #out <= 1 then return end
+    minetest.show_formspec(user:get_player_name(), "sub_crafts:battery_formspec", "formspec_version[4]size["..(x_offset-0.25)..",1,true]"..table.concat(out))
+end
+
+--Switch battery upon receiving choice
+minetest.register_on_player_receive_fields(function(player, formname, fields)
+    if formname ~= "sub_crafts:battery_formspec" then return end
+    for name, value in pairs(fields) do
+        if value then
+            if name == "quit" then return end
+            local i = tonumber(string.sub(name, 5))
+            local inv = player:get_inventory()
+            local wield_item, battery = player:get_wielded_item(), inv:get_stack("main", i)
+            local battery_wear = battery:get_wear()
+            battery:set_wear(wield_item:get_wear())
+            wield_item:set_wear(battery_wear)
+            inv:set_stack(player:get_wield_list(), player:get_wield_index(), wield_item)
+            inv:set_stack("main", i, battery)
+            minetest.close_formspec(player:get_player_name(), "sub_crafts:battery_formspec")
+            return
+        end
+    end
+end)
 
 --Computer chip, used for many tools and upgrades
 minetest.register_craftitem("sub_crafts:computer_chip", {
