@@ -253,13 +253,12 @@ local sqrt, cos, hypot, min = math.sqrt, math.cos, math.hypot, math.min
 local inv2 = 1/sqrt(2)
 
 local function get_pillar_density(pos, start_pos, height, width)
-    local pi_h = 2*math.pi/height
     local width_sq = width^2
     local y_diff = pos.y-start_pos.y
     local x_diff = hypot(pos.x-start_pos.x, pos.z-start_pos.z)
     if x_diff > width or y_diff < -width*0.5 or y_diff > height+width*0.25 then return 0 end
-    local w = y_diff < 0 and sqrt(width_sq*0.25-y_diff^2)
-        or y_diff < height and width/6*(5+cos(pi_h*y_diff))*(0.1*(1-inv2)*y_diff+inv2)
+    local w = y_diff < 0 and sqrt(width_sq*0.5-y_diff^2)
+        or y_diff < height and 2*width*((y_diff/height-0.43)^2+0.17)
         or sqrt(width_sq-16*(y_diff-height)^2)
     return min(0, x_diff-w)
 end
