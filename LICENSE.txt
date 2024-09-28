@@ -63,11 +63,11 @@ All music tracks are written by theidealist using the Sibelius sounds library an
 
 The following tracks reference musical motifs from the original Subnautica soundtrack, copyright of Simon Chylinski:
 
-theme.ogg:
+Salutestions:
 - the opening of Salutations, here played in woodwind and strings at 1:08-1:35
 - the theme of Into The Unknown, in the glockenspiel at 2:07-2:18
 
-all_is_found.ogg:
+All Is Found:
 - the theme of Into The Unknown, quoted extensively throughout with the first appearance being at 0:29-0:48
 
 The following tracks use sound effects under the Pixabay content license (see https://pixabay.com/service/terms/):
