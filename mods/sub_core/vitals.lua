@@ -224,7 +224,6 @@ minetest.register_globalstep(function(dtime)
         else
             obj:set_physics_override({speed=1})
         end
-        minetest.log(dump(sub_core.swim_monoid:value(obj)))
 
         --update hovertext
         local hovertext
