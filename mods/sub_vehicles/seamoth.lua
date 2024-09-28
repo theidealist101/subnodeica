@@ -4,6 +4,8 @@ local MAX_SPEED = 16
 local GRAVITY = -1
 local FRICTION = 0.3
 
+local enable_damage = minetest.settings:get_bool("enable_damage")
+
 local seamoth_collide = {
     full_punch_interval = 1,
     damage_groups = {normal=5}
@@ -17,7 +19,7 @@ local function seamoth_on_step(self, dtime, moveresult)
 
     --check for collisions
     local speed = vector.length(self.object:get_velocity())
-    if #moveresult.collisions > 0 and speed > 10 and self.iframes <= 0 then
+    if enable_damage and #moveresult.collisions > 0 and speed > 10 and self.iframes <= 0 then
         for i, col in ipairs(moveresult.collisions) do
             if col.type == "object" then
                 col.object:punch(self.object, speed/MAX_SPEED, seamoth_collide)
@@ -39,13 +41,13 @@ local function seamoth_on_step(self, dtime, moveresult)
         if controls.aux1 then
             driver:set_detach()
             driver:set_eye_offset(vector.zero())
-            sub_vehicles.remove_huds(driver)
+            if enable_damage then sub_vehicles.remove_huds(driver) end
             --based on how it's done in Minetest Game's boats mod
             local dismount_pos = driver:get_pos()
             dismount_pos.y = dismount_pos.y+1
             minetest.after(0.1, function() driver:set_pos(dismount_pos) end)
         else
-            sub_vehicles.update_huds(driver)
+            if enable_damage then sub_vehicles.update_huds(driver) end
             local rot = vector.new(-driver:get_look_vertical(), driver:get_look_horizontal(), 0)
             self.object:set_rotation(rot)
 
@@ -91,13 +93,18 @@ minetest.register_entity("sub_vehicles:seamoth", {
     },
     breathable = true,
     on_activate = function (self, staticdata)
-        self.object:set_armor_groups({
-            normal = 100,
-            gas = 100,
-            fire = 100
-        })
+        if enable_damage then
+            self.object:set_armor_groups({
+                normal = 100,
+                gas = 100,
+                fire = 100
+            })
+        end
+        self.iframes = 0
         if staticdata and staticdata ~= "" then
-            self.waypoint = tonumber(staticdata)
+            local waypoint, hp = unpack(minetest.deserialize(staticdata))
+            self.waypoint = waypoint
+            self.object:set_hp(hp)
         else
             self.waypoint = sub_nav.set_waypoint(self.object:get_pos(), {
                 name = "Seamoth",
@@ -105,7 +112,6 @@ minetest.register_entity("sub_vehicles:seamoth", {
                 dist = 6
             })
         end
-        self.iframes = 0
     end,
     on_rightclick = function (self, user)
         user:set_attach(self.object)
@@ -113,14 +119,16 @@ minetest.register_entity("sub_vehicles:seamoth", {
         user:set_look_vertical(-rot.x)
         user:set_look_horizontal(rot.y)
         user:set_eye_offset(vector.new(0, -12, 0))
-        sub_vehicles.add_huds(user, self.object)
+        if enable_damage then
+            sub_vehicles.add_huds(user, self.object)
+        end
     end,
     on_step = seamoth_on_step,
     on_death = function (self)
         sub_nav.remove_waypoint(self.waypoint)
     end,
     get_staticdata = function (self)
-        return tostring(self.waypoint)
+        return minetest.serialize({self.waypoint, self.object:get_hp()})
     end
 })
 
