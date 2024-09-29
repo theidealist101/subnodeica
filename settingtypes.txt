@@ -1,0 +1,2 @@
+#Plays randomly selected music tracks based on the current biome. Turn off if it's getting annoying.
+sub_play_music (Enable music) bool true
