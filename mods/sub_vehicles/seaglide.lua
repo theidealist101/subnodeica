@@ -16,7 +16,10 @@ minetest.register_tool("sub_vehicles:seaglide", {
     _on_unequip = function (player, itemstack)
         sub_core.swim_monoid:del_change(player, itemstack:get_meta():get_int("monoid"))
     end,
-    on_use = sub_crafts.switch_battery
+    on_use = sub_crafts.switch_battery,
+    _hovertext = function (itemstack)
+        return itemstack:get_wear() >= 65535 and "Switch battery (LMB)" or ""
+    end
 })
 
 sub_crafts.register_craft({

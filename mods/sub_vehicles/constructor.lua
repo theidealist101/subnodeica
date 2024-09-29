@@ -63,7 +63,8 @@ minetest.register_craftitem("sub_vehicles:item_constructor", {
         minetest.add_entity(pointed.above, "sub_vehicles:constructor")
         itemstack:take_item()
         return itemstack
-    end
+    end,
+    _hovertext = "Deploy Mobile Vehicle Bay (RMB)"
 })
 
 sub_crafts.register_craft({
