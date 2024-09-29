@@ -62,14 +62,14 @@ minetest.register_tool("sub_crafts:item_flare", {
     end,
     _hovertext = "Place Flare (RMB)",
     _equip = "wield",
-    _equip_tick = function (player, itemstack, dtime)
+    --[[_equip_tick = function (player, itemstack, dtime)
         local wear = itemstack:get_wear()
         wear = math.min(math.max(math.round(wear+dtime*327.5), 0), 65536) --327.5 is approximately 65535/200
         if wear >= 65536 then
             --itemstack:get_definition()._on_unequip(player, itemstack)
         end
         itemstack:set_wear(wear)
-    end
+    end]]
 })
 
 sub_crafts.register_craft({
