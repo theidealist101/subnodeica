@@ -28,7 +28,6 @@ local play_music = minetest.settings:get_bool("sub_play_music")
 if play_music == nil then play_music = true end
 
 local function update_music(player, node, node_def, dtime)
-    minetest.log(dump(play_music))
     if not play_music then return end
 
     local timeout = music_timeouts[player]
