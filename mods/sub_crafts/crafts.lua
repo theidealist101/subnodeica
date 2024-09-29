@@ -164,8 +164,7 @@ sub_crafts.register_craft({
 minetest.register_craftitem("sub_crafts:filtered_water", {
     description = "Filtered Water",
     inventory_image = "sub_crafts_filtered_water.png",
-    on_place = sub_core.item_eat(0, 20),
-    on_secondary_use = sub_core.item_eat(0, 20)
+    on_use = sub_core.item_eat(0, 20)
 })
 
 sub_crafts.register_craft({
