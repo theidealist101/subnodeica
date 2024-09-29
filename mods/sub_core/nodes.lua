@@ -29,6 +29,15 @@ function sub_core.drop_if_slash(item, no_break)
     end
 end
 
+--Placeholder, to stay here until glow is actually implemented in the engine
+minetest.register_on_mods_loaded(function ()
+    for name, defs in pairs(table.copy(minetest.registered_nodes)) do
+        if defs.glow and defs.glow > 0 then
+            minetest.override_item(name, {paramtype="light", sunlight_propagates=true, light_source=5})
+        end
+    end
+end)
+
 --General nodes which appear in many biomes
 --For more specific nodes see the file for their biome
 minetest.register_node("sub_core:stone", {
@@ -76,6 +85,7 @@ sub_core.register_waterloggable("sub_core:veined_nettle", {
     },
     paramtype = "light",
     sunlight_propagates = true,
+    glow = 15,
     walkable = false,
     groups = {attached_node=1},
     _hovertext = "Veined Nettle"
@@ -111,6 +121,7 @@ sub_core.register_waterloggable("sub_core:blue_palm", {
     },
     paramtype = "light",
     sunlight_propagates = true,
+    glow = 15,
     walkable = false,
     groups = {attached_node=1},
     _hovertext = "Blue Palm"
@@ -128,6 +139,7 @@ sub_core.register_waterloggable("sub_core:furled_papyrus", {
     },
     paramtype = "light",
     sunlight_propagates = true,
+    glow = 15,
     walkable = false,
     groups = {attached_node=1},
     _hovertext = "Furled Papyrus"
@@ -144,6 +156,7 @@ sub_core.register_waterloggable("sub_core:redwort", {
     },
     paramtype = "light",
     sunlight_propagates = true,
+    glow = 15,
     walkable = false,
     groups = {attached_node=1},
     _hovertext = "Redwort"
@@ -160,6 +173,7 @@ sub_core.register_waterloggable("sub_core:violet_beau", {
     },
     paramtype = "light",
     sunlight_propagates = true,
+    glow = 15,
     walkable = false,
     groups = {attached_node=1},
     _hovertext = "Violet Beau"
@@ -177,6 +191,7 @@ sub_core.register_waterloggable("sub_core:regress_shell", {
     },
     paramtype = "light",
     sunlight_propagates = true,
+    glow = 15,
     walkable = false,
     groups = {attached_node=1},
     _hovertext = "Regress Shell"
@@ -194,6 +209,7 @@ sub_core.register_waterloggable("sub_core:rouge_cradle", {
     },
     paramtype = "light",
     sunlight_propagates = true,
+    glow = 15,
     walkable = false,
     groups = {attached_node=1},
     _hovertext = "Rouge Cradle"
@@ -218,6 +234,7 @@ sub_core.register_waterloggable("sub_core:acidshroom1", {
     paramtype = "light",
     paramtype2 = "4dir",
     sunlight_propagates = true,
+    glow = 15,
     walkable = false,
     groups = {attached_node=1},
     on_rightclick = acidshroom_on_rightclick,
@@ -237,6 +254,7 @@ sub_core.register_waterloggable("sub_core:acidshroom2", {
     paramtype = "light",
     paramtype2 = "4dir",
     sunlight_propagates = true,
+    glow = 15,
     walkable = false,
     groups = {attached_node=1},
     on_rightclick = acidshroom_on_rightclick,
@@ -256,6 +274,7 @@ sub_core.register_waterloggable("sub_core:acidshroom3", {
     paramtype = "light",
     paramtype2 = "4dir",
     sunlight_propagates = true,
+    glow = 15,
     walkable = false,
     groups = {attached_node=1},
     on_rightclick = acidshroom_on_rightclick,
@@ -275,6 +294,7 @@ sub_core.register_waterloggable("sub_core:acidshroom4", {
     paramtype = "light",
     paramtype2 = "4dir",
     sunlight_propagates = true,
+    glow = 15,
     walkable = false,
     groups = {attached_node=1},
     on_rightclick = acidshroom_on_rightclick,
@@ -300,6 +320,7 @@ sub_core.register_waterloggable("sub_core:table_coral", {
     paramtype = "light",
     paramtype2 = "wallmounted",
     sunlight_propagates = true,
+    glow = 15,
     walkable = false,
     on_punch = sub_core.drop_if_slash("sub_core:table_coral_sample"),
     _hovertext = "Table Coral"
@@ -447,6 +468,7 @@ sub_core.register_waterloggable("sub_core:quartz_outcrop", {
     paramtype = "light",
     paramtype2 = "wallmounted",
     sunlight_propagates = true,
+    glow = 15,
     walkable = false,
     on_rightclick = function (pos, node, user, itemstack)
         minetest.set_node(pos, {name=minetest.registered_nodes[node.name]._water_equivalent})
@@ -504,6 +526,7 @@ minetest.register_node("sub_core:brain_coral", {
         fixed = {-0.75, -0.5, -0.75, 0.75, 0.5, 0.75}
     },
     tiles = {"sub_core_brain_coral.png"},
+    glow = 15,
     _hovertext = "Brain Coral"
 })
 

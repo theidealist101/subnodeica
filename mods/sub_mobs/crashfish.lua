@@ -10,6 +10,7 @@ sub_core.register_waterloggable("sub_mobs:sulfur_plant", {
         fixed = {-0.375, -0.5, -0.375, 0.375, 0, 0.375}
     },
     paramtype2 = "wallmounted",
+    glow = 15,
     groups = {sulfur_plant=1},
     _hovertext = "Sulfur Plant"
 })
@@ -25,6 +26,7 @@ sub_core.register_waterloggable("sub_mobs:sulfur_plant_open", {
         fixed = {-0.375, -0.5, -0.375, 0.375, 0, 0.375}
     },
     paramtype2 = "wallmounted",
+    glow = 15,
     groups = {not_in_creative_inventory=1},
     on_timer = function (pos)
         local node = minetest.get_node(pos)

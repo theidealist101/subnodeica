@@ -84,7 +84,7 @@ minetest.register_node("sub_core:creepvine_with_cluster", sub_core.add_water_phy
         type = "fixed",
         fixed = {-0.375, -0.5, -0.375, 0.375, 0.5, 0.375}
     },
-    light_source = 7,
+    light_source = 10,
     on_rightclick = function (pos, node, user, itemstack)
         minetest.set_node(pos, {name="sub_core:creepvine_stem"})
         return sub_core.give_item("sub_core:creepvine_seeds")(pos, node, user, itemstack)
