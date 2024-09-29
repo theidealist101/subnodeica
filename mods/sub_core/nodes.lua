@@ -1,12 +1,13 @@
 --Give player itemstack on rightclick
-function sub_core.give_item(name)
+function sub_core.give_item(item)
+    if type(item) == "string" then item = ItemStack(item) end
     return function (pos, node, user, itemstack)
         if itemstack:is_empty() then
-            return ItemStack(name)
-        elseif itemstack:get_name() == name and itemstack:get_free_space() > 0 then
+            return item
+        elseif itemstack:equals(item) and itemstack:get_free_space() > 0 then
             itemstack:set_count(itemstack:get_count()+1)
         else
-            user:get_inventory():add_item("main", name)
+            user:get_inventory():add_item("main", item)
         end
         return itemstack
     end
