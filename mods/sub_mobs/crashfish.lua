@@ -33,7 +33,16 @@ sub_core.register_waterloggable("sub_mobs:sulfur_plant_open", {
         node.name = sub_core.get_waterlogged("sub_mobs:sulfur_plant", minetest.registered_nodes[node.name]._water_equivalent)
         minetest.swap_node(pos, node)
     end,
-    _hovertext = "Sulfur Plant"
+    _hovertext = function (itemstack, user, pointed)
+        return minetest.get_meta(pointed.under):get_int("harvested") > 0 and "Sulfur Plant" or "Collect Cave Sulfur (RMB)"
+    end,
+    on_rightclick = function (pos, node, user, itemstack)
+        local meta = minetest.get_meta(pos)
+        if meta:get_int("harvested") == 0 then
+            meta:set_int("harvested", 1)
+            return sub_core.give_item("sub_mobs:cave_sulfur")(pos, node, user, itemstack)
+        end
+    end
 })
 
 minetest.register_abm({
@@ -57,6 +66,11 @@ minetest.register_abm({
 sub_core.register_spawner("sub_mobs:sulfur_plant", "sub_core:sandstone_with_lichen", "sub_core:sandstone", {
     description = "Sulfur Plant Spawner",
     tiles = {"default_sandstone.png^sub_core_lichen.png"}
+})
+
+minetest.register_craftitem("sub_mobs:cave_sulfur", {
+    description = "Cave Sulfur",
+    inventory_image = "mcl_nether_glowstone_dust.png"
 })
 
 --Function controlling crashfish, swim quickly at the target then blow up
