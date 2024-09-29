@@ -219,7 +219,7 @@ sub_crafts.register_craft({
     category = "personal",
     subcategory = "equipment",
     output = {"sub_crafts:o2_tank"},
-    recipe = {"sub_core:titanium", "sub_core:titanium", "sub_core:titanium"}
+    recipe = {"sub_core:titanium 3"}
 })
 
 minetest.register_tool("sub_crafts:double_o2_tank", {
@@ -239,7 +239,7 @@ sub_crafts.register_craft({
     category = "personal",
     subcategory = "equipment",
     output = {"sub_crafts:double_o2_tank"},
-    recipe = {"sub_crafts:o2_tank", "sub_crafts:glass", "sub_crafts:glass", "sub_core:titanium", "sub_core:titanium", "sub_core:titanium", "sub_core:titanium", "sub_core:silver"}
+    recipe = {"sub_crafts:o2_tank", "sub_crafts:glass 2", "sub_core:titanium 4", "sub_core:silver"}
 })
 
 sub_crafts.register_on_craft(function(itemstack, player)
