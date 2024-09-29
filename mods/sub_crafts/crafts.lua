@@ -266,7 +266,7 @@ sub_crafts.register_craft({
     category = "personal",
     subcategory = "equipment",
     output = {"sub_crafts:fins"},
-    recipe = {"sub_crafts:rubber", "sub_crafts:rubber"}
+    recipe = {"sub_crafts:rubber 2"}
 })
 
 --First aid kit, pretty much the only method of restoring player's hp
