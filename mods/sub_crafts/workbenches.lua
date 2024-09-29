@@ -41,11 +41,11 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                     end
                 end
                 for i, item in ipairs(recipe.output) do
+                    local count = string.split(item, " ")[2] or 1
                     item = ItemStack(item)
                     for _, func in ipairs(sub_crafts.registered_on_crafts) do
                         item = func(item, player) or item
                     end
-                    local count = item:get_count()
                     item:set_count(1)
                     for _ = 1, count do
                         inv:add_item("main", item)

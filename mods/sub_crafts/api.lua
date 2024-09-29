@@ -81,9 +81,8 @@ end
 function sub_crafts.get_recipe_string(recipe)
     local out = {}
     for _, item in ipairs(recipe) do
-        item = ItemStack(item)
-        local count = item:get_count()
-        table.insert(out, item:get_description()..(count > 1 and " x"..count or ""))
+        local name, count = unpack(string.split(item, " "))
+        table.insert(out, minetest.registered_items[name].description..(count and " x"..count or ""))
     end
     return table.concat(out, ", ")
 end
@@ -139,7 +138,7 @@ function sub_crafts.get_formspec(player, rtype, category, subcategory)
             table.insert(out, "tooltip["..name..";"..defs.output_tooltip.."\n"..color_esc..sub_crafts.get_recipe_string(defs.recipe)..";#6e823c;#ffffff]")
         else
             name = defs.output[1]
-            table.insert(out, table.concat({"item_image_button[", x_offset, ",", y_offset+height, ";1,1;", name, ";", name, ";]"}))
+            table.insert(out, table.concat({"item_image_button[", x_offset, ",", y_offset+height, ";1,1;", string.split(defs.output[1], " ")[1], ";", name, ";]"}))
             table.insert(out, "tooltip["..name..";"..sub_crafts.get_recipe_string(defs.output).."\n"..color_esc..sub_crafts.get_recipe_string(defs.recipe)..";#6e823c;#ffffff]")
         end
         if doable then table.insert(doable_elems, name) end
@@ -160,7 +159,7 @@ function sub_crafts.get_formspec(player, rtype, category, subcategory)
             table.insert(out, "tooltip["..name..";"..defs.output_tooltip.."\n"..color_esc..sub_crafts.get_recipe_string(defs.recipe)..";#6e823c;#ffffff]")
         else
             name = category.."|"..escape_colon(defs.output[1])
-            table.insert(out, table.concat({"item_image_button[", x_offset+1+PADDING, ",", y_offset+height, ";1,1;", defs.output[1], ";", name, ";]"}))
+            table.insert(out, table.concat({"item_image_button[", x_offset+1+PADDING, ",", y_offset+height, ";1,1;", string.split(defs.output[1], " ")[1], ";", name, ";]"}))
             table.insert(out, "tooltip["..name..";"..sub_crafts.get_recipe_string(defs.output).."\n"..color_esc..sub_crafts.get_recipe_string(defs.recipe)..";#6e823c;#ffffff]")
         end
         if doable then table.insert(doable_elems, name) end
@@ -172,7 +171,7 @@ function sub_crafts.get_formspec(player, rtype, category, subcategory)
     local x = 2+2*PADDING
     for defs, doable in dict.pairs(level3) do
         local name = category.."|"..subcategory.."|"..escape_colon(defs.output[1])
-        table.insert(out, table.concat({"item_image_button[", x_offset+x, ",", y_offset+height, ";1,1;", defs.output[1], ";", name, ";]"}))
+        table.insert(out, table.concat({"item_image_button[", x_offset+x, ",", y_offset+height, ";1,1;", string.split(defs.output[1], " ")[1], ";", name, ";]"}))
         table.insert(out, "tooltip["..name..";"..sub_crafts.get_recipe_string(defs.output).."\n"..color_esc..sub_crafts.get_recipe_string(defs.recipe)..";#6e823c;#ffffff]")
         if doable then table.insert(doable_elems, name) end
         x = x+1+PADDING
