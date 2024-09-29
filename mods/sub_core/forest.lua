@@ -178,6 +178,7 @@ minetest.register_node("sub_core:drooping_stinger", {
     },
     paramtype = "light",
     sunlight_propagates = true,
+    glow = 15,
     walkable = false,
     groups = {drooping_stinger=1},
     liquid_move_physics = true,
@@ -228,6 +229,7 @@ minetest.register_abm({
 
 sub_core.register_decor({
     type = "bottom",
+    in_cave = true,
     biome = "sub_core:forest",
     fill_ratio = 0.1,
     decor = "sub_core:drooping_stinger"
@@ -253,7 +255,6 @@ sub_core.register_decor({
 sub_core.register_decor({
     type = "underground",
     in_cave = true,
-    not_surface = true,
     biome = "sub_core:forest",
     fill_ratio = 0.6,
     decor = "sub_core:sandstone_with_moss"
