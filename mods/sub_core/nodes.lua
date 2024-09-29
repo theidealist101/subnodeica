@@ -93,6 +93,7 @@ sub_core.register_waterloggable("sub_core:writhing_weed", {
     },
     paramtype = "light",
     sunlight_propagates = true,
+    glow = 15,
     walkable = false,
     groups = {attached_node=1},
     _hovertext = "Writhing Weed"
