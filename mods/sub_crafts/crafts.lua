@@ -2,7 +2,7 @@
 sub_crafts.register_craft({
     category = "resources",
     subcategory = "basic",
-    output = {"sub_core:titanium", "sub_core:titanium", "sub_core:titanium", "sub_core:titanium"},
+    output = {"sub_core:titanium 4"},
     recipe = {"sub_core:salvage"}
 })
 
@@ -41,7 +41,7 @@ minetest.register_craftitem("sub_crafts:rubber", {
 sub_crafts.register_craft({
     category = "resources",
     subcategory = "basic",
-    output = {"sub_crafts:rubber", "sub_crafts:rubber"},
+    output = {"sub_crafts:rubber 2"},
     recipe = {"sub_core:creepvine_seeds"}
 })
 

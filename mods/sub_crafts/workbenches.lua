@@ -45,7 +45,11 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                     for _, func in ipairs(sub_crafts.registered_on_crafts) do
                         item = func(item, player) or item
                     end
-                    inv:add_item("main", item)
+                    local count = item:get_count()
+                    item:set_count(1)
+                    for _ = 1, count do
+                        inv:add_item("main", item)
+                    end
                 end
                 table.remove(names, #names)
             end
