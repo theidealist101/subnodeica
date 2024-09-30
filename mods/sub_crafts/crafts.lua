@@ -408,7 +408,8 @@ minetest.register_entity("sub_crafts:grav_trap", {
 
 minetest.register_entity("sub_crafts:grav_conduit", {
     initial_properties = {
-        is_visible = false,
+        visual = "sprite",
+        textures = {"blank.png"},
         physical = true,
         pointable = false,
         static_save = false
@@ -420,7 +421,7 @@ minetest.register_entity("sub_crafts:grav_conduit", {
             if not obj:is_player() and obj:get_luaentity().name == "sub_crafts:grav_trap" then
                 local pos = self.object:get_pos()
                 local dir = obj:get_pos()-pos
-                self.object:set_pos(pos+dtime*vector.normalize(dir))
+                self.object:add_velocity(0.1*vector.normalize(dir))
                 grav = true
             end
         end
