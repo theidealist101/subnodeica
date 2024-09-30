@@ -8,7 +8,6 @@ local flare_defs = {
     tiles = {"sub_crafts_flare.png"},
     selection_box = {type="fixed", fixed={-0.25, -0.5, -0.25, 0.25, -0.375, 0.25}},
     light_source = 12,
-    groups = {flare=1},
     on_rightclick = function (pos, node, user, itemstack)
         local out = ItemStack("sub_crafts:item_flare")
         out:set_wear(minetest.get_meta(pos):get_int("wear"))
@@ -77,4 +76,43 @@ sub_crafts.register_craft({
     subcategory = "tools",
     output = {"sub_crafts:item_flare 5"},
     recipe = {"sub_mobs:cave_sulfur"}
+})
+
+--Light stick, does sort of the same thing but brighter and doesn't wear out
+local light_stick_defs = {
+    description = "Placed Light Stick",
+    drawtype = "mesh",
+    mesh = "double_plantlike_down.obj",
+    tiles = {"sub_crafts_light_stick.png"},
+    use_texture_alpha = "clip",
+    selection_box = {type="fixed", fixed={-0.125, -1.5, -0.125, 0.125, 0.25, 0.125}},
+    light_source = 14,
+    on_rightclick = function (pos, node, user, itemstack)
+        minetest.set_node(pos, {name=minetest.registered_nodes[node.name]._water_equivalent or "air"})
+        return sub_core.give_item("sub_crafts:item_light_stick")(pos, node, user, itemstack)
+    end,
+    _hovertext = "Pick up Light Stick (RMB)"
+}
+
+minetest.register_node("sub_crafts:air_light_stick", light_stick_defs)
+sub_core.register_waterloggable("sub_crafts:light_stick", light_stick_defs)
+
+minetest.register_craftitem("sub_crafts:item_light_stick", {
+    description = "Light Stick",
+    inventory_image = "sub_crafts_item_light_stick.png",
+    on_place = function (itemstack, user, pointed)
+        local nodename = minetest.get_node(pointed.above+up).name
+        if pointed.above.y-pointed.under.y ~= 1 or minetest.registered_nodes[nodename].drawtype ~= "airlike" then return end
+        minetest.set_node(pointed.above+up, {name=nodename == "air" and "sub_crafts:air_light_stick" or sub_core.get_waterlogged("sub_crafts:light_stick", nodename)})
+        itemstack:take_item()
+        return itemstack
+    end,
+    _hovertext = "Place Light Stick (RMB)",
+})
+
+sub_crafts.register_craft({
+    category = "personal",
+    subcategory = "tools",
+    output = {"sub_crafts:item_light_stick"},
+    recipe = {"sub_crafts:battery", "sub_core:titanium", "sub_crafts:glass"}
 })
