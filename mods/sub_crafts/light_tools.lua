@@ -130,11 +130,30 @@ local path_defs = {
     paramtype = "light",
     sunlight_propagates = true,
     light_source = 7,
-    groups = {path_node=1}
+    groups = {path_node=1},
+    on_construct = function (pos)
+        pos.y = pos.y+0.25
+        minetest.add_entity(pos, "sub_crafts:path_marker")
+    end
 }
 
 minetest.register_node("sub_crafts:air_path_node", path_defs)
 sub_core.register_waterloggable("sub_crafts:path_node", path_defs)
+
+minetest.register_entity("sub_crafts:path_marker", {
+    initial_properties = {
+        visual = "sprite",
+        visual_size = {x=0.3, y=0.3},
+        textures = {"path_start.png"},
+        use_texture_alpha = true,
+        physical = false,
+        pointable = false,
+        glow = 15
+    },
+    on_step = function (self)
+        if minetest.get_item_group(minetest.get_node(vector.round(self.object:get_pos())).name, "path_node") <= 0 then self.object:remove() end
+    end
+})
 
 minetest.register_tool("sub_crafts:pathfinder", {
     description = "Pathfinder",
