@@ -344,6 +344,7 @@ local function air_bladder_on_place(itemstack)
     meta:set_int("inflated", meta:get_int("inflated") > 0 and 0 or 1)
     return itemstack
 end
+
 minetest.register_tool("sub_crafts:air_bladder", {
     description = "Air Bladder",
     inventory_image = "sub_crafts_air_bladder.png",
@@ -378,4 +379,38 @@ sub_crafts.register_craft({
     subcategory = "tools",
     output = {"sub_crafts:air_bladder"},
     recipe = {"sub_mobs:item_bladderfish", "sub_crafts:rubber"}
+})
+
+--Grav trap, a small deployable which sucks in items and small fish
+local grav_image = "sub_crafts_grav_trap.png"
+
+minetest.register_entity("sub_crafts:grav_trap", {
+    initial_properties = {
+        visual = "cube",
+        visual_size = {x=0.5625, y=0.5625},
+        textures = {grav_image, grav_image, grav_image, grav_image, grav_image, grav_image},
+        selectionbox = {-0.25, -0.25, -0.25, 0.25, 0.25, 0.25},
+        physical = true,
+    },
+    on_rightclick = function (self, user)
+        self.object:remove()
+        user:get_inventory():add_item("main", "sub_crafts:item_grav_trap")
+    end,
+    _hovertext = "Pick up Grav Trap (RMB)"
+})
+
+minetest.register_craftitem("sub_crafts:item_grav_trap", {
+    description = "Grav Trap",
+    inventory_image = "sub_crafts_item_grav_trap.png",
+    on_place = function (itemstack, user, pointed)
+        minetest.add_entity(pointed.above, "sub_crafts:grav_trap")
+        itemstack:take_item()
+        return itemstack
+    end
+})
+
+sub_crafts.register_craft({
+    category = "deployables",
+    output = {"sub_crafts:item_grav_trap"},
+    recipe = {"sub_crafts:battery", "sub_core:copper", "sub_core:titanium"}
 })
