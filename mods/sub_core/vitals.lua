@@ -74,26 +74,32 @@ local hovertext_hud_defs = {
 }
 
 --Functions for adding to stats
-function sub_core.do_item_eat(food, water, itemstack, user)
+function sub_core.do_item_eat(food, water, oxygen, itemstack, user)
     local meta = user:get_meta()
     local hunger = meta:get_int("hunger")
     local thirst = meta:get_int("thirst")
+    local breath = user:get_breath()
     local used = false
-    if food ~= 0 and hunger < sub_core.max_hunger*0.95 then
+    if food ~= 0 and (food < 0 or hunger < sub_core.max_hunger) then
         meta:set_int("hunger", hunger+food*sub_core.max_hunger*0.01)
         used = true
     end
-    if water ~= 0 and thirst < sub_core.max_thirst*0.95 then
+    if water ~= 0 and (water < 0 or thirst < sub_core.max_thirst) then
         meta:set_int("thirst", math.min(thirst+water*sub_core.max_thirst*0.01, sub_core.max_thirst))
+        used = true
+    end
+    if oxygen ~= 0 and (oxygen < 0 or breath < user:get_properties().breath_max) then
+        user:set_breath(breath+oxygen)
         used = true
     end
     if used then itemstack:take_item() end
     return itemstack
 end
 
-function sub_core.item_eat(food, water)
+function sub_core.item_eat(food, water, oxygen)
+    oxygen = oxygen or 0
     return function (itemstack, user)
-        return sub_core.do_item_eat(food, water, itemstack, user)
+        return sub_core.do_item_eat(food, water, oxygen, itemstack, user)
     end
 end
 

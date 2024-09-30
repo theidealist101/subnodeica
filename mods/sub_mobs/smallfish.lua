@@ -141,7 +141,7 @@ minetest.register_craftitem("sub_mobs:item_bladderfish", {
     inventory_image = "sub_mobs_bladderfish.png",
     stack_max = 1,
     on_drop = smallfish_place("sub_mobs:bladderfish"),
-    on_use = sub_core.item_eat(9, -4)
+    on_use = sub_core.item_eat(9, -4, 15)
 })
 
 sub_mobs.register_spawn({
