@@ -130,11 +130,7 @@ local path_defs = {
     paramtype = "light",
     sunlight_propagates = true,
     light_source = 7,
-    groups = {path_node=1},
-    on_construct = function (pos)
-        pos.y = pos.y+0.25
-        minetest.add_entity(pos, "sub_crafts:path_marker")
-    end
+    groups = {path_node=1}
 }
 
 minetest.register_node("sub_crafts:air_path_node", path_defs)
@@ -150,6 +146,15 @@ minetest.register_entity("sub_crafts:path_marker", {
         pointable = false,
         glow = 15
     },
+    on_activate = function (self, staticdata)
+        if not staticdata or staticdata == "" then return end
+        self.aim = minetest.deserialize(staticdata)
+        self.object:set_rotation(vector.dir_to_rotation(self.aim-vector.round(self.object:get_pos())))
+        self.object:set_properties({visual="mesh", visual_size={x=3, y=3}, mesh="sprite.obj", textures={"path_arrow.png"}})
+    end,
+    get_staticdata = function (self)
+        if self.aim then return minetest.serialize(self.aim) end
+    end,
     on_step = function (self)
         if minetest.get_item_group(minetest.get_node(vector.round(self.object:get_pos())).name, "path_node") <= 0 then self.object:remove() end
     end
@@ -168,23 +173,46 @@ minetest.register_tool("sub_crafts:pathfinder", {
         if pointed.above.y-pointed.under.y ~= 1 or minetest.registered_nodes[nodename].drawtype ~= "airlike" then return end
         local wear = itemstack:get_wear()
         if wear >= 65535 then return end
+        local meta = itemstack:get_meta()
+        if meta:get_int("length") >= 20 then return end
         minetest.set_node(pointed.above, {name=nodename == "air" and "sub_crafts:air_path_node" or sub_core.get_waterlogged("sub_crafts:path_node", nodename)})
+        minetest.add_entity(pointed.above+0.25*up, "sub_crafts:path_marker", meta:get("last_pos"))
+        meta:set_string("last_pos", minetest.serialize(pointed.above))
+        meta:set_int("length", meta:get_int("length")+1)
         wear = math.min(math.max(math.round(wear+327.5), 0), 65535) --327.5 is approximately 65535/200
         itemstack:set_wear(wear)
         return itemstack
     end,
     on_use = sub_crafts.switch_battery,
     _hovertext = function (itemstack, user, pointed)
-        if itemstack:get_wear() >= 65535 then return "Switch battery (LMB)" end
-        if pointed.type ~= "node" then return end
-        local nodename = minetest.get_node(pointed.under).name
-        if minetest.get_item_group(nodename, "path_node") > 0 then
-            return "Pick up path node (RMB)"
-        else
-            return "Place path node (RMB)"
-        end
+        return itemstack:get_wear() >= 65535 and "Switch battery (LMB)"
+            or itemstack:get_meta():get_int("length") >= 20 and "Clear path (Aux1)"
+            or pointed.type ~= "node" and ""
+            or minetest.get_item_group(minetest.get_node(pointed.under).name, "path_node") > 0 and "Pick up path node (RMB)"
+            or "Place path node (RMB)"
     end
 })
+
+local function remove_chain(pos)
+    for _, obj in ipairs(minetest.get_objects_inside_radius(pos, 0.5)) do
+        local entity = obj:get_luaentity()
+        if entity and entity.aim then remove_chain(entity.aim) end
+    end
+    minetest.set_node(pos, {name=minetest.registered_nodes[minetest.get_node(pos).name]._water_equivalent or "air"})
+end
+
+minetest.register_globalstep(function ()
+    for _, player in ipairs(minetest.get_connected_players()) do
+        local item = player:get_wielded_item()
+        local meta = item:get_meta()
+        if item:get_name() == "sub_crafts:pathfinder" and player:get_player_control().aux1 and meta:get_string("last_pos") ~= "" then
+            remove_chain(minetest.deserialize(meta:get_string("last_pos")))
+            meta:set_string("last_pos", "")
+            meta:set_int("length", 0)
+            player:get_inventory():set_stack(player:get_wield_list(), player:get_wield_index(), item)
+        end
+    end
+end)
 
 sub_crafts.register_craft({
     category = "personal",
