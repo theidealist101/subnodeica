@@ -156,13 +156,13 @@ minetest.register_tool("sub_crafts:pathfinder", {
     end,
     on_use = sub_crafts.switch_battery,
     _hovertext = function (itemstack, user, pointed)
-        local out = itemstack:get_wear() >= 65535 and "Switch battery (LMB)" or ""
-        if pointed.type ~= "node" then return out end
+        if itemstack:get_wear() >= 65535 then return "Switch battery (LMB)" end
+        if pointed.type ~= "node" then return end
         local nodename = minetest.get_node(pointed.under).name
         if minetest.get_item_group(nodename, "path_node") > 0 then
-            return "Pick up path node (RMB)\n"..out
+            return "Pick up path node (RMB)"
         else
-            return "Place path node (RMB)\n"..out
+            return "Place path node (RMB)"
         end
     end
 })
