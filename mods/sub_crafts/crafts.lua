@@ -335,3 +335,47 @@ sub_crafts.register_craft({
     output = {"sub_crafts:knife"},
     recipe = {"sub_core:titanium", "sub_crafts:rubber"}
 })
+
+local bladder_accel = vector.new(0, 60, 0)
+
+--Air bladder, can be used to restore oxygen or go up quickly
+local function air_bladder_on_place(itemstack)
+    local meta = itemstack:get_meta()
+    meta:set_int("inflated", meta:get_int("inflated") > 0 and 0 or 1)
+    return itemstack
+end
+minetest.register_tool("sub_crafts:air_bladder", {
+    description = "Air Bladder",
+    inventory_image = "sub_crafts_air_bladder.png",
+    on_use = function (itemstack, user)
+        user:set_breath(user:get_breath()+(65535-itemstack:get_wear())/4369) --4369 == 65535/15
+        itemstack:set_wear(65535)
+        return itemstack
+    end,
+    on_place = air_bladder_on_place,
+    on_secondary_use = air_bladder_on_place,
+    _hovertext = function (itemstack)
+        if itemstack:get_wear() >= 65535 then return end
+        return "Consume oxygen (LMB)\n"..(itemstack:get_meta():get_int("inflated") > 0 and "Deflate" or "Inflate").." Air Bladder (RMB)"
+    end,
+    _equip = "wield",
+    _equip_tick = function (player, itemstack, dtime)
+        if player:get_pos().y+1.625 > 0 and itemstack:get_wear() > 0 then
+            itemstack:set_wear(math.max(itemstack:get_wear()-dtime*65535, 0))
+            itemstack:get_meta():set_int("inflated", 0)
+        elseif itemstack:get_wear() >= 65535 then
+            itemstack:get_meta():set_int("inflated", 0)
+        elseif itemstack:get_meta():get_int("inflated") > 0 then
+            player:add_velocity(dtime*bladder_accel)
+            itemstack:set_wear(math.min(itemstack:get_wear()+dtime*10000, 65535))
+        end
+        return itemstack
+    end
+})
+
+sub_crafts.register_craft({
+    category = "personal",
+    subcategory = "tools",
+    output = {"sub_crafts:air_bladder"},
+    recipe = {"sub_mobs:item_bladderfish", "sub_crafts:rubber"}
+})
