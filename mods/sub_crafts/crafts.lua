@@ -396,7 +396,36 @@ minetest.register_entity("sub_crafts:grav_trap", {
         self.object:remove()
         user:get_inventory():add_item("main", "sub_crafts:item_grav_trap")
     end,
+    on_step = function (self)
+        for _, obj in ipairs(minetest.get_objects_inside_radius(self.object:get_pos(), 16)) do
+            if sub_mobs.is_larger({size=1}, obj) == false and not obj:get_attach() then
+                obj:set_attach(minetest.add_entity(obj:get_pos(), "sub_crafts:grav_conduit"))
+            end
+        end
+    end,
     _hovertext = "Pick up Grav Trap (RMB)"
+})
+
+minetest.register_entity("sub_crafts:grav_conduit", {
+    initial_properties = {
+        is_visible = false,
+        physical = true,
+        pointable = false,
+        static_save = false
+    },
+    on_step = function (self, dtime)
+        if #self.object:get_children() == 0 then self.object:remove() return end
+        local grav = false
+        for _, obj in ipairs(minetest.get_objects_inside_radius(self.object:get_pos(), 16)) do
+            if not obj:is_player() and obj:get_luaentity().name == "sub_crafts:grav_trap" then
+                local pos = self.object:get_pos()
+                local dir = obj:get_pos()-pos
+                self.object:set_pos(pos+dtime*vector.normalize(dir))
+                grav = true
+            end
+        end
+        if not grav then self.object:remove() end
+    end
 })
 
 minetest.register_craftitem("sub_crafts:item_grav_trap", {

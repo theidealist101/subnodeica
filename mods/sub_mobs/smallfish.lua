@@ -4,18 +4,18 @@
 local function smallfish_brain(self)
     if mobkit.timer(self, 1) then
         --fall back into water if out of water
-        if not sub_mobs.check_in_water(self) then return end
-
-        --swim away from larger entities nearby
-        for i, obj in ipairs(minetest.get_objects_inside_radius(self.object:get_pos(), 8)) do
-            if self:flee_check(obj) then
-                sub_mobs.hq_fish_flee(self, 20, self.max_speed*0.5, obj, self.name == "sub_mobs:peeper", self.name == "sub_mobs:hoverfish")
+        if sub_mobs.check_in_water(self) then
+            --swim away from larger entities nearby
+            for i, obj in ipairs(minetest.get_objects_inside_radius(self.object:get_pos(), 8)) do
+                if self:flee_check(obj) then
+                    sub_mobs.hq_fish_flee(self, 20, self.max_speed*0.5, obj, self.name == "sub_mobs:peeper", self.name == "sub_mobs:hoverfish")
+                end
             end
-        end
 
-        --swim around (default)
-        if mobkit.is_queue_empty_high(self) then
-            sub_mobs.hq_fish_roam(self, 10, self.max_speed*0.3, self.name == "sub_mobs:hoverfish")
+            --swim around (default)
+            if mobkit.is_queue_empty_high(self) then
+                sub_mobs.hq_fish_roam(self, 10, self.max_speed*0.3, self.name == "sub_mobs:hoverfish")
+            end
         end
     end
 end

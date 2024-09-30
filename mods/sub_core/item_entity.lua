@@ -10,6 +10,8 @@ local item_defs = table.copy(old_item_defs)
 item_defs.on_punch = nil
 item_defs.on_rightclick = old_item_defs.on_punch
 
+item_defs.size = 0.5
+
 --override gravity value to simulate upthrust
 item_defs.on_activate = function (self, staticdata, dtime)
     old_item_defs.on_activate(self, staticdata, dtime)
