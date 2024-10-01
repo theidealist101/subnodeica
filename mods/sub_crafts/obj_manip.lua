@@ -8,7 +8,7 @@ minetest.register_entity("sub_crafts:grav_trap", {
         visual = "cube",
         visual_size = {x=0.5625, y=0.5625},
         textures = {grav_image, grav_image, grav_image, grav_image, grav_image, grav_image},
-        selectionbox = {-0.25, -0.25, -0.25, 0.25, 0.25, 0.25},
+        collisionbox = {-0.25, -0.25, -0.25, 0.25, 0.25, 0.25},
         physical = true,
         automatic_rotate = 0.5,
     },
@@ -41,6 +41,7 @@ minetest.register_entity("sub_crafts:grav_conduit", {
     initial_properties = {
         visual = "sprite",
         textures = {"blank.png"},
+        collisionbox = {-0.25, -0.25, -0.25, 0.25, 0.25, 0.25},
         physical = true,
         pointable = false,
         static_save = false,

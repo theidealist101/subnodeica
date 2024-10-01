@@ -1,8 +1,12 @@
 --Waterproof locker, a deployable with a small inventory
 minetest.register_entity("sub_crafts:water_locker", {
     initial_properties = {
-        visual = "upright_sprite", --placeholder
-        textures = {"sub_crafts_item_water_locker.png"}
+        visual = "mesh",
+        visual_size = {x=10, y=10},
+        mesh = "water_locker.obj",
+        textures = {"water_locker.png"},
+        physical = true,
+        collisionbox = {-0.25, -0.125, -0.5, 0.25, 0.25, 0.5}
     },
     on_activate = function (self, staticdata)
         sub_inv.add_entity_inv(self, 16, staticdata)
