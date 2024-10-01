@@ -14,3 +14,4 @@ end
 local path = minetest.get_modpath("sub_inv").."/"
 dofile(path.."inventory.lua")
 dofile(path.."databank.lua")
+dofile(path.."entity_inv.lua")

@@ -237,7 +237,7 @@ minetest.register_globalstep(function(dtime)
         local raycast = minetest.raycast(eye_pos, eye_pos+4*obj:get_look_dir())
         raycast:next() --discard player
         local pointed = raycast:next() or {type="nothing"}
-        if not itemstack:is_empty() then
+        if not itemstack:is_empty() and itemstack:is_known() then
             hovertext = itemstack:get_meta():get("hovertext") or minetest.registered_items[itemstack:get_name()]._hovertext
         end
         if not hovertext then
