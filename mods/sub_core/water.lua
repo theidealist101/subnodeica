@@ -188,3 +188,7 @@ minetest.register_globalstep(function(dtime)
         sub_core.update_sounds(playername, nodename, node_def, dtime, eye_pos)
     end
 end)
+
+minetest.register_on_joinplayer(function(player)
+    player:set_lighting({shadows={intensity=0.5}, volumetric_light={strength=0.1}})
+end)

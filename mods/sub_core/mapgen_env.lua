@@ -9,6 +9,7 @@ function minetest.register_craftitem(...) end
 function minetest.set_mapgen_setting(...) end
 function minetest.fix_light(...) end
 function minetest.register_on_mods_loaded(...) end
+function minetest.register_on_joinplayer(...) end
 
 local path = minetest.get_modpath("sub_core").."/"
 dofile(path.."mapgen.lua")
